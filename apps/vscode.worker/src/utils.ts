@@ -4,7 +4,10 @@ import {
 import {
   paginateRest,
 } from "@octokit/plugin-paginate-rest";
+import type { Context } from "hono";
+import type { StatusCode } from "hono/utils/http-status";
 import type { $$Octokit, Repository } from "./types";
+import type { ApiError } from "./schemas";
 
 export function base64ToRawText(base64: string) {
   const base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -126,4 +129,14 @@ export async function getBuiltinExtensionFiles(
   }
 
   return files;
+}
+
+export function createError<TCtx extends Context, TStatus extends StatusCode>(ctx: TCtx, status: TStatus, message: string) {
+  return ctx.json({
+    message,
+    status,
+    timestamp: new Date().toISOString(),
+  } satisfies ApiError, status, {
+    "Content-Type": "application/json",
+  });
 }

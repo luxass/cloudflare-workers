@@ -1,32 +1,16 @@
-import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
+import { OpenAPIHono } from "@hono/zod-openapi";
 import semver from "semver";
 import type { HonoContext } from "../types";
-import { RELEASE_SCHEMA } from "../schemas";
+import { createError } from "../utils";
+import {
+  ALL_RELEASES_ROUTE,
+  LATEST_RELEASE_ROUTE,
+  RELEASE_ROUTE,
+} from "./releases.openapi";
 
-export const releasesRouter = new OpenAPIHono<HonoContext>();
+export const RELEASES_ROUTER = new OpenAPIHono<HonoContext>();
 
-const releasesRoute = createRoute({
-  method: "get",
-  path: "/releases",
-  responses: {
-    200: {
-      content: {
-        "application/json": {
-          schema: z
-            .array(
-              z.object({
-                tag: z.string(),
-                url: z.string(),
-              }),
-            ),
-        },
-      },
-      description: "Retrieve a list of all releases",
-    },
-  },
-});
-
-releasesRouter.openapi(releasesRoute, async (ctx) => {
+RELEASES_ROUTER.openapi(ALL_RELEASES_ROUTE, async (ctx) => {
   const octokit = ctx.get("octokit");
 
   const releases = await octokit.paginate("GET /repos/{owner}/{repo}/releases", {
@@ -47,32 +31,7 @@ releasesRouter.openapi(releasesRoute, async (ctx) => {
   );
 });
 
-const latestReleaseRoute = createRoute({
-  method: "get",
-  path: "/releases/latest",
-  responses: {
-    200: {
-      content: {
-        "application/json": {
-          schema: RELEASE_SCHEMA,
-        },
-      },
-      description: "Get the latest release",
-    },
-    404: {
-      content: {
-        "application/json": {
-          schema: z.object({
-            error: z.string(),
-          }),
-        },
-      },
-      description: "No release found",
-    },
-  },
-});
-
-releasesRouter.openapi(latestReleaseRoute, async (ctx) => {
+RELEASES_ROUTER.openapi(LATEST_RELEASE_ROUTE, async (ctx) => {
   const octokit = ctx.get("octokit");
 
   const { data: releases } = await octokit.request("GET /repos/{owner}/{repo}/releases", {
@@ -83,11 +42,7 @@ releasesRouter.openapi(latestReleaseRoute, async (ctx) => {
 
   const release = releases[0];
   if (!("tag_name" in release)) {
-    return ctx.json({
-      error: "No release found",
-    }, 404, {
-      "Content-Type": "application/json",
-    });
+    return createError(ctx, 404, "No release found");
   }
 
   const { data: commit } = await octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
@@ -101,54 +56,15 @@ releasesRouter.openapi(latestReleaseRoute, async (ctx) => {
     tag: release.tag_name,
     url: release.url,
     commit: commit.sha,
-  }, 200, {
-    "Content-Type": "application/json",
-  });
+  }, 200);
 });
 
-const releaseRoute = createRoute({
-  method: "get",
-  path: "/releases/{tag}",
-  parameters: [
-    {
-      in: "path",
-      name: "tag",
-      required: true,
-      example: "1.87.0",
-    },
-  ],
-  responses: {
-    200: {
-      content: {
-        "application/json": {
-          schema: RELEASE_SCHEMA,
-        },
-      },
-      description: "Get the latest release",
-    },
-    404: {
-      content: {
-        "application/json": {
-          schema: z.object({
-            error: z.string(),
-          }),
-        },
-      },
-      description: "No release found",
-    },
-  },
-});
-
-releasesRouter.openapi(releaseRoute, async (ctx) => {
+RELEASES_ROUTER.openapi(RELEASE_ROUTE, async (ctx) => {
   const octokit = ctx.get("octokit");
 
   const params = ctx.req.param();
   if (!params || !params.tag) {
-    return ctx.json({
-      error: "No release found",
-    }, 404, {
-      "Content-Type": "application/json",
-    });
+    return createError(ctx, 400, "No release tag provided");
   }
 
   const releases = await octokit.paginate("GET /repos/{owner}/{repo}/releases", {
@@ -160,11 +76,7 @@ releasesRouter.openapi(releaseRoute, async (ctx) => {
   const release = releases.find((release) => release.tag_name === params.tag);
 
   if (!release) {
-    return ctx.json({
-      error: "No release found",
-    }, 404, {
-      "Content-Type": "application/json",
-    });
+    return createError(ctx, 404, "No release found");
   }
 
   const { data: commit } = await octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
@@ -178,7 +90,5 @@ releasesRouter.openapi(releaseRoute, async (ctx) => {
     tag: release.tag_name,
     url: release.url,
     commit: commit.sha,
-  }, 200, {
-    "Content-Type": "application/json",
-  });
+  }, 200);
 });
