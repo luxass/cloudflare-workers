@@ -1,0 +1,9 @@
+# See https://github.com/actions/labeler
+
+"worker: assets":
+  - any:
+      - apps/assets.worker/**
+
+"worker: projectrc":
+  - any:
+      - apps/projectrc.worker/**
