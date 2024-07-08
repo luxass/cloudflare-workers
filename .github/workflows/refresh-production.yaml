@@ -29,16 +29,16 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm build --filter "${{ github.event.inputs.app }}"
+        run: pnpm --filter "${{ github.event.inputs.app }}" run build
 
       - name: Lint
-        run: pnpm lint --filter "${{ github.event.inputs.app }}"
+        run: pnpm --filter "${{ github.event.inputs.app }}" run lint
 
       - name: Typecheck
-        run: pnpm typecheck --filter "${{ github.event.inputs.app }}"
+        run: pnpm --filter "${{ github.event.inputs.app }}" run typecheck
 
       - name: Deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
