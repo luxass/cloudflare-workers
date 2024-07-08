@@ -3,7 +3,13 @@
   "type": "module",
   "private": true,
   "packageManager": "pnpm@9.4.0",
-  "scripts": {},
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev:all": "pnpm -r dev",
+    "dev:assets": "pnpm --filter assets.worker dev",
+    "lint": "eslint .",
+    "typecheck": "pnpm -r tsc --noEmit"
+  },
   "devDependencies": {
     "@luxass/eslint-config": "^4.8.3",
     "eslint": "^9.6.0",
