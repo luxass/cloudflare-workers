@@ -5,6 +5,7 @@ compatibility_date = "2023-08-20"
 [vars]
 
 [env.staging]
+name = "assets-staging"
 vars = { ENVIRONMENT = "staging" }
 routes = [
   { pattern = "staging.assets.luxass.dev", custom_domain = true },
@@ -12,8 +13,10 @@ routes = [
 ]
 
 [env.production]
+name = "assets"
 vars = { ENVIRONMENT = "production" }
 routes = [
   { pattern = "assets.luxass.dev", custom_domain = true },
   { pattern = "assets.luxass.com", custom_domain = true }
 ]
+
