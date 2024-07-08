@@ -98,7 +98,7 @@ importers:
   apps/vscode.worker:
     dependencies:
       '@hono/zod-openapi':
-        specifier: ^0.14.7
+        specifier: ^0.14.8
         version: 0.14.8(hono@4.4.12)(zod@3.23.8)
       '@octokit/core':
         specifier: ^6.1.2
@@ -107,13 +107,13 @@ importers:
         specifier: ^11.3.3
         version: 11.3.3(@octokit/core@6.1.2)
       '@scalar/hono-api-reference':
-        specifier: ^0.5.90
+        specifier: ^0.5.97
         version: 0.5.97(postcss@8.4.39)(tailwindcss@3.4.4)(typescript@5.5.3)
       github-schema:
         specifier: ^1.10.1
         version: 1.10.1
       hono:
-        specifier: ^4.4.11
+        specifier: ^4.4.12
         version: 4.4.12
       semver:
         specifier: ^7.6.2
@@ -126,7 +126,7 @@ importers:
         specifier: ^4.20240620.0
         version: 4.20240620.0
       '@luxass/eslint-config':
-        specifier: ^4.8.0
+        specifier: ^4.8.3
         version: 4.8.3(@vue/compiler-sfc@3.4.31)(eslint-plugin-format@0.1.2(eslint@9.6.0))(eslint@9.6.0)(typescript@5.5.3)
       '@types/semver':
         specifier: ^7.5.8
@@ -141,7 +141,7 @@ importers:
         specifier: ^5.5.3
         version: 5.5.3
       wrangler:
-        specifier: ^3.62.0
+        specifier: ^3.63.1
         version: 3.63.1(@cloudflare/workers-types@4.20240620.0)
 
 packages:
