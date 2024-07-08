@@ -1,0 +1,49 @@
+name: refresh worker in production
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Run the workflow without creating a deployment
+        required: false
+        default: "false"
+      app:
+        description: The app to deploy
+        required: true
+        default: "assets.worker"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'luxass'
+    steps:
+      - uses: actions/checkout@v4.1.7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Setup node
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build --filter "${{ github.event.inputs.app }}"
+
+      - name: Lint
+        run: pnpm lint --filter "${{ github.event.inputs.app }}"
+
+      - name: Typecheck
+        run: pnpm typecheck --filter "${{ github.event.inputs.app }}"
+
+      - name: Deploy
+        if: ${{ github.event.inputs.dry-run != 'true' }}
+        uses: cloudflare/wrangler-action@v3.7.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: ./apps/${{ github.event.inputs.app }}
+          environment: production
