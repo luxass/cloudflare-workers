@@ -1,0 +1,51 @@
+name: deploy assets.worker to staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Run the workflow without creating a deployment
+        required: false
+        default: "false"
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize]
+    paths:
+      - 'apps/assets.worker/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'luxass'
+    steps:
+      - uses: actions/checkout@v4.1.7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Setup node
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build:assets
+
+      - name: Lint
+        run: pnpm lint --filter "assets.worker"
+
+      - name: Typecheck
+        run: pnpm typecheck --filter "assets.worker"
+
+      - name: Deploy
+        if: ${{ github.event.inputs.dry-run != 'true' }}
+        uses: cloudflare/wrangler-action@v3.7.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: ./apps/assets.worker
+          environment: staging
