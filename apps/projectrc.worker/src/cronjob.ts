@@ -8,10 +8,18 @@ export async function runCronjob(env: Env) {
 
   const octokit = new Octokit({ auth: env.GITHUB_TOKEN });
 
+  let branchName = "projectrc-dev";
+  if (env.ENVIRONMENT === "production") {
+    branchName = "main";
+  } else if (env.ENVIRONMENT === "staging") {
+    branchName = "projectrc-staging";
+  }
+
   const { data: commits } = await octokit.repos.listCommits({
     owner: "luxass",
     repo: "luxass.dev",
     per_page: 1, // get only the latest commit
+    sha: "main", // always read from main,
   });
 
   const latestCommitSHA = commits[0].sha;
@@ -173,7 +181,7 @@ export async function runCronjob(env: Env) {
   await octokit.git.updateRef({
     owner: "luxass",
     repo: "luxass.dev",
-    ref: "heads/main",
+    ref: `heads/${branchName}`,
     sha: newCommit.data.sha,
   });
 }

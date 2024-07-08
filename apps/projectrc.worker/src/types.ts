@@ -46,6 +46,7 @@ export type Project = ResolvedProject & Pick<Repository, "nameWithOwner" | "push
 export interface Env {
   GITHUB_TOKEN: string;
   API_TOKEN: string;
+  ENVIRONMENT: "production" | "staging" | "development";
 }
 
 export interface GitTree {

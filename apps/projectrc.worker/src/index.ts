@@ -19,7 +19,7 @@ export default {
     );
 
     // check if the request contains a specific authorization header
-    if (request.headers.get("Authorization") === `Bearer ${ctx.API_TOKEN}`) {
+    if (request.url === "/refresh" && request.headers.get("Authorization") === `Bearer ${ctx.API_TOKEN}`) {
       await runCronjob(ctx);
       return new Response(JSON.stringify({
         status: "success",
