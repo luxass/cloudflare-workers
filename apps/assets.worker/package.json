@@ -1,0 +1,23 @@
+{
+  "name": "assets.worker",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@9.4.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "wrangler deploy --dry-run --outdir=dist",
+    "deploy": "wrangler deploy",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "^4.4.6"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240620.0",
+    "@luxass/eslint-config": "^4.7.0",
+    "eslint": "^9.6.0",
+    "typescript": "^5.5.2",
+    "wrangler": "^3.62.0"
+  }
+}

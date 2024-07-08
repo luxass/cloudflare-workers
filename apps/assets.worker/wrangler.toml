@@ -1,0 +1,19 @@
+name = "assets"
+main = "src/index.ts"
+compatibility_date = "2023-08-20"
+
+[vars]
+
+[env.staging]
+vars = { ENVIRONMENT = "staging" }
+routes = [
+  { pattern = "staging.assets.luxass.dev", custom_domain = true },
+  { pattern = "staging.assets.luxass.com", custom_domain = true },
+]
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+routes = [
+  { pattern = "assets.luxass.dev", custom_domain = true },
+  { pattern = "assets.luxass.com", custom_domain = true }
+]
