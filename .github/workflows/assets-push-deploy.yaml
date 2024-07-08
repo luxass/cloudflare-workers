@@ -33,7 +33,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm --filter "assets.worker" run build
+        run: pnpm build:assets
 
       - name: Lint
         run: pnpm --filter "assets.worker" run lint

@@ -5,6 +5,7 @@
   "packageManager": "pnpm@9.4.0",
   "scripts": {
     "build": "pnpm -r build",
+    "build:assets": "pnpm --filter assets.worker build",
     "dev:all": "pnpm -r dev",
     "dev:assets": "pnpm --filter assets.worker dev",
     "lint": "eslint .",
