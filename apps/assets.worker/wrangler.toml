@@ -17,6 +17,5 @@ name = "assets"
 vars = { ENVIRONMENT = "production" }
 routes = [
   { pattern = "assets.luxass.dev", custom_domain = true },
-  { pattern = "assets.luxass.com", custom_domain = true }
+  { pattern = "assets.luxass.com", custom_domain = true },
 ]
-
