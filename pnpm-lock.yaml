@@ -18,32 +18,32 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2(eslint@9.6.0)
       typescript:
-        specifier: ^5.5.2
+        specifier: ^5.5.3
         version: 5.5.3
       wrangler:
-        specifier: ^3.62.0
+        specifier: ^3.63.1
         version: 3.63.1(@cloudflare/workers-types@4.20240620.0)
 
   apps/assets.worker:
     dependencies:
       hono:
-        specifier: ^4.4.6
+        specifier: ^4.4.12
         version: 4.4.12
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20240620.0
         version: 4.20240620.0
       '@luxass/eslint-config':
-        specifier: ^4.7.0
+        specifier: ^4.8.3
         version: 4.8.3(@vue/compiler-sfc@3.4.31)(eslint-plugin-format@0.1.2(eslint@9.6.0))(eslint@9.6.0)(typescript@5.5.3)
       eslint:
         specifier: ^9.6.0
         version: 9.6.0
       typescript:
-        specifier: ^5.5.2
+        specifier: ^5.5.3
         version: 5.5.3
       wrangler:
-        specifier: ^3.62.0
+        specifier: ^3.63.1
         version: 3.63.1(@cloudflare/workers-types@4.20240620.0)
 
 packages:
