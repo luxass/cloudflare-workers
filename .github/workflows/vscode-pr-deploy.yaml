@@ -1,4 +1,4 @@
-name: deploy vscode.worker to production
+name: deploy vscode.worker to staging
 
 on:
   workflow_dispatch:
@@ -7,9 +7,10 @@ on:
         description: Run the workflow without creating a deployment
         required: false
         default: "false"
-  push:
+  pull_request:
     branches:
       - main
+    types: [opened, synchronize]
     paths:
       - 'apps/vscode.worker/**'
 
@@ -47,4 +48,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: ./apps/vscode.worker
-          environment: production
+          environment: staging

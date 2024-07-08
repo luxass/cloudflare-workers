@@ -7,3 +7,7 @@
 "worker: projectrc":
   - any:
       - apps/projectrc.worker/**
+
+"worker: vscode":
+  - any:
+      - apps/vscode.worker/**

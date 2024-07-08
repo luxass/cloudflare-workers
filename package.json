@@ -7,9 +7,11 @@
     "build": "pnpm -r build",
     "build:assets": "pnpm --filter assets.worker build",
     "build:projectrc": "pnpm --filter projectrc.worker build",
+    "build:vscode": "pnpm --filter vscode.worker build",
     "dev:all": "pnpm -r dev",
     "dev:assets": "pnpm --filter assets.worker dev",
     "dev:projectrc": "pnpm --filter projectrc.worker dev",
+    "dev:vscode": "pnpm --filter vscode.worker dev",
     "lint": "eslint .",
     "typecheck": "pnpm -r tsc --noEmit"
   },
