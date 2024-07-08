@@ -31,16 +31,16 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm build:assets
+        run: pnpm --filter "assets.worker" run build
 
       - name: Lint
-        run: pnpm lint --filter "assets.worker"
+        run: pnpm --filter "assets.worker" run lint
 
       - name: Typecheck
-        run: pnpm typecheck --filter "assets.worker"
+        run: pnpm --filter "assets.worker" run typecheck
 
       - name: Deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
