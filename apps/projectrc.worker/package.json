@@ -1,0 +1,32 @@
+{
+  "name": "robobub.worker",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@9.5.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "wrangler deploy --dry-run --outdir=dist",
+    "deploy": "wrangler deploy",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@octokit/core": "^6.1.2",
+    "@octokit/plugin-paginate-rest": "^11.3.3",
+    "@octokit/rest": "^21.0.0",
+    "github-schema": "^1.10.1",
+    "remark": "^15.0.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240620.0",
+    "@luxass/eslint-config": "^4.8.3",
+    "@types/mdast": "^4.0.4",
+    "eslint": "^9.6.0",
+    "typescript": "^5.5.3",
+    "unified": "^11.0.5",
+    "unist-util-remove": "^4.0.0",
+    "unist-util-visit": "^5.0.0",
+    "wrangler": "^3.63.1"
+  }
+}
