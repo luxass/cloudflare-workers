@@ -5,7 +5,7 @@ export default {
   async fetch(
     request,
     env,
-    ctx,
+    _ctx,
   ): Promise<Response> {
     const url = `https://cron.projectrc.luxass.dev`;
     const requestUrl = new URL(request.url);
@@ -28,7 +28,7 @@ export default {
     // check if the request contains a specific authorization header
     if (requestUrl.pathname === "/refresh" && request.headers.get("Authorization") === `Bearer ${env.API_TOKEN}`) {
       try {
-        ctx.waitUntil(runCronjob(env));
+        await runCronjob(env);
       } catch (err) {
         console.error(err);
       }
