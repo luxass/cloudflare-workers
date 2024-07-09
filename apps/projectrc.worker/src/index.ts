@@ -4,6 +4,7 @@ import { runCronjob } from "./cronjob";
 export default {
   async fetch(
     request,
+    env,
     ctx,
   ): Promise<Response> {
     const url = `https://cron.projectrc.luxass.dev`;
@@ -25,8 +26,8 @@ export default {
     );
 
     // check if the request contains a specific authorization header
-    if (requestUrl.pathname === "/refresh" && request.headers.get("Authorization") === `Bearer ${ctx.API_TOKEN}`) {
-      await runCronjob(ctx);
+    if (requestUrl.pathname === "/refresh" && request.headers.get("Authorization") === `Bearer ${env.API_TOKEN}`) {
+      ctx.waitUntil(runCronjob(env));
       return new Response(JSON.stringify({
         status: "success",
       }), {
