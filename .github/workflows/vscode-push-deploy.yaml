@@ -11,7 +11,7 @@ on:
     branches:
       - main
     paths:
-      - 'apps/projectrc.worker/**'
+      - "apps/projectrc.worker/**"
 
 jobs:
   deploy:

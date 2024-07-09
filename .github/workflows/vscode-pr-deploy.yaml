@@ -12,7 +12,7 @@ on:
       - main
     types: [opened, synchronize]
     paths:
-      - 'apps/vscode.worker/**'
+      - "apps/vscode.worker/**"
 
 jobs:
   deploy:

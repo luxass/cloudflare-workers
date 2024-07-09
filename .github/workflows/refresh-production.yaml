@@ -10,7 +10,7 @@ on:
       app:
         description: The app to deploy
         required: true
-        default: "assets.worker"
+        default: assets.worker
 
 jobs:
   deploy:

@@ -12,7 +12,7 @@ on:
       - main
     types: [opened, synchronize]
     paths:
-      - 'apps/projectrc.worker/**'
+      - "apps/projectrc.worker/**"
 
 jobs:
   deploy:

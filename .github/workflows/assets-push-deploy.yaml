@@ -11,7 +11,7 @@ on:
     branches:
       - main
     paths:
-      - 'apps/assets.worker/**'
+      - "apps/assets.worker/**"
 
 jobs:
   deploy:

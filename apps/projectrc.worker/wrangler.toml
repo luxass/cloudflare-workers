@@ -7,16 +7,12 @@ compatibility_date = "2023-08-20"
 [env.staging]
 name = "projectrc-staging"
 vars = { ENVIRONMENT = "staging" }
-routes = [
-  { pattern = "staging.cron.projectrc.luxass.dev", custom_domain = true },
-]
+routes = [ { pattern = "staging.cron.projectrc.luxass.dev", custom_domain = true }, ]
 
 [env.production]
 name = "projectrc"
 vars = { ENVIRONMENT = "production" }
-routes = [
-  { pattern = "cron.projectrc.luxass.dev", custom_domain = true },
-]
+routes = [ { pattern = "cron.projectrc.luxass.dev", custom_domain = true }, ]
 
 [triggers]
 crons = [ "0 0 * * *" ]
