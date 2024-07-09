@@ -27,11 +27,7 @@ export default {
 
     // check if the request contains a specific authorization header
     if (requestUrl.pathname === "/refresh" && request.headers.get("Authorization") === `Bearer ${env.API_TOKEN}`) {
-      try {
-        await runCronjob(env);
-      } catch (err) {
-        console.error(err);
-      }
+      await runCronjob(env);
       return new Response(JSON.stringify({
         status: "success",
       }), {
