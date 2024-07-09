@@ -33,22 +33,14 @@ export async function runCronjob(env: Env) {
     recursive: "1",
   });
 
-  const updatedTree: GitTree[] = [];
-
+  const existingFiles = new Map<string, GitTree>();
   for (const project of projectsTree) {
     if (project.type === "blob" && !project.path?.endsWith(".gitkeep")) {
-      const { data: { content } } = await octokit.git.getBlob({
-        owner: "luxass",
-        repo: "luxass.dev",
-        file_sha: project.sha!,
-      });
-
-      updatedTree.push({
+      existingFiles.set(project.path!, {
         path: `${contentPath}/${project.path}`,
         sha: project.sha!,
         mode: project.mode as GitTree["mode"],
         type: project.type as GitTree["type"],
-        content: decodeURIComponent(escape(atob(content))),
       });
     }
   }
@@ -61,6 +53,8 @@ export async function runCronjob(env: Env) {
     console.error("no projects found");
     return;
   }
+
+  const updatedTree: GitTree[] = [];
 
   for (const project of projects.filter((project) => project.readme)) {
     const fileName = project.name.replace(/^\./, "").replace(/\./g, "-");
@@ -110,33 +104,58 @@ export async function runCronjob(env: Env) {
       .filter(Boolean)
       .join("\n");
 
-    // check if updatedTree already contains the file based on fileName
-    const existingFile = updatedTree.find((file) => file.path === `${contentPath}/${fileName}.mdx`);
+    const newContent = `${frontmatter}\n\n${file.toString()}`;
+    const filePath = `${contentPath}/${fileName}.mdx`;
 
-    if (!existingFile) {
+    const existingFile = existingFiles.get(`${fileName}.mdx`);
+    if (existingFile) {
+      // File exists, update if content has changed
+      const { data: { content: existingContent } } = await octokit.git.getBlob({
+        owner: "luxass",
+        repo: "luxass.dev",
+        file_sha: existingFile.sha!,
+      });
+
+      const decodedExistingContent = decodeURIComponent(escape(atob(existingContent)));
+
+      if (decodedExistingContent !== newContent) {
+        updatedTree.push({
+          path: filePath,
+          mode: "100644",
+          type: "blob",
+          content: newContent,
+        });
+        // eslint-disable-next-line no-console
+        console.info(`updated ${fileName}`);
+      } else {
+        // eslint-disable-next-line no-console
+        console.info(`no changes detected for ${fileName}`);
+      }
+
+      // Remove from existingFiles map to track deletions
+      existingFiles.delete(`${fileName}.mdx`);
+    } else {
+      // New file
       updatedTree.push({
-        path: `${contentPath}/${fileName}.mdx`,
+        path: filePath,
         mode: "100644",
         type: "blob",
-        content: `${frontmatter}\n\n${file.toString()}`,
+        content: newContent,
       });
       // eslint-disable-next-line no-console
       console.info(`added ${fileName}`);
-    } else {
-      const newContent = `${frontmatter}\n\n${file.toString()}`;
-
-      if (existingFile.content === newContent) {
-        // eslint-disable-next-line no-console
-        console.info(`no changes detected for ${fileName}`);
-        delete existingFile.content;
-        continue;
-      }
-
-      delete existingFile?.sha;
-      existingFile!.content = newContent;
-      // eslint-disable-next-line no-console
-      console.info(`updated ${fileName}`);
     }
+  }
+
+  for (const [fileName, file] of existingFiles) {
+    updatedTree.push({
+      path: file.path,
+      mode: file.mode,
+      type: file.type,
+      sha: null, // This signals GitHub to delete the file
+    });
+    // eslint-disable-next-line no-console
+    console.info(`deleted ${fileName}`);
   }
 
   const projectsTreePaths = projectsTree.map((file) => file.path);
@@ -178,10 +197,33 @@ export async function runCronjob(env: Env) {
     parents: [latestCommitSHA],
   });
 
+  // check if branch exists
+  try {
+    await octokit.git.getRef({
+      owner: "luxass",
+      repo: "luxass.dev",
+      ref: `heads/${branchName}`,
+    });
+  } catch (error) {
+    if (typeof error === "object" && error && "status" in error && error.status === 404) {
+      await octokit.git.createRef({
+        owner: "luxass",
+        repo: "luxass.dev",
+        ref: `refs/heads/${branchName}`,
+        sha: newCommit.data.sha,
+      });
+      // eslint-disable-next-line no-console
+      console.log(`created branch ${branchName}`);
+    } else {
+      throw error;
+    }
+  }
+
   await octokit.git.updateRef({
     owner: "luxass",
     repo: "luxass.dev",
     ref: `heads/${branchName}`,
     sha: newCommit.data.sha,
+    force: env.ENVIRONMENT !== "production",
   });
 }
