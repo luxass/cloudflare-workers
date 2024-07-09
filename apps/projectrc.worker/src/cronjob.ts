@@ -182,48 +182,52 @@ export async function runCronjob(env: Env) {
     return;
   }
 
-  const newTree = await octokit.git.createTree({
-    owner: "luxass",
-    repo: "luxass.dev",
-    base_tree: latestCommitSHA,
-    tree: updatedTree,
-  });
-
-  const newCommit = await octokit.git.createCommit({
-    owner: "luxass",
-    repo: "luxass.dev",
-    message: "chore: update list of projects",
-    tree: newTree.data.sha,
-    parents: [latestCommitSHA],
-  });
-
-  // check if branch exists
   try {
-    await octokit.git.getRef({
+    const newTree = await octokit.git.createTree({
+      owner: "luxass",
+      repo: "luxass.dev",
+      base_tree: latestCommitSHA,
+      tree: updatedTree,
+    });
+
+    const newCommit = await octokit.git.createCommit({
+      owner: "luxass",
+      repo: "luxass.dev",
+      message: "chore: update list of projects",
+      tree: newTree.data.sha,
+      parents: [latestCommitSHA],
+    });
+
+    // check if branch exists
+    try {
+      await octokit.git.getRef({
+        owner: "luxass",
+        repo: "luxass.dev",
+        ref: `heads/${branchName}`,
+      });
+    } catch (error) {
+      if (typeof error === "object" && error && "status" in error && error.status === 404) {
+        await octokit.git.createRef({
+          owner: "luxass",
+          repo: "luxass.dev",
+          ref: `refs/heads/${branchName}`,
+          sha: newCommit.data.sha,
+        });
+        // eslint-disable-next-line no-console
+        console.log(`created branch ${branchName}`);
+      } else {
+        throw error;
+      }
+    }
+
+    await octokit.git.updateRef({
       owner: "luxass",
       repo: "luxass.dev",
       ref: `heads/${branchName}`,
+      sha: newCommit.data.sha,
+      force: env.ENVIRONMENT !== "production",
     });
-  } catch (error) {
-    if (typeof error === "object" && error && "status" in error && error.status === 404) {
-      await octokit.git.createRef({
-        owner: "luxass",
-        repo: "luxass.dev",
-        ref: `refs/heads/${branchName}`,
-        sha: newCommit.data.sha,
-      });
-      // eslint-disable-next-line no-console
-      console.log(`created branch ${branchName}`);
-    } else {
-      throw error;
-    }
+  } catch (err) {
+    console.error(err);
   }
-
-  await octokit.git.updateRef({
-    owner: "luxass",
-    repo: "luxass.dev",
-    ref: `heads/${branchName}`,
-    sha: newCommit.data.sha,
-    force: env.ENVIRONMENT !== "production",
-  });
 }
