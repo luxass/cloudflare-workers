@@ -7,6 +7,12 @@ export default {
     ctx,
   ): Promise<Response> {
     const url = `https://cron.projectrc.luxass.dev`;
+    const requestUrl = new URL(request.url);
+
+    if (requestUrl.pathname === "/favicon.ico") {
+      // redirect to random-emoji
+      return Response.redirect("https://image.luxass.dev/api/image/emoji", 301);
+    }
 
     const ogUrl = new URL(
       `https://image.luxass.dev/api/image/text?input=${encodeURIComponent(
@@ -19,7 +25,7 @@ export default {
     );
 
     // check if the request contains a specific authorization header
-    if (request.url === "/refresh" && request.headers.get("Authorization") === `Bearer ${ctx.API_TOKEN}`) {
+    if (requestUrl.pathname === "/refresh" && request.headers.get("Authorization") === `Bearer ${ctx.API_TOKEN}`) {
       await runCronjob(ctx);
       return new Response(JSON.stringify({
         status: "success",
@@ -75,6 +81,10 @@ export default {
     });
   },
   async scheduled(_event, env, _ctx) {
-    return await runCronjob(env);
+    try {
+      return await runCronjob(env);
+    } catch (err) {
+      console.error(err);
+    }
   },
 } satisfies ExportedHandler<Env>;
