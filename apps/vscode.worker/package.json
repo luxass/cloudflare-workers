@@ -12,22 +12,22 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@hono/zod-openapi": "^0.15.3",
-    "@octokit/core": "^6.1.2",
-    "@octokit/plugin-paginate-rest": "^11.3.3",
-    "@scalar/hono-api-reference": "^0.5.140",
-    "github-schema": "^1.10.5",
-    "hono": "^4.5.5",
-    "semver": "^7.6.3",
-    "zod": "^3.23.8"
+    "@hono/zod-openapi": "catalog:",
+    "@octokit/core": "catalog:",
+    "@octokit/plugin-paginate-rest": "catalog:",
+    "@scalar/hono-api-reference": "catalog:",
+    "github-schema": "catalog:",
+    "hono": "catalog:",
+    "semver": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240815.0",
-    "@luxass/eslint-config": "^4.11.0",
-    "@types/semver": "^7.5.8",
-    "eslint": "^9.9.0",
-    "eslint-plugin-format": "^0.1.2",
-    "typescript": "^5.5.4",
-    "wrangler": "^3.72.0"
+    "@cloudflare/workers-types": "catalog:",
+    "@luxass/eslint-config": "catalog:",
+    "@types/semver": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-format": "catalog:",
+    "typescript": "catalog:",
+    "wrangler": "catalog:"
   }
 }

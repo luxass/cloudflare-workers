@@ -1,2 +1,18 @@
 packages:
-  - "apps/*"
+  - apps/*
+catalog:
+  "@cloudflare/workers-types": ^4.20240815.0
+  "@hono/zod-openapi": ^0.15.3
+  "@luxass/eslint-config": ^4.11.0
+  "@octokit/core": ^6.1.2
+  "@octokit/plugin-paginate-rest": ^11.3.3
+  "@scalar/hono-api-reference": ^0.5.140
+  "@types/semver": ^7.5.8
+  eslint: ^9.9.0
+  eslint-plugin-format: ^0.1.2
+  github-schema: ^1.10.5
+  hono: ^4.5.5
+  semver: ^7.6.3
+  typescript: ^5.5.4
+  wrangler: ^3.72.0
+  zod: ^3.23.8
