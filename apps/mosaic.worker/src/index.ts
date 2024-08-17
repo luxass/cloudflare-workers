@@ -91,12 +91,13 @@ const PROFILE_QUERY = gql`
   #graphql
   ${REPOSITORY_FRAGMENT}
 
-  query getProfile() {
+  query getProfile {
     viewer {
       repositories(
         first: 100
         isFork: false
         privacy: PUBLIC
+        ownerAffiliations: [OWNER]
         orderBy: { field: STARGAZERS, direction: DESC }
       ) {
         totalCount
@@ -173,7 +174,8 @@ export default {
 
       for (const tmp of data) {
         if (tmp.type !== "success") {
-          console.warn(`failed to fetch config for ${tmp.repository}`);
+          // eslint-disable-next-line no-console
+          console.info(`failed to fetch config for ${tmp.repository} reason ${tmp.type}`);
         }
       }
 
@@ -187,10 +189,14 @@ export default {
       });
     })).then((chunks) => chunks.flat());
 
+    // eslint-disable-next-line no-console
+    console.log(repositoriesWithConfigs);
+
     // delete all repositories where github_id is not in the list
     const githubIdsToKeep = repositoriesWithConfigs.map((repo) => repo?.id).filter((id) => id !== undefined);
 
-    console.warn("will delete repositories that doesn't exist in the list", githubIdsToKeep);
+    // eslint-disable-next-line no-console
+    console.info("will delete repositories that doesn't exist in the list", githubIdsToKeep);
 
     try {
     // delete all repositories where github_id is not in the list
@@ -212,9 +218,6 @@ export default {
         console.warn("repository with config is undefined");
         continue;
       }
-
-      // eslint-disable-next-line no-console
-      console.log(repositoryWithConfig);
 
       try {
         // check if repository already exists
