@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { graphql } from "@octokit/graphql";
 import { type Repository, type User, gql } from "github-schema";
+import { logger } from "hono/logger";
 
 export interface HonoContext {
   Bindings: {
@@ -21,6 +22,34 @@ app.get("/ping", (c) => {
   c.status(418);
   return c.text("pong!");
 });
+
+app.use("*", logger());
+
+app.get(
+  "*",
+  async (c, next) => {
+    if (c.env.ENVIRONMENT !== "production" && c.env.ENVIRONMENT !== "preview") {
+      return await next();
+    }
+    const key = c.req.url;
+    const cache = await caches.open("mosaic");
+
+    const response = await cache.match(key);
+    if (!response) {
+      await next();
+      if (!c.res.ok) {
+        return;
+      }
+
+      c.res.headers.set("Cache-Control", "public, max-age=3600");
+
+      const response = c.res.clone();
+      c.executionCtx.waitUntil(cache.put(key, response));
+    } else {
+      return new Response(response.body, response);
+    }
+  },
+);
 
 app.get("/repositories", async (c) => {
   const { results } = await c.env.DATABASE.prepare(
