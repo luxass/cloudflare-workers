@@ -143,7 +143,7 @@ export default {
       );
     });
 
-    const mosaicUrl = env.ENVIRONMENT !== "production" && env.ENVIRONMENT === "preview" ? "https://mosaic.luxass.dev" : "http://localhost:3000";
+    const mosaicUrl = env.ENVIRONMENT === "production" || env.ENVIRONMENT === "preview" ? "https://mosaic.luxass.dev" : "http://localhost:3000";
 
     // split repositories into chunks of 10
     const chunks = repositories.reduce((acc, _, i) => {
