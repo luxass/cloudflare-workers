@@ -263,6 +263,22 @@ export default {
         if (results.length > 0) {
           // eslint-disable-next-line no-console
           console.info(`repository ${repositoryWithConfig.nameWithOwner} already exists`);
+
+          const existingRepository = results[0];
+          // eslint-disable-next-line no-console
+          console.info(`repository ${repositoryWithConfig.nameWithOwner} already exists`);
+
+          // check if the description is different
+          if (existingRepository.description !== repositoryWithConfig.description) {
+            // update the description
+            await env.DATABASE.prepare(
+              `UPDATE repositories SET description = ? WHERE name_with_owner = ? AND github_id = ? AND url = ?`,
+            )
+              .bind(repositoryWithConfig.description, repositoryWithConfig.nameWithOwner, repositoryWithConfig.id, repositoryWithConfig.url)
+              .run();
+            // eslint-disable-next-line no-console
+            console.info(`updated description for repository ${repositoryWithConfig.nameWithOwner}`);
+          }
           continue;
         }
 
