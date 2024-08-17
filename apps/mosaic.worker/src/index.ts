@@ -143,8 +143,10 @@ export default {
       );
     });
 
+    const mosaicUrl = env.ENVIRONMENT !== "production" && env.ENVIRONMENT === "preview" ? "https://mosaic.luxass.dev" : "http://localhost:3000";
+
     const repositoriesWithConfigs = await Promise.all(repositories.map(async (repo) => {
-      const data = await fetch(`http://localhost:3000/api/v1/mosaic/${repo.nameWithOwner}/config`).then((res) => res.json());
+      const data = await fetch(`${mosaicUrl}/api/v1/mosaic/${repo.nameWithOwner}/config`).then((res) => res.json());
 
       if (!data) {
         return undefined;
