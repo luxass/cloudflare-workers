@@ -213,6 +213,14 @@ export default {
         continue;
       }
 
+      // eslint-disable-next-line no-console
+      console.info({
+        id: repositoryWithConfig.id,
+        nameWithOwner: repositoryWithConfig.nameWithOwner,
+        name: repositoryWithConfig.name,
+        url: repositoryWithConfig.url,
+      });
+
       try {
         // check if repository already exists
         const { results } = await env.DATABASE.prepare(
