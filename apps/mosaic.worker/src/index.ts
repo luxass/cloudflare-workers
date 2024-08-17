@@ -170,8 +170,13 @@ export default {
         return undefined;
       }
 
-      // filter out objects that doesn't have type "success"
+      for (const tmp of data) {
+        if (tmp.type !== "success") {
+          console.warn(`failed to fetch config for ${tmp.repository}`);
+        }
+      }
 
+      // filter out objects that doesn't have type "success"
       return data.filter((item) => item.type === "success").map((item) => {
         const repoObj = chunk.find((repo) => repo.nameWithOwner === item.repository);
         return {
