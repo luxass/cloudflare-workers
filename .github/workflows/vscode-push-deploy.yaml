@@ -20,28 +20,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.7
 
-      - name: Setup pnpm
+      - name: setup pnpm
         uses: pnpm/action-setup@v4.0.0
 
-      - name: Setup node
+      - name: setup node
         uses: actions/setup-node@v4.0.3
         with:
           node-version: 20
           cache: pnpm
 
-      - name: Install dependencies
+      - name: install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: build
         run: pnpm build:vscode
 
-      - name: Lint
+      - name: lint
         run: pnpm --filter "vscode.worker" run lint
 
-      - name: Typecheck
+      - name: typecheck
         run: pnpm --filter "vscode.worker" run typecheck
 
-      - name: Deploy
+      - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.7.0
         with:

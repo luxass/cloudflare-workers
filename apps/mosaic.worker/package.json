@@ -11,6 +11,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@octokit/core": "catalog:",
+    "@octokit/graphql": "catalog:",
+    "@octokit/plugin-paginate-rest": "catalog:",
+    "github-schema": "catalog:",
     "hono": "catalog:"
   },
   "devDependencies": {

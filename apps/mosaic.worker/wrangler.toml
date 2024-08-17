@@ -4,13 +4,21 @@ compatibility_date = "2023-08-20"
 
 [vars]
 
-[env.staging]
-name = "mosaic-staging"
-vars = { ENVIRONMENT = "staging" }
+# preview
+
+[env.preview]
+name = "mosaic-preview"
+vars = { ENVIRONMENT = "preview" }
 routes = [
-  { pattern = "staging.mosaic-worker.luxass.dev", custom_domain = true },
-  { pattern = "staging.mosaic-worker.luxass.com", custom_domain = true },
+  { pattern = "preview.mosaic-worker.luxass.dev", custom_domain = true },
+  { pattern = "preview.mosaic-worker.luxass.com", custom_domain = true },
 ]
+d1_databases = [ { binding = "DATABASE", database_name = "preview-mosaic", database_id = "dcdaecb9-fc3d-44b0-89ba-377aebdc8312" } ]
+
+[env.preview.triggers]
+crons = [ "*/10 * * * *" ]
+
+# production
 
 [env.production]
 name = "mosaic"
@@ -19,3 +27,14 @@ routes = [
   { pattern = "mosaic-worker.luxass.dev", custom_domain = true },
   { pattern = "mosaic-worker.luxass.com", custom_domain = true },
 ]
+d1_databases = [ { binding = "DATABASE", database_name = "prod-mosaic", database_id = "5b479f67-3311-4394-98c2-b983e7b29c53" } ]
+
+[env.production.triggers]
+crons = [ "*/10 * * * *" ]
+
+# local
+
+[[d1_databases]]
+binding = "DATABASE"
+database_name = "prod-mosaic"
+database_id = "5b479f67-3311-4394-98c2-b983e7b29c53"

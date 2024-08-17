@@ -1,9 +1,13 @@
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
+import { graphql } from "@octokit/graphql";
+import { type Repository, type User, gql } from "github-schema";
 
 export interface HonoContext {
   Bindings: {
+    GITHUB_TOKEN: string;
     ENVIRONMENT: string;
+    DATABASE: D1Database;
   };
 }
 
@@ -18,91 +22,18 @@ app.get("/ping", (c) => {
   return c.text("pong!");
 });
 
-app.get(
-  "/api/fonts/*",
-  async (c, next) => {
-    if (c.env.ENVIRONMENT !== "production" && c.env.ENVIRONMENT !== "staging") {
-      return await next();
-    }
-    const key = c.req.url;
-    const cache = await caches.open("fonts");
+app.get("/repositories", async (c) => {
+  const { results } = await c.env.DATABASE.prepare(
+    "SELECT * FROM repositories",
+  )
+    .run();
 
-    const response = await cache.match(key);
-    if (!response) {
-      // eslint-disable-next-line no-console
-      console.info("serving font from network");
-      await next();
-      if (!c.res.ok) {
-        console.error("failed to fetch font, skipping caching");
-        return;
-      }
-
-      c.res.headers.set("Cache-Control", "public, max-age=3600");
-
-      const response = c.res.clone();
-      c.executionCtx.waitUntil(cache.put(key, response));
-    } else {
-      // eslint-disable-next-line no-console
-      console.info("serving font from cache");
-      return new Response(response.body, response);
-    }
-  },
-);
-
-app.get("/api/fonts/:family/:weight/:text?", async (c) => {
-  const url = new URL(c.req.url);
-  const { family: _family, weight, text } = c.req.param();
-
-  const family = _family[0].toUpperCase() + _family.slice(1);
-
-  let fontsUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}`;
-  if (text) {
-    // allow font optimization if we pass text => only getting the characters we need
-    fontsUrl += `&text=${encodeURIComponent(text)}`;
-  }
-
-  const css = await (
-    await fetch(fontsUrl, {
-      headers: {
-        // Make sure it returns TTF.
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; de-at) AppleWebKit/533.21.1 (KHTML, like Gecko) Version/5.0.5 Safari/533.21.1",
-      },
-    })
-  ).text();
-
-  const resource = css.match(
-    /src: url\((.+)\) format\('(opentype|truetype)'\)/,
-  );
-
-  if (!resource || !resource[1]) {
-    return new Response("No resource found", { status: 404 });
-  }
-
-  const res = await fetch(resource[1]);
-
-  const arrayBuffer = await res.arrayBuffer();
-  const body = new Uint8Array(arrayBuffer);
-
-  const response = new Response(body, res);
-
-  if (url.hostname === "localhost") {
-    response.headers.delete("content-encoding");
-    response.headers.delete("content-length");
-  }
-
-  return response;
-});
-
-app.use(async (c) => {
-  const url = new URL(c.req.url);
-
-  if (url.pathname === "/") {
-    url.pathname = "/README.md";
-  }
-
-  const branch = url.searchParams.get("branch") || "main";
-  return fetch(`https://raw.githubusercontent.com/luxass/assets/${branch}/${url.pathname}`);
+  return c.json(results.map((row) => ({
+    github_id: row.github_id,
+    name_with_owner: row.name_with_owner,
+    name: row.name,
+    url: row.url,
+  })));
 });
 
 app.onError(async (err, c) => {
@@ -135,4 +66,137 @@ app.notFound(async (c) => {
   });
 });
 
-export default app;
+const REPOSITORY_FRAGMENT = gql`
+  #graphql
+  fragment RepositoryFragment on Repository {
+    id
+    name
+    isFork
+    isArchived
+    nameWithOwner
+    description
+    pushedAt
+    url
+    defaultBranchRef {
+      name
+    }
+    primaryLanguage {
+      name
+      color
+    }
+  }
+`;
+
+const PROFILE_QUERY = gql`
+  #graphql
+  ${REPOSITORY_FRAGMENT}
+
+  query getProfile() {
+    viewer {
+      repositories(
+        first: 100
+        isFork: false
+        privacy: PUBLIC
+        orderBy: { field: STARGAZERS, direction: DESC }
+      ) {
+        totalCount
+        nodes {
+          ...RepositoryFragment
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  }
+`;
+
+export default {
+  fetch: app.fetch,
+  scheduled: async (event, env) => {
+    const { viewer } = await graphql<{
+      viewer: User;
+    }>(PROFILE_QUERY, {
+      headers: {
+        "Authorization": `Bearer ${env.GITHUB_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!viewer.repositories.nodes?.length) {
+      console.warn("no repositories found");
+      return undefined;
+    }
+
+    const ignoreFile = await fetch("https://raw.githubusercontent.com/luxass/luxass/main/.github/mosaic/.mosaicignore").then((res) => res.text());
+    const ignore = ignoreFile.split("\n").map((line) => line.trim()).filter((line) => line && !line.startsWith("#"));
+
+    const repositories = viewer.repositories.nodes.filter((repo): repo is NonNullable<Repository> => {
+      return (
+        !!repo
+        && !repo.isFork
+        && !repo.isPrivate
+        && !repo.isArchived
+        && !ignore.includes(repo.nameWithOwner)
+        && !ignore.includes(repo.nameWithOwner.split("/")[1])
+      );
+    });
+
+    const repositoriesWithConfigs = await Promise.all(repositories.map(async (repo) => {
+      const data = await fetch(`http://localhost:3000/api/v1/mosaic/${repo.nameWithOwner}/config`).then((res) => res.json());
+
+      if (!data) {
+        return undefined;
+      }
+
+      if (typeof data === "object" && "message" in data) {
+        console.warn(data.message);
+        return undefined;
+      }
+
+      return {
+        ...repo,
+        config: data,
+      };
+    }));
+
+    // delete all repositories where github_id is not in the list
+    const githubIdsToKeep = repositoriesWithConfigs.map((repo) => repo?.id).filter((id) => id !== undefined);
+
+    console.warn("will delete repositories that doesn't exist in the list", githubIdsToKeep);
+
+    // delete all repositories where github_id is not in the list
+    await env.DATABASE.prepare(
+      `DELETE FROM repositories WHERE github_id NOT IN (${githubIdsToKeep.map(() => "?").join(", ")})`,
+    )
+      .bind(...githubIdsToKeep)
+      .run();
+
+    for (const repositoryWithConfig of repositoriesWithConfigs) {
+      if (!repositoryWithConfig) {
+        continue;
+      }
+
+      // check if repository already exists
+      const { results } = await env.DATABASE.prepare(
+        `SELECT * FROM repositories WHERE name_with_owner = ? AND github_id = ? AND url = ?`,
+      )
+        .bind(repositoryWithConfig.nameWithOwner, repositoryWithConfig.id, repositoryWithConfig.url)
+        .run();
+
+      if (results.length > 0) {
+        // eslint-disable-next-line no-console
+        console.info(`repository ${repositoryWithConfig.nameWithOwner} already exists`);
+        continue;
+      }
+
+      // insert repository into database
+      await env.DATABASE.prepare(
+        `INSERT INTO repositories (github_id, name_with_owner, name, url) VALUES (?, ?, ?, ?)`,
+      )
+        .bind(repositoryWithConfig.id, repositoryWithConfig.nameWithOwner, repositoryWithConfig.name, repositoryWithConfig.url)
+        .run();
+    }
+  },
+} satisfies ExportedHandler<HonoContext["Bindings"]>;

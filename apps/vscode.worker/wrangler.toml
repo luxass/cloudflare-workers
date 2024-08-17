@@ -2,10 +2,10 @@ name = "vscode"
 main = "src/index.ts"
 compatibility_date = "2023-08-20"
 
-[env.staging]
-name = "vscode-staging"
-vars = { ENVIRONMENT = "staging" }
-routes = [ { pattern = "staging.vscode.luxass.dev", custom_domain = true } ]
+[env.preview]
+name = "vscode-preview"
+vars = { ENVIRONMENT = "preview" }
+routes = [ { pattern = "preview.vscode.luxass.dev", custom_domain = true } ]
 
 [env.production]
 name = "vscode"

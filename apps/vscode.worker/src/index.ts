@@ -14,7 +14,7 @@ app.use("*", logger());
 app.get(
   "*",
   async (c, next) => {
-    if (c.env.ENVIRONMENT !== "production" && c.env.ENVIRONMENT !== "staging") {
+    if (c.env.ENVIRONMENT !== "production" && c.env.ENVIRONMENT !== "preview") {
       return await next();
     }
     const key = c.req.url;
@@ -87,8 +87,8 @@ app.doc("/openapi.json", {
       description: "Production Environment",
     },
     {
-      url: "https://staging.vscode.luxass.dev",
-      description: "Staging Environment",
+      url: "https://preview.vscode.luxass.dev",
+      description: "preview Environment",
     },
   ],
 });

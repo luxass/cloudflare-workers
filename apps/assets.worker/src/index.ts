@@ -21,7 +21,7 @@ app.get("/ping", (c) => {
 app.get(
   "/api/fonts/*",
   async (c, next) => {
-    if (c.env.ENVIRONMENT !== "production" && c.env.ENVIRONMENT !== "staging") {
+    if (c.env.ENVIRONMENT !== "production" && c.env.ENVIRONMENT !== "preview") {
       return await next();
     }
     const key = c.req.url;

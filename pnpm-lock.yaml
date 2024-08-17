@@ -18,6 +18,9 @@ catalogs:
     '@octokit/core':
       specifier: ^6.1.2
       version: 6.1.2
+    '@octokit/graphql':
+      specifier: ^8.1.1
+      version: 8.1.1
     '@octokit/plugin-paginate-rest':
       specifier: ^11.3.3
       version: 11.3.3
@@ -96,6 +99,18 @@ importers:
 
   apps/mosaic.worker:
     dependencies:
+      '@octokit/core':
+        specifier: 'catalog:'
+        version: 6.1.2
+      '@octokit/graphql':
+        specifier: 'catalog:'
+        version: 8.1.1
+      '@octokit/plugin-paginate-rest':
+        specifier: 'catalog:'
+        version: 11.3.3(@octokit/core@6.1.2)
+      github-schema:
+        specifier: 'catalog:'
+        version: 1.10.5
       hono:
         specifier: 'catalog:'
         version: 4.5.5
