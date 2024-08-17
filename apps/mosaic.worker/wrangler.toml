@@ -1,0 +1,21 @@
+name = "mosaic"
+main = "src/index.ts"
+compatibility_date = "2023-08-20"
+
+[vars]
+
+[env.staging]
+name = "mosaic-staging"
+vars = { ENVIRONMENT = "staging" }
+routes = [
+  { pattern = "staging.mosaic-worker.luxass.dev", custom_domain = true },
+  { pattern = "staging.mosaic-worker.luxass.com", custom_domain = true },
+]
+
+[env.production]
+name = "mosaic"
+vars = { ENVIRONMENT = "production" }
+routes = [
+  { pattern = "mosaic-worker.luxass.dev", custom_domain = true },
+  { pattern = "mosaic-worker.luxass.com", custom_domain = true },
+]
