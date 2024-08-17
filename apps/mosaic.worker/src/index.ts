@@ -186,12 +186,17 @@ export default {
 
     console.warn("will delete repositories that doesn't exist in the list", githubIdsToKeep);
 
+    try {
     // delete all repositories where github_id is not in the list
-    await env.DATABASE.prepare(
+      await env.DATABASE.prepare(
       `DELETE FROM repositories WHERE github_id NOT IN (${githubIdsToKeep.map(() => "?").join(", ")})`,
-    )
-      .bind(...githubIdsToKeep)
-      .run();
+      )
+        .bind(...githubIdsToKeep)
+        .run();
+    } catch (err) {
+      console.error(err);
+      return undefined;
+    }
 
     // eslint-disable-next-line no-console
     console.info(`set to handle x${repositoriesWithConfigs.length} repositories`);
