@@ -195,6 +195,7 @@ export default {
 
     for (const repositoryWithConfig of repositoriesWithConfigs) {
       if (!repositoryWithConfig) {
+        console.warn("repository with config is undefined");
         continue;
       }
 
@@ -217,6 +218,8 @@ export default {
       )
         .bind(repositoryWithConfig.id, repositoryWithConfig.nameWithOwner, repositoryWithConfig.name, repositoryWithConfig.url)
         .run();
+      // eslint-disable-next-line no-console
+      console.info(`inserted repository ${repositoryWithConfig.nameWithOwner}`);
     }
   },
 } satisfies ExportedHandler<HonoContext["Bindings"]>;
