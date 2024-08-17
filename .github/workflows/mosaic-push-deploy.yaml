@@ -48,4 +48,12 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: ./apps/mosaic.worker
           environment: production
-          postCommands: d1 migrations apply prod-mosaic --remote --env production
+
+      - name: run migrations
+        if: ${{ github.event.inputs.dry-run != 'true' }}
+        uses: cloudflare/wrangler-action@v3.7.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: ./apps/mosaic.worker
+          environment: production
+          command: d1 migrations apply prod-mosaic --remote --env production

@@ -49,4 +49,12 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: ./apps/mosaic.worker
           environment: preview
-          postCommands: d1 migrations apply preview-mosaic --remote --env preview
+
+      - name: run migrations
+        if: ${{ github.event.inputs.dry-run != 'true' }}
+        uses: cloudflare/wrangler-action@v3.7.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: ./apps/mosaic.worker
+          environment: preview
+          command: d1 migrations apply preview-mosaic --remote --env preview
