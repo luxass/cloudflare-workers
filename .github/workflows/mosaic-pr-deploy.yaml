@@ -49,3 +49,5 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: ./apps/mosaic.worker
           environment: preview
+          postCommands: |
+            wrangler d1 migrations apply preview-mosaic --remote --env preview

@@ -48,3 +48,5 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: ./apps/mosaic.worker
           environment: production
+          postCommands: |
+            wrangler d1 migrations apply prod-mosaic --remote --env production
