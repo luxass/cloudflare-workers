@@ -94,7 +94,7 @@ app.doc("/openapi.json", {
 });
 
 app.get("/view-source", (c) => {
-  return c.redirect("https://github.com/luxass/vscode.worker");
+  return c.redirect("https://github.com/luxass/cloudflare-workers/tree/main/apps/vscode.worker");
 });
 
 app.onError(async (err, c) => {
