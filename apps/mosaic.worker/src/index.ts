@@ -62,6 +62,7 @@ app.get("/repositories", async (c) => {
     name_with_owner: row.name_with_owner,
     name: row.name,
     url: row.url,
+    description: row.description,
   })));
 });
 
@@ -267,9 +268,15 @@ export default {
 
         // insert repository into database
         await env.DATABASE.prepare(
-          `INSERT INTO repositories (github_id, name_with_owner, name, url) VALUES (?, ?, ?, ?)`,
+          `INSERT INTO repositories (github_id, name_with_owner, name, url, description) VALUES (?, ?, ?, ?, ?)`,
         )
-          .bind(repositoryWithConfig.id, repositoryWithConfig.nameWithOwner, repositoryWithConfig.name, repositoryWithConfig.url)
+          .bind(
+            repositoryWithConfig.id,
+            repositoryWithConfig.nameWithOwner,
+            repositoryWithConfig.name,
+            repositoryWithConfig.url,
+            repositoryWithConfig.description,
+          )
           .run();
         // eslint-disable-next-line no-console
         console.info(`inserted repository ${repositoryWithConfig.nameWithOwner}`);
