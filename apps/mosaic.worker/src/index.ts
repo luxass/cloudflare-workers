@@ -214,12 +214,7 @@ export default {
       }
 
       // eslint-disable-next-line no-console
-      console.info({
-        id: repositoryWithConfig.id,
-        nameWithOwner: repositoryWithConfig.nameWithOwner,
-        name: repositoryWithConfig.name,
-        url: repositoryWithConfig.url,
-      });
+      console.log(repositoryWithConfig);
 
       try {
         // check if repository already exists
