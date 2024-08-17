@@ -2,7 +2,7 @@
   "name": "cloudflare-workers",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@9.5.0",
+  "packageManager": "pnpm@9.7.1",
   "scripts": {
     "build": "pnpm -r build",
     "build:assets": "pnpm --filter assets.worker build",
@@ -14,10 +14,10 @@
     "typecheck": "pnpm -r tsc --noEmit"
   },
   "devDependencies": {
-    "@luxass/eslint-config": "^4.8.3",
-    "eslint": "^9.6.0",
+    "@luxass/eslint-config": "^4.11.0",
+    "eslint": "^9.9.0",
     "eslint-plugin-format": "^0.1.2",
-    "typescript": "^5.5.3",
-    "wrangler": "^3.63.1"
+    "typescript": "^5.5.4",
+    "wrangler": "^3.72.0"
   }
 }
