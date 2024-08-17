@@ -193,6 +193,9 @@ export default {
       .bind(...githubIdsToKeep)
       .run();
 
+    // eslint-disable-next-line no-console
+    console.info(`set to handle x${repositoriesWithConfigs.length} repositories`);
+
     for (const repositoryWithConfig of repositoriesWithConfigs) {
       if (!repositoryWithConfig) {
         console.warn("repository with config is undefined");
