@@ -1,4 +1,4 @@
-name: deploy projectrc.worker to production
+name: deploy vscode.worker to production
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ on:
     branches:
       - main
     paths:
-      - "apps/projectrc.worker/**"
+      - "apps/vscode.worker/**"
 
 jobs:
   deploy:
@@ -33,18 +33,18 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm build:projectrc
+        run: pnpm build:vscode
 
       - name: Lint
-        run: pnpm --filter "projectrc.worker" run lint
+        run: pnpm --filter "vscode.worker" run lint
 
       - name: Typecheck
-        run: pnpm --filter "projectrc.worker" run typecheck
+        run: pnpm --filter "vscode.worker" run typecheck
 
       - name: Deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.7.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: ./apps/projectrc.worker
+          workingDirectory: ./apps/vscode.worker
           environment: production
