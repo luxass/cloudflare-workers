@@ -213,27 +213,31 @@ export default {
         continue;
       }
 
-      // check if repository already exists
-      const { results } = await env.DATABASE.prepare(
-        `SELECT * FROM repositories WHERE name_with_owner = ? AND github_id = ? AND url = ?`,
-      )
-        .bind(repositoryWithConfig.nameWithOwner, repositoryWithConfig.id, repositoryWithConfig.url)
-        .run();
+      try {
+        // check if repository already exists
+        const { results } = await env.DATABASE.prepare(
+          `SELECT * FROM repositories WHERE name_with_owner = ? AND github_id = ? AND url = ?`,
+        )
+          .bind(repositoryWithConfig.nameWithOwner, repositoryWithConfig.id, repositoryWithConfig.url)
+          .run();
 
-      if (results.length > 0) {
+        if (results.length > 0) {
+          // eslint-disable-next-line no-console
+          console.info(`repository ${repositoryWithConfig.nameWithOwner} already exists`);
+          continue;
+        }
+
+        // insert repository into database
+        await env.DATABASE.prepare(
+          `INSERT INTO repositories (github_id, name_with_owner, name, url) VALUES (?, ?, ?, ?)`,
+        )
+          .bind(repositoryWithConfig.id, repositoryWithConfig.nameWithOwner, repositoryWithConfig.name, repositoryWithConfig.url)
+          .run();
         // eslint-disable-next-line no-console
-        console.info(`repository ${repositoryWithConfig.nameWithOwner} already exists`);
-        continue;
+        console.info(`inserted repository ${repositoryWithConfig.nameWithOwner}`);
+      } catch (error) {
+        console.error(`error processing repository ${repositoryWithConfig.nameWithOwner}:`, error);
       }
-
-      // insert repository into database
-      await env.DATABASE.prepare(
-        `INSERT INTO repositories (github_id, name_with_owner, name, url) VALUES (?, ?, ?, ?)`,
-      )
-        .bind(repositoryWithConfig.id, repositoryWithConfig.nameWithOwner, repositoryWithConfig.name, repositoryWithConfig.url)
-        .run();
-      // eslint-disable-next-line no-console
-      console.info(`inserted repository ${repositoryWithConfig.nameWithOwner}`);
     }
   },
 } satisfies ExportedHandler<HonoContext["Bindings"]>;
