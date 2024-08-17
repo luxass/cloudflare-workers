@@ -183,7 +183,7 @@ export default {
       return data.filter((item) => item.type === "success").map((item) => {
         const repoObj = chunk.find((repo) => repo.nameWithOwner === item.repository);
         if (!repoObj) {
-          console.warn(`repository ${item.repository} not found in chunk`, chunk);
+          console.warn(`repository ${item.repository} not found in chunk`, chunk.map((repo) => repo.nameWithOwner));
         }
         return {
           ...repoObj,
