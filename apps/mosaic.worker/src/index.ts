@@ -144,7 +144,8 @@ export default {
     });
 
     const mosaicUrl = env.ENVIRONMENT === "production" || env.ENVIRONMENT === "preview" ? "https://mosaic.luxass.dev" : "http://localhost:3000";
-
+    // eslint-disable-next-line no-console
+    console.info(`will fetch configs from ${mosaicUrl}`);
     // split repositories into chunks of 10
     const chunks = repositories.reduce((acc, _, i) => {
       if (i % 10 === 0) {
