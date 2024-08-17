@@ -145,23 +145,41 @@ export default {
 
     const mosaicUrl = env.ENVIRONMENT !== "production" && env.ENVIRONMENT === "preview" ? "https://mosaic.luxass.dev" : "http://localhost:3000";
 
-    const repositoriesWithConfigs = await Promise.all(repositories.map(async (repo) => {
-      const data = await fetch(`${mosaicUrl}/api/v1/mosaic/${repo.nameWithOwner}/config`).then((res) => res.json());
+    // split repositories into chunks of 10
+    const chunks = repositories.reduce((acc, _, i) => {
+      if (i % 10 === 0) {
+        acc.push(repositories.slice(i, i + 10));
+      }
+
+      return acc;
+    }, [] as Repository[][]);
+
+    // fetch all repositories with configs
+    const repositoriesWithConfigs = await Promise.all(chunks.map(async (chunk) => {
+      const data = await fetch(`${mosaicUrl}/api/v1/mosaic/resolve-configs`, {
+        headers: {
+          "X-MOSAIC-REPOSITORIES": chunk.map((repo) => repo.nameWithOwner).join(","),
+        },
+      }).then((res) => res.json());
 
       if (!data) {
         return undefined;
       }
 
-      if (typeof data === "object" && "message" in data) {
-        console.warn(data.message);
+      if (!Array.isArray(data) || data.length === 0) {
         return undefined;
       }
 
-      return {
-        ...repo,
-        config: data,
-      };
-    }));
+      // filter out objects that doesn't have type "success"
+
+      return data.filter((item) => item.type === "success").map((item) => {
+        const repoObj = chunk.find((repo) => repo.nameWithOwner === item.repository);
+        return {
+          ...repoObj,
+          config: item.content,
+        };
+      });
+    })).then((chunks) => chunks.flat());
 
     // delete all repositories where github_id is not in the list
     const githubIdsToKeep = repositoriesWithConfigs.map((repo) => repo?.id).filter((id) => id !== undefined);
