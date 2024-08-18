@@ -88,7 +88,7 @@ app.doc("/openapi.json", {
     },
     {
       url: "https://preview.vscode.luxass.dev",
-      description: "preview Environment",
+      description: "Preview Environment",
     },
   ],
 });
