@@ -67,6 +67,76 @@ app.get("/repositories", async (c) => {
   })));
 });
 
+app.get("/repositories/:github_id", async (c) => {
+  const githubId = c.req.param("github_id");
+
+  if (!githubId || !githubId.trim()) {
+    throw new HTTPException(400, {
+      message: "github_id is required",
+    });
+  }
+
+  try {
+    const { results } = await c.env.DATABASE.prepare(
+      "SELECT * FROM repositories WHERE github_id = ?",
+    )
+      .bind(githubId)
+      .run();
+
+    return c.json(results.map((row) => ({
+      github_id: row.github_id,
+      name_with_owner: row.name_with_owner,
+      name: row.name,
+      url: row.url,
+      description: row.description,
+      config: row.config,
+    })));
+  } catch (error) {
+    console.error("Database query failed:", error);
+    throw new HTTPException(500, {
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.get("/repositories/:github_id/config", async (c) => {
+  const githubId = c.req.param("github_id");
+
+  if (!githubId || !githubId.trim()) {
+    throw new HTTPException(400, {
+      message: "github_id is required",
+    });
+  }
+
+  try {
+    const { results } = await c.env.DATABASE.prepare(
+      "SELECT config FROM repositories WHERE github_id = ?",
+    )
+      .bind(githubId)
+      .run();
+
+    if (results.length === 0) {
+      throw new HTTPException(404, {
+        message: "Repository not found",
+      });
+    }
+
+    // verify that the config is a string
+    if (typeof results[0].config !== "string") {
+      throw new HTTPException(500, {
+        message: "Internal Server Error",
+      });
+    }
+
+    return c.json(results[0].config);
+  } catch (error) {
+    console.error("Database query failed:", error);
+    throw new HTTPException(500, {
+      message: "Internal Server Error",
+    });
+  }
+});
+
 app.onError(async (err, c) => {
   console.error(err);
   const url = new URL(c.req.url);
