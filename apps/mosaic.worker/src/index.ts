@@ -126,14 +126,22 @@ app.openapi(REPOSITORIES_ROUTE, async (c) => {
   )
     .run();
 
-  return c.json(results.map((row) => ({
-    github_id: row.github_id,
-    name_with_owner: row.name_with_owner,
-    name: row.name,
-    url: row.url,
-    description: row.description,
-    config: row.config,
-  })));
+  return c.json(results.map((row) => {
+    if (typeof row.config !== "string") {
+      throw new HTTPException(500, {
+        message: "Internal Server Error",
+      });
+    }
+
+    return {
+      github_id: row.github_id,
+      name_with_owner: row.name_with_owner,
+      name: row.name,
+      url: row.url,
+      description: row.description,
+      config: JSON.parse(row.config),
+    };
+  }));
 });
 
 const REPOSITORY_ID_ROUTE = createRoute({
@@ -200,13 +208,19 @@ app.openapi(REPOSITORY_ID_ROUTE, async (c) => {
 
     const row = results[0];
 
+    if (typeof row.config !== "string") {
+      throw new HTTPException(500, {
+        message: "Internal Server Error",
+      });
+    }
+
     return c.json({
       github_id: row.github_id,
       name_with_owner: row.name_with_owner,
       name: row.name,
       url: row.url,
       description: row.description,
-      config: row.config,
+      config: JSON.parse(row.config),
     });
   } catch (error) {
     console.error("Database query failed:", error);
