@@ -1,10 +1,14 @@
-import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
+import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import { graphql } from "@octokit/graphql";
-import { type Repository, type User, gql } from "github-schema";
-import { logger } from "hono/logger";
-import { OpenAPIHono } from "@hono/zod-openapi";
 import { apiReference } from "@scalar/hono-api-reference";
+import type { Repository, User } from "github-schema";
+import { HTTPException } from "hono/http-exception";
+import { logger } from "hono/logger";
+import { PROFILE_QUERY } from "./graphql-queries";
+import {
+  ApiErrorSchema,
+  MosaicRepositorySchema,
+} from "./schemas";
 
 export interface HonoContext {
   Bindings: {
@@ -26,7 +30,7 @@ app.get("/ping", (c) => {
 });
 
 app.get(
-  "/",
+  "/scalar",
   apiReference({
     spec: {
       url: "/openapi.json",
@@ -92,7 +96,31 @@ app.get(
   },
 );
 
-app.get("/repositories", async (c) => {
+const REPOSITORIES_ROUTE = createRoute({
+  method: "get",
+  path: "/repositories",
+  tags: ["Repositories"],
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: z.array(MosaicRepositorySchema),
+        },
+      },
+      description: "Retrieve a list of repositories with a `mosaic` config.",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: ApiErrorSchema,
+        },
+      },
+      description: "Internal Server Error",
+    },
+  },
+});
+
+app.openapi(REPOSITORIES_ROUTE, async (c) => {
   const { results } = await c.env.DATABASE.prepare(
     "SELECT * FROM repositories",
   )
@@ -108,7 +136,47 @@ app.get("/repositories", async (c) => {
   })));
 });
 
-app.get("/repositories/:github_id", async (c) => {
+const REPOSITORY_ID_ROUTE = createRoute({
+  method: "get",
+  path: "/repositories/{github_id}",
+  tags: ["Repositories"],
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: MosaicRepositorySchema,
+        },
+      },
+      description: "Retrieve a repository with a `mosaic` config.",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: ApiErrorSchema,
+        },
+      },
+      description: "Bad Request",
+    },
+    404: {
+      content: {
+        "application/json": {
+          schema: ApiErrorSchema,
+        },
+      },
+      description: "Repository not found",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: ApiErrorSchema,
+        },
+      },
+      description: "Internal Server Error",
+    },
+  },
+});
+
+app.openapi(REPOSITORY_ID_ROUTE, async (c) => {
   const githubId = c.req.param("github_id");
 
   if (!githubId || !githubId.trim()) {
@@ -124,14 +192,22 @@ app.get("/repositories/:github_id", async (c) => {
       .bind(githubId)
       .run();
 
-    return c.json(results.map((row) => ({
+    if (results.length === 0) {
+      throw new HTTPException(404, {
+        message: "Repository not found",
+      });
+    }
+
+    const row = results[0];
+
+    return c.json({
       github_id: row.github_id,
       name_with_owner: row.name_with_owner,
       name: row.name,
       url: row.url,
       description: row.description,
       config: row.config,
-    })));
+    });
   } catch (error) {
     console.error("Database query failed:", error);
     throw new HTTPException(500, {
@@ -140,7 +216,47 @@ app.get("/repositories/:github_id", async (c) => {
   }
 });
 
-app.get("/repositories/:github_id/config", async (c) => {
+const REPOSITORY_ID_CONFIG_ROUTE = createRoute({
+  method: "get",
+  path: "/repositories/{github_id}/config",
+  tags: ["Repositories"],
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: MosaicRepositorySchema,
+        },
+      },
+      description: "Retrieve a config of a repository with a `mosaic` config.",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: ApiErrorSchema,
+        },
+      },
+      description: "Bad Request",
+    },
+    404: {
+      content: {
+        "application/json": {
+          schema: ApiErrorSchema,
+        },
+      },
+      description: "Repository not found",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: ApiErrorSchema,
+        },
+      },
+      description: "Internal Server Error",
+    },
+  },
+});
+
+app.openapi(REPOSITORY_ID_CONFIG_ROUTE, async (c) => {
   const githubId = c.req.param("github_id");
 
   if (!githubId || !githubId.trim()) {
@@ -151,7 +267,7 @@ app.get("/repositories/:github_id/config", async (c) => {
 
   try {
     const { results } = await c.env.DATABASE.prepare(
-      "SELECT config FROM repositories WHERE github_id = ?",
+      "SELECT json(config) as config FROM repositories WHERE github_id = ?",
     )
       .bind(githubId)
       .run();
@@ -162,14 +278,15 @@ app.get("/repositories/:github_id/config", async (c) => {
       });
     }
 
-    // verify that the config is a string
-    if (typeof results[0].config !== "string") {
+    const row = results[0];
+
+    if (typeof row.config !== "string") {
       throw new HTTPException(500, {
         message: "Internal Server Error",
       });
     }
 
-    return c.json(results[0].config);
+    return c.json(JSON.parse(row.config));
   } catch (error) {
     console.error("Database query failed:", error);
     throw new HTTPException(500, {
@@ -207,53 +324,6 @@ app.notFound(async (c) => {
     timestamp: new Date().toISOString(),
   });
 });
-
-const REPOSITORY_FRAGMENT = gql`
-  #graphql
-  fragment RepositoryFragment on Repository {
-    id
-    name
-    isFork
-    isArchived
-    nameWithOwner
-    description
-    pushedAt
-    url
-    defaultBranchRef {
-      name
-    }
-    primaryLanguage {
-      name
-      color
-    }
-  }
-`;
-
-const PROFILE_QUERY = gql`
-  #graphql
-  ${REPOSITORY_FRAGMENT}
-
-  query getProfile {
-    viewer {
-      repositories(
-        first: 100
-        isFork: false
-        privacy: PUBLIC
-        ownerAffiliations: [OWNER]
-        orderBy: { field: STARGAZERS, direction: DESC }
-      ) {
-        totalCount
-        nodes {
-          ...RepositoryFragment
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-  }
-`;
 
 export default {
   fetch: app.fetch,
