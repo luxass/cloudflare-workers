@@ -63,6 +63,7 @@ app.get("/repositories", async (c) => {
     name: row.name,
     url: row.url,
     description: row.description,
+    config: row.config,
   })));
 });
 
@@ -232,9 +233,9 @@ export default {
     console.info("will delete repositories that doesn't exist in the list", githubIdsToKeep);
 
     try {
-    // delete all repositories where github_id is not in the list
+      // delete all repositories where github_id is not in the list
       await env.DATABASE.prepare(
-      `DELETE FROM repositories WHERE github_id NOT IN (${githubIdsToKeep.map(() => "?").join(", ")})`,
+        `DELETE FROM repositories WHERE github_id NOT IN (${githubIdsToKeep.map(() => "?").join(", ")})`,
       )
         .bind(...githubIdsToKeep)
         .run();
@@ -279,12 +280,25 @@ export default {
             // eslint-disable-next-line no-console
             console.info(`updated description for repository ${repositoryWithConfig.nameWithOwner}`);
           }
+
+          // check if the config is different
+          if (JSON.stringify(existingRepository.config) !== JSON.stringify(repositoryWithConfig.config)) {
+            // update the config
+            await env.DATABASE.prepare(
+              `UPDATE repositories SET config = ? WHERE name_with_owner = ? AND github_id = ? AND url = ?`,
+            )
+              .bind(JSON.stringify(repositoryWithConfig.config), repositoryWithConfig.nameWithOwner, repositoryWithConfig.id, repositoryWithConfig.url)
+              .run();
+            // eslint-disable-next-line no-console
+            console.info(`updated config for repository ${repositoryWithConfig.nameWithOwner}`);
+          }
+
           continue;
         }
 
         // insert repository into database
         await env.DATABASE.prepare(
-          `INSERT INTO repositories (github_id, name_with_owner, name, url, description) VALUES (?, ?, ?, ?, ?)`,
+          `INSERT INTO repositories (github_id, name_with_owner, name, url, description, config) VALUES (?, ?, ?, ?, ?, ?)`,
         )
           .bind(
             repositoryWithConfig.id,
@@ -292,6 +306,7 @@ export default {
             repositoryWithConfig.name,
             repositoryWithConfig.url,
             repositoryWithConfig.description,
+            JSON.stringify(repositoryWithConfig.config),
           )
           .run();
         // eslint-disable-next-line no-console
