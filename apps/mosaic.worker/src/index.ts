@@ -3,6 +3,8 @@ import { HTTPException } from "hono/http-exception";
 import { graphql } from "@octokit/graphql";
 import { type Repository, type User, gql } from "github-schema";
 import { logger } from "hono/logger";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import { apiReference } from "@scalar/hono-api-reference";
 
 export interface HonoContext {
   Bindings: {
@@ -12,7 +14,7 @@ export interface HonoContext {
   };
 }
 
-const app = new Hono<HonoContext>();
+const app = new OpenAPIHono<HonoContext>();
 
 app.get("/view-source", (c) => {
   return c.redirect("https://github.com/luxass/cloudflare-workers/tree/main/apps/mosaic.worker", 301);
@@ -21,6 +23,45 @@ app.get("/view-source", (c) => {
 app.get("/ping", (c) => {
   c.status(418);
   return c.text("pong!");
+});
+
+app.get(
+  "/",
+  apiReference({
+    spec: {
+      url: "/openapi.json",
+    },
+    layout: "modern",
+    theme: "bluePlanet",
+  }),
+);
+
+app.doc("/openapi.json", {
+  openapi: "3.0.0",
+  info: {
+    version: "1.0.0",
+    title: "A Cloudflare worker that offers a small amount of data about my repositories.",
+  },
+  tags: [
+    {
+      name: "Repositories",
+      description: "Endpoints to retrieve information about my repositories.",
+    },
+  ],
+  servers: [
+    {
+      url: "http://localhost:8787",
+      description: "Local Environment",
+    },
+    {
+      url: "https://mosaic-worker.luxass.dev",
+      description: "Production Environment",
+    },
+    {
+      url: "https://preview.mosaic-worker.luxass.dev",
+      description: "Preview Environment",
+    },
+  ],
 });
 
 app.use("*", logger());

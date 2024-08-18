@@ -99,6 +99,9 @@ importers:
 
   apps/mosaic.worker:
     dependencies:
+      '@hono/zod-openapi':
+        specifier: 'catalog:'
+        version: 0.15.3(hono@4.5.5)(zod@3.23.8)
       '@octokit/core':
         specifier: 'catalog:'
         version: 6.1.2
@@ -108,12 +111,21 @@ importers:
       '@octokit/plugin-paginate-rest':
         specifier: 'catalog:'
         version: 11.3.3(@octokit/core@6.1.2)
+      '@scalar/hono-api-reference':
+        specifier: 'catalog:'
+        version: 0.5.140(hono@4.5.5)
       github-schema:
         specifier: 'catalog:'
         version: 1.10.5
       hono:
         specifier: 'catalog:'
         version: 4.5.5
+      semver:
+        specifier: 'catalog:'
+        version: 7.6.3
+      zod:
+        specifier: 'catalog:'
+        version: 3.23.8
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 'catalog:'

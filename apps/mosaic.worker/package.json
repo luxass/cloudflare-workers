@@ -11,11 +11,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@hono/zod-openapi": "catalog:",
     "@octokit/core": "catalog:",
     "@octokit/graphql": "catalog:",
     "@octokit/plugin-paginate-rest": "catalog:",
+    "@scalar/hono-api-reference": "catalog:",
     "github-schema": "catalog:",
-    "hono": "catalog:"
+    "hono": "catalog:",
+    "semver": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
