@@ -1,0 +1,21 @@
+name = "image"
+main = "src/index.ts"
+compatibility_date = "2023-08-20"
+
+[vars]
+
+[env.preview]
+name = "image-preview"
+vars = { ENVIRONMENT = "preview" }
+routes = [
+  { pattern = "preview.image.luxass.dev", custom_domain = true },
+  { pattern = "preview.image.luxass.com", custom_domain = true },
+]
+
+[env.production]
+name = "image"
+vars = { ENVIRONMENT = "production" }
+routes = [
+  { pattern = "v2.image.luxass.dev", custom_domain = true },
+  { pattern = "v2.image.luxass.com", custom_domain = true },
+]

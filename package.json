@@ -8,10 +8,12 @@
     "build:assets": "pnpm --filter assets.worker build",
     "build:vscode": "pnpm --filter vscode.worker build",
     "build:mosaic": "pnpm --filter mosaic.worker build",
+    "build:image": "pnpm --filter image.worker build",
     "dev:all": "pnpm -r dev",
     "dev:assets": "pnpm --filter assets.worker dev",
     "dev:vscode": "pnpm --filter vscode.worker dev",
     "dev:mosaic": "pnpm --filter mosaic.worker dev",
+    "dev:image": "pnpm --filter image.worker dev",
     "lint": "eslint .",
     "typecheck": "pnpm -r tsc --noEmit"
   },

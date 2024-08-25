@@ -1,0 +1,25 @@
+{
+  "name": "image.worker",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@9.7.1",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "wrangler deploy --dry-run --outdir=dist",
+    "deploy": "wrangler deploy",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "catalog:",
+    "hono-jsx-to-react": "^0.1.0",
+    "workers-og": "^0.0.24"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "catalog:",
+    "@luxass/eslint-config": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "wrangler": "catalog:"
+  }
+}
