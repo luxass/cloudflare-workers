@@ -2,8 +2,8 @@ import * as React from "rxeact";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
-import { HonoContext } from "../types";
-import { font, ImageResponse, truncateWords } from "../utils";
+import type { HonoContext } from "../types";
+import { ImageResponse, font, truncateWords } from "../utils";
 
 export const projectImageRouter = new Hono<HonoContext>();
 
@@ -32,16 +32,16 @@ projectImageRouter.get(
 
     const data = await fetch(`https://api.github.com/repos/${repo}`, {
       headers: {
-        authorization: `Bearer ${c.env.GITHUB_TOKEN}`,
+        "authorization": `Bearer ${c.env.GITHUB_TOKEN}`,
         "User-Agent": "image.luxass.dev",
       },
     }).then((res) => res.json());
 
     if (
-      !data ||
-      typeof data !== "object" ||
-      !("stargazers_count" in data) ||
-      typeof data?.stargazers_count !== "number"
+      !data
+      || typeof data !== "object"
+      || !("stargazers_count" in data)
+      || typeof data?.stargazers_count !== "number"
     ) {
       return c.body("Invalid repo", 400);
     }
