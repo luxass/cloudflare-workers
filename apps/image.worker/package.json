@@ -13,12 +13,14 @@
   "dependencies": {
     "hono": "catalog:",
     "hono-jsx-to-react": "^0.1.0",
-    "workers-og": "^0.0.24"
+    "workers-og": "^0.0.24",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
     "@luxass/eslint-config": "catalog:",
     "eslint": "catalog:",
+    "satori": "^0.10.14",
     "typescript": "catalog:",
     "wrangler": "catalog:"
   }

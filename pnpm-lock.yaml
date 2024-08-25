@@ -108,6 +108,9 @@ importers:
       workers-og:
         specifier: ^0.0.24
         version: 0.0.24
+      zod:
+        specifier: 'catalog:'
+        version: 3.23.8
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 'catalog:'
@@ -118,6 +121,9 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 9.9.0(jiti@1.21.6)
+      satori:
+        specifier: ^0.10.14
+        version: 0.10.14
       typescript:
         specifier: 'catalog:'
         version: 5.5.4
