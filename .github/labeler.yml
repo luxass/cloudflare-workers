@@ -1,17 +1,17 @@
 # See https://github.com/actions/labeler
 
 "worker: assets":
-  - any:
-      - apps/assets.worker/**
+  - changed-files:
+      - any-glob-to-any-file: apps/assets.worker/**
 
 "worker: mosaic":
-  - any:
-      - apps/mosaic.worker/**
+  - changed-files:
+      - any-glob-to-any-file: apps/mosaic.worker/**
 
 "worker: vscode":
-  - any:
-      - apps/vscode.worker/**
+  - changed-files:
+      - any-glob-to-any-file: apps/vscode.worker/**
 
 "worker: image":
-  - any:
-      - apps/image.worker/**
+  - changed-files:
+      - any-glob-to-any-file: apps/image.worker/**
