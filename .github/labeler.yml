@@ -4,10 +4,14 @@
   - any:
       - apps/assets.worker/**
 
-"worker: projectrc":
+"worker: mosaic":
   - any:
-      - apps/projectrc.worker/**
+      - apps/mosaic.worker/**
 
 "worker: vscode":
   - any:
       - apps/vscode.worker/**
+
+"worker: image":
+  - any:
+      - apps/image.worker/**
