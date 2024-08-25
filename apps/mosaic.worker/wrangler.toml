@@ -24,8 +24,8 @@ crons = [ "*/10 * * * *" ]
 name = "mosaic"
 vars = { ENVIRONMENT = "production" }
 routes = [
-  { pattern = "mosaic-worker.luxass.dev", custom_domain = true },
-  { pattern = "mosaic-worker.luxass.com", custom_domain = true },
+  { pattern = "worker.mosaic.luxass.dev", custom_domain = true },
+  { pattern = "worker.mosaic.luxass.com", custom_domain = true },
 ]
 d1_databases = [ { binding = "DATABASE", database_name = "prod-mosaic", database_id = "5b479f67-3311-4394-98c2-b983e7b29c53" } ]
 

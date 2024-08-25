@@ -40,32 +40,38 @@ app.get(
   }),
 );
 
-app.doc("/openapi.json", {
-  openapi: "3.0.0",
-  info: {
-    version: "1.0.0",
-    title: "A Cloudflare worker that offers a small amount of data about my repositories.",
-  },
-  tags: [
-    {
-      name: "Repositories",
-      description: "Endpoints to retrieve information about my repositories.",
+app.doc("/openapi.json", (c) => {
+  const server = {
+    url: "http://localhost:8787",
+    description: "Local Environment",
+  };
+
+  if (c.env.ENVIRONMENT === "production") {
+    server.url = "https://worker.mosaic.luxass.dev";
+    server.description = "Production Environment";
+  }
+
+  if (c.env.ENVIRONMENT === "preview") {
+    server.url = "https://preview.mosaic-worker.luxass.dev";
+    server.description = "Preview Environment";
+  }
+
+  return {
+    openapi: "3.0.0",
+    info: {
+      version: "1.0.0",
+      title: "A Cloudflare worker that offers a small amount of data about my repositories.",
     },
-  ],
-  servers: [
-    {
-      url: "http://localhost:8787",
-      description: "Local Environment",
-    },
-    {
-      url: "https://mosaic-worker.luxass.dev",
-      description: "Production Environment",
-    },
-    {
-      url: "https://preview.mosaic-worker.luxass.dev",
-      description: "Preview Environment",
-    },
-  ],
+    tags: [
+      {
+        name: "Repositories",
+        description: "Endpoints to retrieve information about my repositories.",
+      },
+    ],
+    servers: [
+      server,
+    ],
+  };
 });
 
 app.use("*", logger());
