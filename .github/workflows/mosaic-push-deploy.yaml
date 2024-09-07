@@ -1,4 +1,4 @@
-name: deploy mosaic.worker to production
+name: deploy mosaic worker to production
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ on:
     branches:
       - main
     paths:
-      - "apps/mosaic.worker/**"
+      - "apps/mosaic/**"
 
 jobs:
   deploy:
@@ -36,17 +36,17 @@ jobs:
         run: pnpm build:mosaic
 
       - name: lint
-        run: pnpm --filter "mosaic.worker" run lint
+        run: pnpm --filter "mosaic" run lint
 
       - name: typecheck
-        run: pnpm --filter "mosaic.worker" run typecheck
+        run: pnpm --filter "mosaic" run typecheck
 
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.7.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: ./apps/mosaic.worker
+          workingDirectory: ./apps/mosaic
           environment: production
 
       - name: run migrations
@@ -54,6 +54,6 @@ jobs:
         uses: cloudflare/wrangler-action@v3.7.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: ./apps/mosaic.worker
+          workingDirectory: ./apps/mosaic
           environment: production
           command: d1 migrations apply prod-mosaic --remote --env production

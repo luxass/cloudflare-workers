@@ -1,1 +1,1 @@
-schema: ./apps/mosaic.worker/node_modules/github-schema/github-schema.graphql
+schema: ./apps/mosaic/node_modules/github-schema/github-schema.graphql

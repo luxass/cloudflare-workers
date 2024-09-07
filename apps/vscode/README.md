@@ -1,4 +1,4 @@
-# vscode.worker
+# vscode
 
 A Cloudflare worker that provides a JSON API, which can be used to gather information about Visual Studio Code extensions from that are builtin.
 

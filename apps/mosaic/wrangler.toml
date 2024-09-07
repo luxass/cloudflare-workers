@@ -13,7 +13,7 @@ routes = [
   { pattern = "preview.mosaic-worker.luxass.dev", custom_domain = true },
   { pattern = "preview.mosaic-worker.luxass.com", custom_domain = true },
 ]
-d1_databases = [ { binding = "DATABASE", database_name = "preview-mosaic", database_id = "dcdaecb9-fc3d-44b0-89ba-377aebdc8312" } ]
+d1_databases = [ { binding = "DATABASE", database_name = "preview-mosaic", database_id = "c966c318-626f-45b8-96fa-45807d5174ee" } ]
 
 [env.preview.triggers]
 crons = [ "*/10 * * * *" ]

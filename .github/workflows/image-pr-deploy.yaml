@@ -1,4 +1,4 @@
-name: deploy image.worker to preview
+name: deploy image worker to preview
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ on:
       - main
     types: [opened, synchronize]
     paths:
-      - "apps/image.worker/**"
+      - "apps/image/**"
 
 jobs:
   deploy:
@@ -37,15 +37,15 @@ jobs:
         run: pnpm build:image
 
       - name: lint
-        run: pnpm --filter "image.worker" run lint
+        run: pnpm --filter "image" run lint
 
       - name: typecheck
-        run: pnpm --filter "image.worker" run typecheck
+        run: pnpm --filter "image" run typecheck
 
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.7.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: ./apps/image.worker
+          workingDirectory: ./apps/image
           environment: preview
