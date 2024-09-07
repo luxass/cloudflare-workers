@@ -1,6 +1,6 @@
 name = "vscode"
 main = "src/index.ts"
-compatibility_date = "2023-08-20"
+compatibility_date = "2024-01-01"
 
 [env.preview]
 name = "vscode-preview"
