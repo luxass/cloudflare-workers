@@ -21,7 +21,7 @@ export interface HonoContext {
 const app = new OpenAPIHono<HonoContext>();
 
 app.get("/view-source", (c) => {
-  return c.redirect("https://github.com/luxass/cloudflare-workers/tree/main/apps/mosaic.worker", 301);
+  return c.redirect("https://github.com/luxass/cloudflare-workers/tree/main/apps/mosaic", 301);
 });
 
 app.get("/ping", (c) => {

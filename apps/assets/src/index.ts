@@ -10,7 +10,7 @@ export interface HonoContext {
 const app = new Hono<HonoContext>();
 
 app.get("/view-source", (c) => {
-  return c.redirect("https://github.com/luxass/cloudflare-workers/tree/main/apps/assets.worker", 301);
+  return c.redirect("https://github.com/luxass/cloudflare-workers/tree/main/apps/assets", 301);
 });
 
 app.get("/ping", (c) => {

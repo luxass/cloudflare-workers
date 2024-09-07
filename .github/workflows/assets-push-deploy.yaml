@@ -1,4 +1,4 @@
-name: deploy assets.worker to production
+name: deploy assets worker to production
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ on:
     branches:
       - main
     paths:
-      - "apps/assets.worker/**"
+      - "apps/assets/**"
 
 jobs:
   deploy:
@@ -36,15 +36,15 @@ jobs:
         run: pnpm build:assets
 
       - name: lint
-        run: pnpm --filter "assets.worker" run lint
+        run: pnpm --filter "assets" run lint
 
       - name: typecheck
-        run: pnpm --filter "assets.worker" run typecheck
+        run: pnpm --filter "assets" run typecheck
 
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.7.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: ./apps/assets.worker
+          workingDirectory: ./apps/assets
           environment: production

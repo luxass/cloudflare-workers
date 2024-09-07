@@ -9,7 +9,7 @@ import { projectImageRouter } from "./routes/project";
 const app = new Hono<HonoContext>();
 
 app.get("/view-source", (c) => {
-  return c.redirect("https://github.com/luxass/cloudflare-workers/tree/main/apps/image.worker", 301);
+  return c.redirect("https://github.com/luxass/cloudflare-workers/tree/main/apps/image", 301);
 });
 
 app.get("/ping", (c) => {

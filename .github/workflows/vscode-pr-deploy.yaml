@@ -1,4 +1,4 @@
-name: deploy vscode.worker to preview
+name: deploy vscode worker to preview
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ on:
       - main
     types: [opened, synchronize]
     paths:
-      - "apps/vscode.worker/**"
+      - "apps/vscode/**"
 
 jobs:
   deploy:
@@ -37,15 +37,15 @@ jobs:
         run: pnpm build:vscode
 
       - name: lint
-        run: pnpm --filter "vscode.worker" run lint
+        run: pnpm --filter "vscode" run lint
 
       - name: typecheck
-        run: pnpm --filter "vscode.worker" run typecheck
+        run: pnpm --filter "vscode" run typecheck
 
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.7.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: ./apps/vscode.worker
+          workingDirectory: ./apps/vscode
           environment: preview

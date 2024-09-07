@@ -1,5 +1,5 @@
 {
-  "name": "assets.worker",
+  "name": "mosaic",
   "type": "module",
   "private": true,
   "packageManager": "pnpm@9.7.1",
@@ -11,7 +11,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "hono": "catalog:"
+    "@hono/zod-openapi": "catalog:",
+    "@octokit/core": "catalog:",
+    "@octokit/graphql": "catalog:",
+    "@octokit/plugin-paginate-rest": "catalog:",
+    "@scalar/hono-api-reference": "catalog:",
+    "github-schema": "catalog:",
+    "hono": "catalog:",
+    "semver": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",

@@ -1,4 +1,4 @@
-# assets.worker
+# assets
 
 A simple cloudflare worker that proxies requests to my assets stored on GitHub.
 
