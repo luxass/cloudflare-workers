@@ -1,8 +1,5 @@
 import type { FontWeight } from "satori";
 import { z } from "zod";
-// import * as Og from "workers-og";
-import { type HonoElement, toReactNode } from "hono-jsx-to-react";
-// import type { ImageResponseOptions } from "workers-og/dist/types";
 
 type Primitives = string | number | boolean | null;
 type JsonValue = Primitives | JsonValue[] | { [key: string]: JsonValue };
@@ -61,23 +58,9 @@ export interface FontOptions {
 export async function font({ family, weight, text }: FontOptions & {
   HOST?: string;
 }) {
-  // eslint-disable-next-line no-console
-  console.info({
-    family,
-    weight,
-    text,
-  });
   const res = await fetch(
     `https://assets.luxass.dev/api/fonts/${family}/${weight}${text ? `?text=${text}` : ""}`,
   );
 
   return await res.arrayBuffer();
 }
-// export class ImageResponse extends Og.ImageResponse {
-//   constructor(element: HonoElement, options?: ImageResponseOptions) {
-//     super(toReactNode(element), {
-//       format: "png",
-//       ...options,
-//     });
-//   }
-// }
