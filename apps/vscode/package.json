@@ -2,7 +2,7 @@
   "name": "vscode",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@9.7.1",
+  "packageManager": "pnpm@9.9.0",
   "scripts": {
     "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run --outdir=dist",

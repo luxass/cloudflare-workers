@@ -10,11 +10,11 @@ catalogs:
       specifier: ^0.4.29
       version: 0.4.29
     '@cloudflare/workers-types':
-      specifier: ^4.20240815.0
+      specifier: ^4.20240903.0
       version: 4.20240903.0
     '@hono/zod-openapi':
-      specifier: ^0.15.3
-      version: 0.15.3
+      specifier: ^0.16.0
+      version: 0.16.0
     '@luxass/eslint-config':
       specifier: ^4.11.0
       version: 4.11.0
@@ -28,13 +28,13 @@ catalogs:
       specifier: ^11.3.3
       version: 11.3.3
     '@scalar/hono-api-reference':
-      specifier: ^0.5.140
+      specifier: ^0.5.144
       version: 0.5.144
     '@types/semver':
       specifier: ^7.5.8
       version: 7.5.8
     eslint:
-      specifier: ^9.9.0
+      specifier: ^9.10.0
       version: 9.10.0
     eslint-plugin-format:
       specifier: ^0.1.2
@@ -43,7 +43,7 @@ catalogs:
       specifier: ^1.10.5
       version: 1.10.5
     hono:
-      specifier: ^4.5.5
+      specifier: ^4.5.11
       version: 4.5.11
     semver:
       specifier: ^7.6.3
@@ -55,7 +55,7 @@ catalogs:
       specifier: 1.5.0
       version: 1.5.0
     wrangler:
-      specifier: ^3.72.0
+      specifier: ^3.75.0
       version: 3.75.0
     zod:
       specifier: ^3.23.8
@@ -159,7 +159,7 @@ importers:
     dependencies:
       '@hono/zod-openapi':
         specifier: 'catalog:'
-        version: 0.15.3(hono@4.5.11)(zod@3.23.8)
+        version: 0.16.0(hono@4.5.11)(zod@3.23.8)
       '@octokit/core':
         specifier: 'catalog:'
         version: 6.1.2
@@ -211,7 +211,7 @@ importers:
     dependencies:
       '@hono/zod-openapi':
         specifier: 'catalog:'
-        version: 0.15.3(hono@4.5.11)(zod@3.23.8)
+        version: 0.16.0(hono@4.5.11)(zod@3.23.8)
       '@octokit/core':
         specifier: 'catalog:'
         version: 6.1.2
@@ -693,8 +693,8 @@ packages:
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
 
-  '@hono/zod-openapi@0.15.3':
-    resolution: {integrity: sha512-9oc4Bbs+L5oGjUOCrApCrx8BSWa5ctOBjRcwxplxkWPYFPhyOhdkMg47QKenGkESfFz0K6zb4F/c0LGPEmR62g==}
+  '@hono/zod-openapi@0.16.0':
+    resolution: {integrity: sha512-jTnccfMTxDmA50FZeyTDD5oNDpcYo0qPzugwMuinnEQRYHLEqOXLv+sP89KNZWCGcL3Ccl+cr5GGE4yxenozqw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       hono: '>=4.3.6'
@@ -2875,7 +2875,7 @@ snapshots:
 
   '@fastify/busboy@2.1.1': {}
 
-  '@hono/zod-openapi@0.15.3(hono@4.5.11)(zod@3.23.8)':
+  '@hono/zod-openapi@0.16.0(hono@4.5.11)(zod@3.23.8)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 7.1.1(zod@3.23.8)
       '@hono/zod-validator': 0.2.2(hono@4.5.11)(zod@3.23.8)
