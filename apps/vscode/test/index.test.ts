@@ -211,26 +211,29 @@ describe("caching", () => {
 
   it("serve response from cache", async () => {
     let idx = 0;
-    vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
-      const request = new Request(input, init);
-      const url = new URL(request.url);
+    vi.spyOn(globalThis, "fetch").mockImplementation(
+      // @ts-expect-error - this works, but types broken
+      async (input, init) => {
+        const request = new Request(input, init);
+        const url = new URL(request.url);
 
-      if (
-        (request.method === "GET"
-        && url.origin === "https://api.github.com"
-        && url.pathname === "/repos/microsoft/vscode/releases") && idx === 0
-      ) {
-        idx++;
-        // fetch the actual request
-        return originalFetch(input, init);
-      }
+        if (
+          (request.method === "GET"
+          && url.origin === "https://api.github.com"
+          && url.pathname === "/repos/microsoft/vscode/releases") && idx === 0
+        ) {
+          idx++;
+          // fetch the actual request
+          return originalFetch(input, init);
+        }
 
-      return new Response(JSON.stringify([]), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    });
+        return new Response(JSON.stringify([]), {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      },
+    );
 
     const request = new Request("https://luxass.dev/releases");
     const cache = await caches.open("vscode");
@@ -262,27 +265,30 @@ describe("caching", () => {
   });
 
   it("skip caching for failed requests", async () => {
-    vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
-      const request = new Request(input, init);
-      const url = new URL(request.url);
+    vi.spyOn(globalThis, "fetch").mockImplementation(
+      // @ts-expect-error - this works, but types broken
+      async (input, init) => {
+        const request = new Request(input, init);
+        const url = new URL(request.url);
 
-      if (
-        (request.method === "GET"
-        && url.origin === "https://api.github.com"
-        && url.pathname === "/repos/microsoft/vscode/releases")
-      ) {
-        return new Response("Internal Server Error", {
-          status: 500,
-          statusText: "Internal Server Error",
+        if (
+          (request.method === "GET"
+          && url.origin === "https://api.github.com"
+          && url.pathname === "/repos/microsoft/vscode/releases")
+        ) {
+          return new Response("Internal Server Error", {
+            status: 500,
+            statusText: "Internal Server Error",
+          });
+        }
+
+        return new Response(JSON.stringify([]), {
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
-      }
-
-      return new Response(JSON.stringify([]), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    });
+      },
+    );
 
     const request = new Request("https://luxass.dev/releases");
     const cache = await caches.open("vscode");
