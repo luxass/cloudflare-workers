@@ -18,6 +18,8 @@ export interface HonoContext {
   };
 }
 
+export type HonoBindings = HonoContext["Bindings"];
+
 const app = new OpenAPIHono<HonoContext>();
 
 app.get("/view-source", (c) => {

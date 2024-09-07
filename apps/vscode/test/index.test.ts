@@ -303,7 +303,7 @@ describe("caching", () => {
   });
 });
 
-describe.only("builtin extensions", () => {
+describe("builtin extensions", () => {
   it("respond with all builtin extensions", async () => {
     const request = new Request("https://luxass.dev/builtin-extensions");
     const cache = await caches.open("vscode");
