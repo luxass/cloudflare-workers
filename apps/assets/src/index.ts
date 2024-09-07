@@ -108,7 +108,10 @@ app.get("*", async (c) => {
     return c.notFound();
   }
 
-  return res;
+  const arrayBuffer = await res.arrayBuffer();
+  const body = new Uint8Array(arrayBuffer);
+
+  return new Response(body, res);
 });
 
 app.onError(async (err, c) => {
