@@ -1,0 +1,50 @@
+name: deploy image.worker to production
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Run the workflow without creating a deployment
+        required: false
+        default: "false"
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/image.worker/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'luxass'
+    steps:
+      - uses: actions/checkout@v4.1.7
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: setup node
+        uses: actions/setup-node@v4.0.3
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: build
+        run: pnpm build:image
+
+      - name: lint
+        run: pnpm --filter "image.worker" run lint
+
+      - name: typecheck
+        run: pnpm --filter "image.worker" run typecheck
+
+      - name: deploy
+        if: ${{ github.event.inputs.dry-run != 'true' }}
+        uses: cloudflare/wrangler-action@v3.7.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: ./apps/image.worker
+          environment: production
