@@ -22,6 +22,7 @@
     "eslint": "catalog:",
     "eslint-plugin-format": "catalog:",
     "typescript": "catalog:",
+    "vitest": "^2.0.5",
     "wrangler": "catalog:"
   }
 }
