@@ -2,7 +2,8 @@ import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
 import type { HonoContext } from "../types";
-import { ImageResponse, font } from "../utils";
+import { font } from "../utils";
+import { ImageResponse } from "../image-response";
 
 export const emojiRouter = new Hono<HonoContext>();
 
@@ -64,6 +65,7 @@ emojiRouter.get(
         width,
         height,
         emoji: "twemoji",
+        debug: true,
         fonts: [
           {
             name: "Inter",

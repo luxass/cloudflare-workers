@@ -99,15 +99,21 @@ importers:
 
   apps/image.worker:
     dependencies:
+      '@resvg/resvg-wasm':
+        specifier: 2.4.1
+        version: 2.4.1
       hono:
         specifier: 'catalog:'
         version: 4.5.5
       hono-jsx-to-react:
         specifier: ^0.1.0
         version: 0.1.0(hono@4.5.5)
-      workers-og:
-        specifier: ^0.0.24
-        version: 0.0.24
+      satori:
+        specifier: ^0.10.14
+        version: 0.10.14
+      yoga-wasm-web:
+        specifier: ^0.3.3
+        version: 0.3.3
       zod:
         specifier: 'catalog:'
         version: 3.23.8
@@ -121,9 +127,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 9.9.0(jiti@1.21.6)
-      satori:
-        specifier: ^0.10.14
-        version: 0.10.14
       typescript:
         specifier: 'catalog:'
         version: 5.5.4
@@ -625,8 +628,8 @@ packages:
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@resvg/resvg-wasm@2.6.2':
-    resolution: {integrity: sha512-FqALmHI8D4o6lk/LRWDnhw95z5eO+eAa6ORjVg09YRR7BkcM6oPHU9uyC0gtQG5vpFLvgpeU4+zEAz2H8APHNw==}
+  '@resvg/resvg-wasm@2.4.1':
+    resolution: {integrity: sha512-yi6R0HyHtsoWTRA06Col4WoDs7SvlXU3DLMNP2bdAgs7HK18dTEVl1weXgxRzi8gwLteGUbIg29zulxIB3GSdg==}
     engines: {node: '>= 10'}
 
   '@scalar/hono-api-reference@0.5.140':
@@ -1508,9 +1511,6 @@ packages:
     resolution: {integrity: sha512-WYDyuc/uFcGp6YtM2H0uKmUwieOuzeE/5YocFJLnLfclZ4inf3mRn8ZVy1s7Hxji7Jxm6Ss8gqpexD/GlKoGgg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  just-camel-case@6.2.0:
-    resolution: {integrity: sha512-ICenRLXwkQYLk3UyvLQZ+uKuwFVJ3JHFYFn7F2782G2Mv2hW8WPePqgdhpnjGaqkYtSVWnyCESZhGXUmY3/bEg==}
-
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
@@ -2035,9 +2035,6 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  workers-og@0.0.24:
-    resolution: {integrity: sha512-vMc0tXYI5qkqsy+eA13iyQBMegj9JBJD26Kc4nZJF51uAahmN+4MUItgPuNohoBFBFJpVBR9HfiyzCkPqs3YIQ==}
-
   wrangler@3.72.0:
     resolution: {integrity: sha512-9sryHTCtCj48vUC5y/M3Dsx02U1bT6mK9E41TXBCpSJgWh8UvWG/xgmu2dY93Mqj9aJIvK/kwwIBRlNFRwF7Hw==}
     engines: {node: '>=16.17.0'}
@@ -2424,7 +2421,7 @@ snapshots:
 
   '@pkgr/core@0.1.1': {}
 
-  '@resvg/resvg-wasm@2.6.2': {}
+  '@resvg/resvg-wasm@2.4.1': {}
 
   '@scalar/hono-api-reference@0.5.140(hono@4.5.5)':
     dependencies:
@@ -3414,8 +3411,6 @@ snapshots:
       espree: 9.6.1
       semver: 7.6.3
 
-  just-camel-case@6.2.0: {}
-
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
@@ -3944,13 +3939,6 @@ snapshots:
       '@cloudflare/workerd-linux-64': 1.20240806.0
       '@cloudflare/workerd-linux-arm64': 1.20240806.0
       '@cloudflare/workerd-windows-64': 1.20240806.0
-
-  workers-og@0.0.24:
-    dependencies:
-      '@resvg/resvg-wasm': 2.6.2
-      just-camel-case: 6.2.0
-      satori: 0.10.14
-      yoga-wasm-web: 0.3.3
 
   wrangler@3.72.0(@cloudflare/workers-types@4.20240815.0):
     dependencies:

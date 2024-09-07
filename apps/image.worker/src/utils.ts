@@ -1,9 +1,8 @@
 import type { FontWeight } from "satori";
 import { z } from "zod";
-
-import * as Og from "workers-og";
+// import * as Og from "workers-og";
 import { type HonoElement, toReactNode } from "hono-jsx-to-react";
-import type { ImageResponseOptions } from "workers-og/dist/types";
+// import type { ImageResponseOptions } from "workers-og/dist/types";
 
 type Primitives = string | number | boolean | null;
 type JsonValue = Primitives | JsonValue[] | { [key: string]: JsonValue };
@@ -62,7 +61,8 @@ export interface FontOptions {
 export async function font({ family, weight, text }: FontOptions & {
   HOST?: string;
 }) {
-  console.error({
+  // eslint-disable-next-line no-console
+  console.info({
     family,
     weight,
     text,
@@ -73,11 +73,11 @@ export async function font({ family, weight, text }: FontOptions & {
 
   return await res.arrayBuffer();
 }
-export class ImageResponse extends Og.ImageResponse {
-  constructor(element: HonoElement, options?: ImageResponseOptions) {
-    super(toReactNode(element), {
-      format: "svg",
-      ...options,
-    });
-  }
-}
+// export class ImageResponse extends Og.ImageResponse {
+//   constructor(element: HonoElement, options?: ImageResponseOptions) {
+//     super(toReactNode(element), {
+//       format: "png",
+//       ...options,
+//     });
+//   }
+// }
