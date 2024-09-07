@@ -15,35 +15,42 @@ const apis = {
 
 export type EmojiType = keyof typeof apis;
 
-const n = String.fromCharCode(8205);
-const O = /\uFE0F/g;
+const ZERO_WITH_JOINER = String.fromCharCode(8205);
+const VARIATION_SELECTOR_REGEX = /\uFE0F/g;
 
 export function loadEmoji(
   code: string,
   type?: EmojiType,
 ): Promise<Response> {
-  (!type || !apis[type]) && (type = "twemoji");
-  const A = apis[type];
+  if (!type || !apis[type]) {
+    type = "twemoji";
+  }
+
+  const api = apis[type];
   return fetch(
-    typeof A == "function" ? A(code) : `${A}${code.toUpperCase()}.svg`,
+    typeof api == "function" ? api(code) : `${api}${code.toUpperCase()}.svg`,
   );
 }
 
 export function getIconCode(char: string): string {
-  return d(!char.includes(n) ? char.replace(O, "") : char);
+  return convertToHexCodePoints(!char.includes(ZERO_WITH_JOINER) ? char.replace(VARIATION_SELECTOR_REGEX, "") : char);
 }
 
-function d(j: string) {
+function convertToHexCodePoints(j: string) {
   const t = [];
-  let A = 0; let k = 0;
+  let A = 0;
+  let k = 0;
   for (let E = 0; E < j.length;) {
-    A = j.charCodeAt(E++),
-    k
-      ? (t.push((65536 + (k - 55296 << 10) + (A - 56320)).toString(16)),
-        k = 0)
-      : A >= 55296 && A <= 56319
-        ? k = A
-        : t.push(A.toString(16));
+    A = j.charCodeAt(E++);
+
+    if (k) {
+      t.push((65536 + (k - 55296 << 10) + (A - 56320)).toString(16));
+      k = 0;
+    } else if (A >= 55296 && A <= 56319) {
+      k = A;
+    } else {
+      t.push(A.toString(16));
+    }
   }
   return t.join("-");
 }
