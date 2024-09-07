@@ -2,16 +2,16 @@
 
 "worker: assets":
   - changed-files:
-      - any-glob-to-any-file: apps/assets.worker/**
+      - any-glob-to-any-file: apps/assets/**
 
 "worker: mosaic":
   - changed-files:
-      - any-glob-to-any-file: apps/mosaic.worker/**
+      - any-glob-to-any-file: apps/mosaic/**
 
 "worker: vscode":
   - changed-files:
-      - any-glob-to-any-file: apps/vscode.worker/**
+      - any-glob-to-any-file: apps/vscode/**
 
 "worker: image":
   - changed-files:
-      - any-glob-to-any-file: apps/image.worker/**
+      - any-glob-to-any-file: apps/image/**
