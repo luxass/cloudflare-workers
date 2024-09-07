@@ -16,6 +16,10 @@ export const BUILTIN_EXTENSIONS_ROUTER = new OpenAPIHono<BuiltinExtensionHonoCon
 BUILTIN_EXTENSIONS_ROUTER.openapi(ALL_BUILTIN_EXTENSIONS_ROUTE, async (c) => {
   const octokit = c.get("octokit");
 
+  if (octokit == null) {
+    return createError(c, 500, "could not get query github");
+  }
+
   const {
     repository: {
       object: files,
@@ -47,6 +51,11 @@ BUILTIN_EXTENSIONS_ROUTER.openapi(ALL_BUILTIN_EXTENSIONS_ROUTE, async (c) => {
 
 BUILTIN_EXTENSIONS_ROUTER.use("/:ext/*", async (c, next) => {
   const octokit = c.get("octokit");
+
+  if (octokit == null) {
+    return createError(c, 500, "could not get query github");
+  }
+
   const params = c.req.param();
   if (!params || !params.ext) {
     return createError(c, 400, "No extension name provided");
@@ -60,7 +69,7 @@ BUILTIN_EXTENSIONS_ROUTER.use("/:ext/*", async (c, next) => {
   );
 
   if (!files || !("entries" in files) || !files.entries) {
-    return createError(c, 404, `No files found for ${extName}`);
+    return createError(c, 404, `No builtin extensions found for ${extName}`);
   }
 
   const pkgEntry = files.entries.find((entry) => entry.name === "package.json");
@@ -115,6 +124,10 @@ BUILTIN_EXTENSIONS_ROUTER.use("/:ext/*", async (c, next) => {
 BUILTIN_EXTENSIONS_ROUTER.openapi(BUILTIN_EXTENSION_ROUTE, async (c) => {
   const octokit = c.get("octokit");
 
+  if (octokit == null) {
+    return createError(c, 500, "could not get query github");
+  }
+
   const extName = c.req.param("ext");
   if (!extName) {
     return createError(c, 400, "No extension name provided");
@@ -166,7 +179,7 @@ BUILTIN_EXTENSIONS_ROUTER.openapi(BUILTIN_EXTENSION_ROUTE, async (c) => {
 
   let result = pkgJSON;
 
-  const shouldTranslate = c.req.query("translate") === "true";
+  const shouldTranslate = c.req.query("translate") === "true" || c.req.query("translate") === "";
 
   if (shouldTranslate) {
     const pkgNLSEntry = files.entries.find((entry) => entry.name === "package.nls.json");
@@ -205,6 +218,11 @@ BUILTIN_EXTENSIONS_ROUTER.openapi(BUILTIN_EXTENSION_CONTRIBUTES_ROUTE, async (c)
     return createError(c, 404, "No builtin extension found");
   }
 
+  // check if the extension has a contributes field
+  if (!("contributes" in ext)) {
+    return createError(c, 404, "No contributes found for builtin extension");
+  }
+
   return c.json(ext.contributes as never, 200);
 });
 
@@ -215,16 +233,19 @@ BUILTIN_EXTENSIONS_ROUTER.openapi(BUILTIN_EXTENSION_CONFIGURATION_ROUTE, async (
     return createError(c, 400, "No extension name provided");
   }
 
-  if (
-    !ext
-    || !("contributes" in ext)
-    || !ext.contributes
-    || typeof ext.contributes !== "object"
-    || !("configuration" in ext.contributes)
-    || !ext.contributes.configuration
-  ) {
+  if (!ext) {
     return createError(c, 404, "No builtin extension found");
   }
 
-  return c.json(ext.contributes.configuration as never, 200);
+  // check if the extension has a contributes field
+  if (!("contributes" in ext)) {
+    return createError(c, 404, "No contributes found for builtin extension");
+  }
+
+  // check if the extension has a configuration field
+  if (typeof ext.contributes === "object" && ext.contributes != null && !("configuration" in ext.contributes)) {
+    return createError(c, 404, "No configuration found for builtin extension");
+  }
+
+  return c.json((ext.contributes as any).configuration as never, 200);
 });

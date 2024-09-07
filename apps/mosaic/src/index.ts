@@ -324,7 +324,7 @@ app.onError(async (err, c) => {
       status: err.status,
       message: err.message,
       timestamp: new Date().toISOString(),
-    });
+    }, err.status);
   }
 
   return c.json({
@@ -332,7 +332,7 @@ app.onError(async (err, c) => {
     status: 500,
     message: "Internal server error",
     timestamp: new Date().toISOString(),
-  });
+  }, 500);
 });
 
 app.notFound(async (c) => {
@@ -342,7 +342,7 @@ app.notFound(async (c) => {
     status: 404,
     message: "Not found",
     timestamp: new Date().toISOString(),
-  });
+  }, 404);
 });
 
 export default {

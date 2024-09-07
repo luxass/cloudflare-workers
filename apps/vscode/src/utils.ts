@@ -69,6 +69,10 @@ export function translate<T>(originalObject: T, translationValues: any): T {
         translatedObject[key] = value;
       }
     } else if (typeof value === "object") {
+      if (Array.isArray(value)) {
+        translatedObject[key] = value.map((v) => translate(v, translationValues));
+        continue;
+      }
       translatedObject[key] = translate(value, translationValues);
     } else {
       translatedObject[key] = value;
@@ -132,7 +136,9 @@ export async function getBuiltinExtensionFiles(
 }
 
 export function createError<TCtx extends Context, TStatus extends StatusCode>(ctx: TCtx, status: TStatus, message: string) {
+  const url = new URL(ctx.req.url);
   return ctx.json({
+    path: url.pathname,
     message,
     status,
     timestamp: new Date().toISOString(),

@@ -13,6 +13,10 @@ export const ReleaseSchema = z.object({
 }).openapi("Release");
 
 export const ApiErrorSchema = z.object({
+  path: z.string().openapi({
+    description: "The URL of the request",
+  }),
+
   message: z.string().openapi({
     description: "The error message",
   }),

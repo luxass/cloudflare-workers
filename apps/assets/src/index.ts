@@ -33,7 +33,7 @@ app.get(
       console.info("serving font from network");
       await next();
       if (!c.res.ok) {
-        console.error("failed to fetch font, skipping caching");
+        console.error("failed to fetch font, skipping cache");
         return;
       }
 
