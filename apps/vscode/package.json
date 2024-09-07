@@ -22,12 +22,14 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "@luxass/eslint-config": "catalog:",
     "@types/semver": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-format": "catalog:",
     "typescript": "catalog:",
+    "vitest": "catalog:",
     "wrangler": "catalog:"
   }
 }

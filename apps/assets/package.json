@@ -16,7 +16,7 @@
     "hono": "catalog:"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.4.29",
+    "@cloudflare/vitest-pool-workers": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "@luxass/eslint-config": "catalog:",
     "eslint": "catalog:",
