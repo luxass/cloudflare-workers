@@ -16,6 +16,6 @@ routes = [
 name = "image"
 vars = { ENVIRONMENT = "production" }
 routes = [
-  { pattern = "v2.image.luxass.dev", custom_domain = true },
-  { pattern = "v2.image.luxass.com", custom_domain = true },
+  { pattern = "image.luxass.dev", custom_domain = true },
+  { pattern = "image.luxass.com", custom_domain = true },
 ]
