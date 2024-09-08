@@ -1,4 +1,4 @@
-import { gql } from "github-schema";
+import { gql } from "github-schema/raw";
 
 export const REPOSITORY_FRAGMENT = gql`
 #graphql
