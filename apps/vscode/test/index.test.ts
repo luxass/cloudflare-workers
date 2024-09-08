@@ -1,10 +1,9 @@
 import {
   createExecutionContext,
   env,
-  fetchMock,
   waitOnExecutionContext,
 } from "cloudflare:test";
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import worker from "../src";
 import type { HonoBindings } from "../src/types";
 
