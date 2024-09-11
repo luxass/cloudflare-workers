@@ -1,9 +1,9 @@
+import { createCacheMiddleware, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { graphql } from "@octokit/graphql";
 import { apiReference } from "@scalar/hono-api-reference";
 import type { Repository, User } from "github-schema";
 import { HTTPException } from "hono/http-exception";
-import { logger } from "hono/logger";
 import { PROFILE_QUERY } from "./graphql-queries";
 import { REPOSITORIES_ROUTE, REPOSITORY_ID_CONFIG_ROUTE, REPOSITORY_ID_ROUTE } from "./openapi";
 
@@ -19,14 +19,9 @@ export type HonoBindings = HonoContext["Bindings"];
 
 const app = new OpenAPIHono<HonoContext>();
 
-app.get("/view-source", (c) => {
-  return c.redirect("https://github.com/luxass/cloudflare-workers/tree/main/apps/mosaic", 301);
-});
-
-app.get("/ping", (c) => {
-  c.status(418);
-  return c.text("pong!");
-});
+app.get("*", createCacheMiddleware("mosaic"));
+app.get("/view-source", createViewSourceRedirect("mosaic"));
+app.get("/ping", createPingPongRoute());
 
 app.get(
   "/scalar",
@@ -72,34 +67,6 @@ app.doc("/openapi.json", (c) => {
     ],
   };
 });
-
-app.use("*", logger());
-
-app.get(
-  "*",
-  async (c, next) => {
-    if (c.env.ENVIRONMENT !== "production" && c.env.ENVIRONMENT !== "preview") {
-      return await next();
-    }
-    const key = c.req.url;
-    const cache = await caches.open("mosaic");
-
-    const response = await cache.match(key);
-    if (!response) {
-      await next();
-      if (!c.res.ok) {
-        return;
-      }
-
-      c.res.headers.set("Cache-Control", "public, max-age=3600");
-
-      const response = c.res.clone();
-      c.executionCtx.waitUntil(cache.put(key, response));
-    } else {
-      return new Response(response.body, response);
-    }
-  },
-);
 
 app.openapi(REPOSITORIES_ROUTE, async (c) => {
   const { results } = await c.env.DATABASE.prepare(
