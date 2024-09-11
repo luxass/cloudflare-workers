@@ -1,6 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { createError } from "@cf-workers/helpers";
 import type { HonoContext, Repository } from "../types";
-import { BUILTIN_QUERY, base64ToRawText, createError, getBuiltinExtensionFiles, translate } from "../utils";
+import { BUILTIN_QUERY, base64ToRawText, getBuiltinExtensionFiles, translate } from "../utils";
 import { BuiltinExtensionSchema } from "../schemas";
 import { ALL_BUILTIN_EXTENSIONS_ROUTE, BUILTIN_EXTENSION_CONFIGURATION_ROUTE, BUILTIN_EXTENSION_CONTRIBUTES_ROUTE, BUILTIN_EXTENSION_ROUTE } from "./builtin-extensions.openapi";
 
