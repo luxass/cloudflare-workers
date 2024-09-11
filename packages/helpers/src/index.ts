@@ -39,3 +39,15 @@ export function createCacheMiddleware<TEnv extends Env>(cacheName: string) {
     }
   });
 }
+
+export function createViewSourceRedirect(workerName: string) {
+  return (c: Context) => {
+    return c.redirect(`https://github.com/luxass/cloudflare-workers/tree/main/apps/${workerName}`, 301);
+  };
+}
+
+export function createPingPongRoute() {
+  return (c: Context) => {
+    return c.text("pong!", 418);
+  };
+}
