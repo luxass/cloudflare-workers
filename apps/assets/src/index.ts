@@ -1,3 +1,4 @@
+import { createCacheMiddleware, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 
@@ -9,45 +10,9 @@ export interface HonoContext {
 
 const app = new Hono<HonoContext>();
 
-app.get("/view-source", (c) => {
-  return c.redirect("https://github.com/luxass/cloudflare-workers/tree/main/apps/assets", 301);
-});
-
-app.get("/ping", (c) => {
-  c.status(418);
-  return c.text("pong!");
-});
-
-app.get(
-  "/api/fonts/*",
-  async (c, next) => {
-    if (c.env.ENVIRONMENT !== "production" && c.env.ENVIRONMENT !== "preview") {
-      return await next();
-    }
-    const key = c.req.url;
-    const cache = await caches.open("fonts");
-
-    const response = await cache.match(key);
-    if (!response) {
-      // eslint-disable-next-line no-console
-      console.info("serving font from network");
-      await next();
-      if (!c.res.ok) {
-        console.error("failed to fetch font, skipping cache");
-        return;
-      }
-
-      c.res.headers.set("Cache-Control", "public, max-age=3600");
-
-      const response = c.res.clone();
-      c.executionCtx.waitUntil(cache.put(key, response));
-    } else {
-      // eslint-disable-next-line no-console
-      console.info("serving font from cache");
-      return new Response(response.body, response);
-    }
-  },
-);
+app.get("/view-source", createViewSourceRedirect("assets"));
+app.get("/ping", createPingPongRoute());
+app.get("/api/fonts/*", createCacheMiddleware("fonts"));
 
 app.get("/api/fonts/:family/:weight/:text?", async (c) => {
   const url = new URL(c.req.url);

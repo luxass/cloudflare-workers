@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
+import { createCacheMiddleware, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
 import type { HonoContext } from "./types";
 import { textImageRouter } from "./routes/text";
 import { emojiRouter } from "./routes/emoji";
@@ -8,45 +9,9 @@ import { projectImageRouter } from "./routes/project";
 
 const app = new Hono<HonoContext>();
 
-app.get("/view-source", (c) => {
-  return c.redirect("https://github.com/luxass/cloudflare-workers/tree/main/apps/image", 301);
-});
-
-app.get("/ping", (c) => {
-  c.status(418);
-  return c.text("pong!");
-});
-
-app.get(
-  "/api/image/*",
-  async (c, next) => {
-    if (c.env.ENVIRONMENT !== "production" && c.env.ENVIRONMENT !== "preview") {
-      return await next();
-    }
-    const key = c.req.url;
-    const cache = await caches.open("og-images");
-
-    const response = await cache.match(key);
-    if (!response) {
-      // eslint-disable-next-line no-console
-      console.info("serving image from network");
-      await next();
-      if (!c.res.ok) {
-        console.error("failed to fetch image, skipping caching");
-        return;
-      }
-
-      c.res.headers.set("Cache-Control", "public, max-age=3600");
-
-      const response = c.res.clone();
-      c.executionCtx.waitUntil(cache.put(key, response));
-    } else {
-      // eslint-disable-next-line no-console
-      console.info("serving image from cache");
-      return new Response(response.body, response);
-    }
-  },
-);
+app.get("/view-source", createViewSourceRedirect("image"));
+app.get("/ping", createPingPongRoute());
+app.get("/api/image/*", createCacheMiddleware("og-images"));
 
 app.route("/api/image/text", textImageRouter);
 app.route("/api/image/emoji", emojiRouter);
