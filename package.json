@@ -17,7 +17,7 @@
     "dev:mosaic": "pnpm --filter mosaic dev",
     "dev:image": "pnpm --filter image dev",
     "lint": "eslint .",
-    "typecheck": "pnpm -r tsc --noEmit"
+    "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {
     "@luxass/eslint-config": "catalog:",
