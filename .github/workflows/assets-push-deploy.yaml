@@ -41,6 +41,9 @@ jobs:
       - name: typecheck
         run: pnpm --filter "assets" run typecheck
 
+      - name: test
+        run: pnpm --filter "assets" run test
+
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.7.0

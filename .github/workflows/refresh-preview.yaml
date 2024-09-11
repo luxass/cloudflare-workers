@@ -40,6 +40,9 @@ jobs:
       - name: typecheck
         run: pnpm --filter "${{ github.event.inputs.app }}" run typecheck
 
+      - name: test
+        run: pnpm --filter "${{ github.event.inputs.app }}" run test
+
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.7.0

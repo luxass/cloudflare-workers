@@ -42,6 +42,11 @@ jobs:
       - name: typecheck
         run: pnpm --filter "vscode" run typecheck
 
+      - name: test
+        run: pnpm --filter "vscode" run test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.7.0

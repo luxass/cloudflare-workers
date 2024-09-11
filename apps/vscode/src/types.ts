@@ -24,8 +24,10 @@ export interface HonoContext {
     ENVIRONMENT: string;
   };
   Variables: {
-    octokit: $$Octokit;
+    octokit?: $$Octokit;
   };
 }
+
+export type HonoBindings = HonoContext["Bindings"];
 
 export type $$Octokit = InstanceType<typeof $Octokit>;

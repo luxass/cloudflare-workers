@@ -33,7 +33,7 @@ app.get(
       console.info("serving font from network");
       await next();
       if (!c.res.ok) {
-        console.error("failed to fetch font, skipping caching");
+        console.error("failed to fetch font, skipping cache");
         return;
       }
 
@@ -94,7 +94,7 @@ app.get("/api/fonts/:family/:weight/:text?", async (c) => {
   return response;
 });
 
-app.use(async (c) => {
+app.get("*", async (c) => {
   const url = new URL(c.req.url);
 
   if (url.pathname === "/") {
@@ -102,7 +102,16 @@ app.use(async (c) => {
   }
 
   const branch = url.searchParams.get("branch") || "main";
-  return fetch(`https://raw.githubusercontent.com/luxass/assets/${branch}/${url.pathname}`);
+  const res = await fetch(`https://raw.githubusercontent.com/luxass/assets/${branch}/${url.pathname}`);
+
+  if (!res.ok) {
+    return c.notFound();
+  }
+
+  const arrayBuffer = await res.arrayBuffer();
+  const body = new Uint8Array(arrayBuffer);
+
+  return new Response(body, res);
 });
 
 app.onError(async (err, c) => {
@@ -114,7 +123,7 @@ app.onError(async (err, c) => {
       status: err.status,
       message: err.message,
       timestamp: new Date().toISOString(),
-    });
+    }, err.status);
   }
 
   return c.json({
@@ -122,7 +131,7 @@ app.onError(async (err, c) => {
     status: 500,
     message: "Internal server error",
     timestamp: new Date().toISOString(),
-  });
+  }, 500);
 });
 
 app.notFound(async (c) => {
@@ -132,7 +141,7 @@ app.notFound(async (c) => {
     status: 404,
     message: "Not found",
     timestamp: new Date().toISOString(),
-  });
+  }, 404);
 });
 
 export default app;

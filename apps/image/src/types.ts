@@ -8,6 +8,8 @@ export interface HonoContext {
   };
 }
 
+export type HonoBindings = HonoContext["Bindings"];
+
 export type ImageResponseOptions = ConstructorParameters<typeof Response>[1] & {
   /**
    * The width of the image.
