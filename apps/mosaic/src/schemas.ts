@@ -24,21 +24,3 @@ export const MosaicRepositorySchema = z.object({
   }),
   config: MosaicConfigSchema,
 }).openapi("MosaicRepository");
-
-export const ApiErrorSchema = z.object({
-  message: z.string().openapi({
-    description: "The error message",
-  }),
-
-  status: z.number().openapi({
-    description: "The HTTP status code",
-  }),
-
-  timestamp: z.string().openapi({
-    description: "The timestamp of the error",
-  }),
-}).openapi("ApiError", {
-  description: "An error response",
-});
-
-export type ApiError = z.infer<typeof ApiErrorSchema>;

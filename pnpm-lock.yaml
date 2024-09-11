@@ -151,6 +151,9 @@ importers:
 
   apps/mosaic:
     dependencies:
+      '@cf-workers/helpers':
+        specifier: workspace:*
+        version: link:../../packages/helpers
       '@hono/zod-openapi':
         specifier: 'catalog:'
         version: 0.16.0(hono@4.5.11)(zod@3.23.8)
@@ -255,6 +258,46 @@ importers:
       wrangler:
         specifier: 'catalog:'
         version: 3.75.0(@cloudflare/workers-types@4.20240903.0)
+
+  packages/helpers:
+    dependencies:
+      '@hono/zod-openapi':
+        specifier: 'catalog:'
+        version: 0.16.0(hono@4.5.11)(zod@3.23.8)
+      '@octokit/core':
+        specifier: 'catalog:'
+        version: 6.1.2
+      '@octokit/plugin-paginate-rest':
+        specifier: 'catalog:'
+        version: 11.3.3(@octokit/core@6.1.2)
+      '@scalar/hono-api-reference':
+        specifier: 'catalog:'
+        version: 0.5.144(hono@4.5.11)
+      github-schema:
+        specifier: 'catalog:'
+        version: 1.10.5
+      hono:
+        specifier: 'catalog:'
+        version: 4.5.11
+      zod:
+        specifier: 'catalog:'
+        version: 3.23.8
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 'catalog:'
+        version: 4.20240903.0
+      '@luxass/eslint-config':
+        specifier: 'catalog:'
+        version: 4.11.0(@typescript-eslint/utils@8.4.0(eslint@9.10.0)(typescript@5.5.4))(@vue/compiler-sfc@3.5.3)(eslint-plugin-format@0.1.2(eslint@9.10.0))(eslint@9.10.0)(typescript@5.5.4)(vitest@1.5.0(@types/node@22.5.4))
+      eslint:
+        specifier: 'catalog:'
+        version: 9.10.0
+      eslint-plugin-format:
+        specifier: 'catalog:'
+        version: 0.1.2(eslint@9.10.0)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.5.4
 
 packages:
 

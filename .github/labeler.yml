@@ -15,3 +15,7 @@
 "worker: image":
   - changed-files:
       - any-glob-to-any-file: apps/image/**
+
+"package: helpers":
+  - changed-files:
+      - any-glob-to-any-file: packages/helpers/**

@@ -1,6 +1,7 @@
 import { createRoute } from "@hono/zod-openapi";
 import { z } from "zod";
-import { ApiErrorSchema, MosaicRepositorySchema } from "./schemas";
+import { ApiErrorSchema } from "@cf-workers/helpers";
+import { MosaicRepositorySchema } from "./schemas";
 
 export const REPOSITORIES_ROUTE = createRoute({
   method: "get",
