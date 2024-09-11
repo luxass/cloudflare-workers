@@ -12,7 +12,7 @@ const app = new OpenAPIHono<HonoContext>();
 
 app.use("*", logger());
 
-const octokitMiddleware = createMiddleware(async (c, next) => {
+const octokitMiddleware = createMiddleware<HonoContext>(async (c, next) => {
   const octokit = new $Octokit({
     auth: c.env.GITHUB_TOKEN,
   });
@@ -22,7 +22,7 @@ const octokitMiddleware = createMiddleware(async (c, next) => {
   await next();
 });
 
-const cachingMiddleware = createMiddleware(async (c, next) => {
+const cachingMiddleware = createMiddleware<HonoContext>(async (c, next) => {
   if (c.env.ENVIRONMENT !== "production" && c.env.ENVIRONMENT !== "preview") {
     return await next();
   }
