@@ -1,14 +1,11 @@
-import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
+import { OpenAPIHono } from "@hono/zod-openapi";
 import { graphql } from "@octokit/graphql";
 import { apiReference } from "@scalar/hono-api-reference";
 import type { Repository, User } from "github-schema";
 import { HTTPException } from "hono/http-exception";
 import { logger } from "hono/logger";
 import { PROFILE_QUERY } from "./graphql-queries";
-import {
-  ApiErrorSchema,
-  MosaicRepositorySchema,
-} from "./schemas";
+import { REPOSITORIES_ROUTE, REPOSITORY_ID_CONFIG_ROUTE, REPOSITORY_ID_ROUTE } from "./openapi";
 
 export interface HonoContext {
   Bindings: {
@@ -104,30 +101,6 @@ app.get(
   },
 );
 
-const REPOSITORIES_ROUTE = createRoute({
-  method: "get",
-  path: "/repositories",
-  tags: ["Repositories"],
-  responses: {
-    200: {
-      content: {
-        "application/json": {
-          schema: z.array(MosaicRepositorySchema),
-        },
-      },
-      description: "Retrieve a list of repositories with a `mosaic` config.",
-    },
-    500: {
-      content: {
-        "application/json": {
-          schema: ApiErrorSchema,
-        },
-      },
-      description: "Internal Server Error",
-    },
-  },
-});
-
 app.openapi(REPOSITORIES_ROUTE, async (c) => {
   const { results } = await c.env.DATABASE.prepare(
     "SELECT * FROM repositories",
@@ -150,46 +123,6 @@ app.openapi(REPOSITORIES_ROUTE, async (c) => {
       config: JSON.parse(row.config),
     };
   }));
-});
-
-const REPOSITORY_ID_ROUTE = createRoute({
-  method: "get",
-  path: "/repositories/{github_id}",
-  tags: ["Repositories"],
-  responses: {
-    200: {
-      content: {
-        "application/json": {
-          schema: MosaicRepositorySchema,
-        },
-      },
-      description: "Retrieve a repository with a `mosaic` config.",
-    },
-    400: {
-      content: {
-        "application/json": {
-          schema: ApiErrorSchema,
-        },
-      },
-      description: "Bad Request",
-    },
-    404: {
-      content: {
-        "application/json": {
-          schema: ApiErrorSchema,
-        },
-      },
-      description: "Repository not found",
-    },
-    500: {
-      content: {
-        "application/json": {
-          schema: ApiErrorSchema,
-        },
-      },
-      description: "Internal Server Error",
-    },
-  },
 });
 
 app.openapi(REPOSITORY_ID_ROUTE, async (c) => {
@@ -236,46 +169,6 @@ app.openapi(REPOSITORY_ID_ROUTE, async (c) => {
       message: "Internal Server Error",
     });
   }
-});
-
-const REPOSITORY_ID_CONFIG_ROUTE = createRoute({
-  method: "get",
-  path: "/repositories/{github_id}/config",
-  tags: ["Repositories"],
-  responses: {
-    200: {
-      content: {
-        "application/json": {
-          schema: MosaicRepositorySchema,
-        },
-      },
-      description: "Retrieve a config of a repository with a `mosaic` config.",
-    },
-    400: {
-      content: {
-        "application/json": {
-          schema: ApiErrorSchema,
-        },
-      },
-      description: "Bad Request",
-    },
-    404: {
-      content: {
-        "application/json": {
-          schema: ApiErrorSchema,
-        },
-      },
-      description: "Repository not found",
-    },
-    500: {
-      content: {
-        "application/json": {
-          schema: ApiErrorSchema,
-        },
-      },
-      description: "Internal Server Error",
-    },
-  },
 });
 
 app.openapi(REPOSITORY_ID_CONFIG_ROUTE, async (c) => {
