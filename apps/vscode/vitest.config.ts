@@ -1,7 +1,12 @@
 import { defineWorkersProject } from "@cloudflare/vitest-pool-workers/config";
-
 // eslint-disable-next-line node/prefer-global/process
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+
+const envBindings: Record<string, unknown> = {};
+
+if (GITHUB_TOKEN != null) {
+  envBindings.GITHUB_TOKEN = GITHUB_TOKEN;
+}
 
 export default defineWorkersProject({
   test: {
@@ -13,7 +18,7 @@ export default defineWorkersProject({
           compatibilityFlags: ["nodejs_compat"],
           bindings: {
             ENVIRONMENT: "production",
-            GITHUB_TOKEN: GITHUB_TOKEN!,
+            ...(envBindings),
           },
         },
         wrangler: {
