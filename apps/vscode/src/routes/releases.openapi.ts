@@ -1,5 +1,6 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { ApiErrorSchema, ReleaseSchema } from "../schemas";
+import { ApiErrorSchema } from "@cf-workers/helpers";
+import { ReleaseSchema } from "../schemas";
 
 export const ALL_RELEASES_ROUTE = createRoute({
   method: "get",

@@ -1,4 +1,4 @@
-import { createCacheMiddleware, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
+import { type ApiError, createCacheMiddleware, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { apiReference } from "@scalar/hono-api-reference";
 import { createMiddleware } from "hono/factory";
@@ -92,7 +92,7 @@ app.onError(async (err, c) => {
       status: err.status,
       message: err.message,
       timestamp: new Date().toISOString(),
-    }, err.status);
+    } satisfies ApiError, err.status);
   }
 
   return c.json({
@@ -100,7 +100,7 @@ app.onError(async (err, c) => {
     status: 500,
     message: "Internal server error",
     timestamp: new Date().toISOString(),
-  }, 500);
+  } satisfies ApiError, 500);
 });
 
 app.notFound(async (c) => {
@@ -110,7 +110,7 @@ app.notFound(async (c) => {
     status: 404,
     message: "Not found",
     timestamp: new Date().toISOString(),
-  }, 404);
+  } satisfies ApiError, 404);
 });
 
 export default app;

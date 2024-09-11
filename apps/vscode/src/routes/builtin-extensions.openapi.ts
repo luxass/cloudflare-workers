@@ -1,5 +1,6 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import { ApiErrorSchema, BuiltinExtensionSchema, BuiltinExtensionsSchema } from "../schemas";
+import { ApiErrorSchema } from "@cf-workers/helpers";
+import { BuiltinExtensionSchema, BuiltinExtensionsSchema } from "../schemas";
 
 export const ALL_BUILTIN_EXTENSIONS_ROUTE = createRoute({
   method: "get",

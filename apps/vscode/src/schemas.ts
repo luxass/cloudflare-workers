@@ -12,28 +12,6 @@ export const ReleaseSchema = z.object({
   }),
 }).openapi("Release");
 
-export const ApiErrorSchema = z.object({
-  path: z.string().openapi({
-    description: "The URL of the request",
-  }),
-
-  message: z.string().openapi({
-    description: "The error message",
-  }),
-
-  status: z.number().openapi({
-    description: "The HTTP status code",
-  }),
-
-  timestamp: z.string().openapi({
-    description: "The timestamp of the error",
-  }),
-}).openapi("ApiError", {
-  description: "An error response",
-});
-
-export type ApiError = z.infer<typeof ApiErrorSchema>;
-
 export const BuiltinExtensionsSchema = z.object({
   extensions: z.array(
     z.string(),
