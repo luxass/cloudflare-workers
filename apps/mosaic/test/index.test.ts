@@ -4,8 +4,8 @@ import {
   waitOnExecutionContext,
 } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
-import worker from "../src";
 import type { HonoBindings } from "../src";
+import worker from "../src";
 
 declare module "cloudflare:test" {
   // eslint-disable-next-line ts/no-empty-object-type
@@ -113,5 +113,51 @@ describe("openapi spec", () => {
         url: "http://localhost:8787",
       },
     ]);
+  });
+});
+
+it("expect empty list of repositories", async () => {
+  const request = new Request("https://luxass.dev/repositories");
+  const ctx = createExecutionContext();
+  const response = await worker.fetch(request, env, ctx);
+  await waitOnExecutionContext(ctx);
+
+  const body = await response.json();
+
+  expect(response.status).toBe(200);
+  expect(body).toEqual([]);
+});
+
+it("expect repository not found", async () => {
+  const request = new Request("https://luxass.dev/repositories/1");
+  const ctx = createExecutionContext();
+  const response = await worker.fetch(request, env, ctx);
+  await waitOnExecutionContext(ctx);
+
+  const body = await response.json();
+
+  expect(response.status).toBe(404);
+  expect(body).toEqual({
+    message: "Repository not found",
+    path: "/repositories/1",
+    status: 404,
+    timestamp: expect.any(String),
+  });
+});
+
+it("expect repository not found on /config", async () => {
+  const request = new Request("https://luxass.dev/repositories/1/config");
+  const ctx = createExecutionContext();
+  const response = await worker.fetch(request, env, ctx);
+  await waitOnExecutionContext(ctx);
+
+  const body = await response.json();
+
+  expect(response.status).toBe(404);
+  expect(body).toEqual({
+    message: "Repository not found",
+    path: "/repositories/1/config",
+    status: 404,
+    timestamp: expect.any(String),
   });
 });

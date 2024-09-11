@@ -6,6 +6,7 @@ import { HTTPException } from "hono/http-exception";
 import { logger } from "hono/logger";
 import { PROFILE_QUERY } from "./graphql-queries";
 import { REPOSITORIES_ROUTE, REPOSITORY_ID_CONFIG_ROUTE, REPOSITORY_ID_ROUTE } from "./openapi";
+import { createError } from "./utils";
 
 export interface HonoContext {
   Bindings: {
@@ -129,9 +130,7 @@ app.openapi(REPOSITORY_ID_ROUTE, async (c) => {
   const githubId = c.req.param("github_id");
 
   if (!githubId || !githubId.trim()) {
-    throw new HTTPException(400, {
-      message: "github_id is required",
-    });
+    return createError(c, 400, "github_id is required");
   }
 
   try {
@@ -142,17 +141,13 @@ app.openapi(REPOSITORY_ID_ROUTE, async (c) => {
       .run();
 
     if (results.length === 0) {
-      throw new HTTPException(404, {
-        message: "Repository not found",
-      });
+      return createError(c, 404, "Repository not found");
     }
 
     const row = results[0];
 
     if (typeof row.config !== "string") {
-      throw new HTTPException(500, {
-        message: "Internal Server Error",
-      });
+      return createError(c, 500, "Internal Server Error");
     }
 
     return c.json({
@@ -164,10 +159,8 @@ app.openapi(REPOSITORY_ID_ROUTE, async (c) => {
       config: JSON.parse(row.config),
     });
   } catch (error) {
-    console.error("Database query failed:", error);
-    throw new HTTPException(500, {
-      message: "Internal Server Error",
-    });
+    console.error("database query failed:", error);
+    return createError(c, 500, "Internal Server Error");
   }
 });
 
@@ -175,9 +168,7 @@ app.openapi(REPOSITORY_ID_CONFIG_ROUTE, async (c) => {
   const githubId = c.req.param("github_id");
 
   if (!githubId || !githubId.trim()) {
-    throw new HTTPException(400, {
-      message: "github_id is required",
-    });
+    return createError(c, 400, "github_id is required");
   }
 
   try {
@@ -188,25 +179,19 @@ app.openapi(REPOSITORY_ID_CONFIG_ROUTE, async (c) => {
       .run();
 
     if (results.length === 0) {
-      throw new HTTPException(404, {
-        message: "Repository not found",
-      });
+      return createError(c, 404, "Repository not found");
     }
 
     const row = results[0];
 
     if (typeof row.config !== "string") {
-      throw new HTTPException(500, {
-        message: "Internal Server Error",
-      });
+      return createError(c, 500, "Internal Server Error");
     }
 
     return c.json(JSON.parse(row.config));
   } catch (error) {
-    console.error("Database query failed:", error);
-    throw new HTTPException(500, {
-      message: "Internal Server Error",
-    });
+    console.error("database query failed:", error);
+    return createError(c, 500, "Internal Server Error");
   }
 });
 

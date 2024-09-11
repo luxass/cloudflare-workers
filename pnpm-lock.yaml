@@ -188,6 +188,9 @@ importers:
       '@luxass/eslint-config':
         specifier: 'catalog:'
         version: 4.11.0(@typescript-eslint/utils@8.4.0(eslint@9.10.0)(typescript@5.5.4))(@vue/compiler-sfc@3.5.3)(eslint-plugin-format@0.1.2(eslint@9.10.0))(eslint@9.10.0)(typescript@5.5.4)(vitest@1.5.0(@types/node@22.5.4))
+      '@types/node':
+        specifier: ^22.5.4
+        version: 22.5.4
       eslint:
         specifier: 'catalog:'
         version: 9.10.0

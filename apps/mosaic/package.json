@@ -27,6 +27,7 @@
     "@cloudflare/vitest-pool-workers": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "@luxass/eslint-config": "catalog:",
+    "@types/node": "^22.5.4",
     "eslint": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:",
