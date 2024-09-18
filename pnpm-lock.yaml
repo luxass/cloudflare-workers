@@ -121,8 +121,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/helpers
       '@resvg/resvg-wasm':
-        specifier: 2.4.1
-        version: 2.4.1
+        specifier: 2.6.2
+        version: 2.6.2
       hono:
         specifier: 'catalog:'
         version: 4.5.11
@@ -864,8 +864,8 @@ packages:
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@resvg/resvg-wasm@2.4.1':
-    resolution: {integrity: sha512-yi6R0HyHtsoWTRA06Col4WoDs7SvlXU3DLMNP2bdAgs7HK18dTEVl1weXgxRzi8gwLteGUbIg29zulxIB3GSdg==}
+  '@resvg/resvg-wasm@2.6.2':
+    resolution: {integrity: sha512-FqALmHI8D4o6lk/LRWDnhw95z5eO+eAa6ORjVg09YRR7BkcM6oPHU9uyC0gtQG5vpFLvgpeU4+zEAz2H8APHNw==}
     engines: {node: '>= 10'}
 
   '@rollup/rollup-android-arm-eabi@4.21.2':
@@ -3058,7 +3058,7 @@ snapshots:
 
   '@pkgr/core@0.1.1': {}
 
-  '@resvg/resvg-wasm@2.4.1': {}
+  '@resvg/resvg-wasm@2.6.2': {}
 
   '@rollup/rollup-android-arm-eabi@4.21.2':
     optional: true
