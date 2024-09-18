@@ -15,7 +15,7 @@
     "@resvg/resvg-wasm": "2.4.1",
     "hono": "catalog:",
     "hono-jsx-to-react": "^0.1.0",
-    "satori": "^0.10.14",
+    "satori": "^0.11.0",
     "yoga-wasm-web": "^0.3.3",
     "zod": "catalog:"
   },
