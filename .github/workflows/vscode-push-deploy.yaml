@@ -18,13 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'luxass'
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.2
 
       - name: setup pnpm
         uses: pnpm/action-setup@v4.0.0
 
       - name: setup node
-        uses: actions/setup-node@v4.0.4
+        uses: actions/setup-node@v4.1.0
         with:
           node-version: 20
           cache: pnpm
@@ -48,7 +48,7 @@ jobs:
 
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
-        uses: cloudflare/wrangler-action@v3.7.0
+        uses: cloudflare/wrangler-action@v3.11.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: ./apps/vscode
