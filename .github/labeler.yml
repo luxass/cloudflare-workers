@@ -4,6 +4,10 @@
   - changed-files:
       - any-glob-to-any-file: apps/assets/**
 
+"worker: vscode":
+  - changed-files:
+      - any-glob-to-any-file: apps/vscode/**
+
 "worker: image":
   - changed-files:
       - any-glob-to-any-file: apps/image/**
