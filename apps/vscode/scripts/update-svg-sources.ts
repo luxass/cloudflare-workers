@@ -29,10 +29,10 @@ async function run() {
 
   const sources = JSON.parse(match.text().replace(/'/g, "\"").replace(/,(\s*[}\]])/g, "$1").trim());
 
-  console.log(sources);
-
   // write sources to file
   await writeFile("./src/trusted-svg-sources.ts", `export const trustedSources = ${JSON.stringify(sources, null, 2)};`);
+
+  console.log("done");
 }
 
 run().catch((err) => {
