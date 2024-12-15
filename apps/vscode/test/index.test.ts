@@ -211,7 +211,6 @@ describe("caching", () => {
   it("serve response from cache", async () => {
     let idx = 0;
     vi.spyOn(globalThis, "fetch").mockImplementation(
-      // @ts-expect-error - this works, but types broken
       async (input, init) => {
         const request = new Request(input, init);
         const url = new URL(request.url);
@@ -265,7 +264,6 @@ describe("caching", () => {
 
   it("skip caching for failed requests", async () => {
     vi.spyOn(globalThis, "fetch").mockImplementation(
-      // @ts-expect-error - this works, but types broken
       async (input, init) => {
         const request = new Request(input, init);
         const url = new URL(request.url);
