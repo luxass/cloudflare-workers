@@ -58,3 +58,4 @@ jobs:
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           reviewers: luxass
+          add-paths: "apps/vscode/src/trusted-svg-sources.ts"
