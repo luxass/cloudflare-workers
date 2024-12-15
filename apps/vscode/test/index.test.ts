@@ -1,3 +1,4 @@
+import type { HonoBindings } from "../src/types";
 import {
   createExecutionContext,
   env,
@@ -5,7 +6,6 @@ import {
 } from "cloudflare:test";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import worker from "../src";
-import type { HonoBindings } from "../src/types";
 
 declare module "cloudflare:test" {
   // eslint-disable-next-line ts/no-empty-object-type
@@ -218,8 +218,8 @@ describe("caching", () => {
 
         if (
           (request.method === "GET"
-          && url.origin === "https://api.github.com"
-          && url.pathname === "/repos/microsoft/vscode/releases") && idx === 0
+            && url.origin === "https://api.github.com"
+            && url.pathname === "/repos/microsoft/vscode/releases") && idx === 0
         ) {
           idx++;
           // fetch the actual request
@@ -272,8 +272,8 @@ describe("caching", () => {
 
         if (
           (request.method === "GET"
-          && url.origin === "https://api.github.com"
-          && url.pathname === "/repos/microsoft/vscode/releases")
+            && url.origin === "https://api.github.com"
+            && url.pathname === "/repos/microsoft/vscode/releases")
         ) {
           return new Response("Internal Server Error", {
             status: 500,

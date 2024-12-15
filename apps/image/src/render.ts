@@ -1,14 +1,14 @@
+import type { ImageResponseOptions } from "./types";
+import { initWasm, Resvg } from "@resvg/resvg-wasm";
+import { type HonoElement, toReactNode } from "hono-jsx-to-react";
 import satori, { init } from "satori/wasm";
 import initYoga from "yoga-wasm-web";
-import { Resvg, initWasm } from "@resvg/resvg-wasm";
-import { type HonoElement, toReactNode } from "hono-jsx-to-react";
+import { getIconCode, loadEmoji } from "./emoji";
 // @ts-expect-error .wasm files are not typed
 import resvgWasm from "./resvg.wasm";
+import { font } from "./utils";
 // @ts-expect-error .wasm files are not typed
 import yogaWasm from "./yoga.wasm";
-import { font } from "./utils";
-import type { ImageResponseOptions } from "./types";
-import { getIconCode, loadEmoji } from "./emoji";
 
 async function initResvgWasm() {
   try {

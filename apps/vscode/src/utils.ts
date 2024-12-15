@@ -1,10 +1,10 @@
+import type { $$Octokit, Repository } from "./types";
 import {
   Octokit,
 } from "@octokit/core";
 import {
   paginateRest,
 } from "@octokit/plugin-paginate-rest";
-import type { $$Octokit, Repository } from "./types";
 
 export function base64ToRawText(base64: string) {
   const base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";

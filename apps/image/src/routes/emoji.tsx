@@ -1,9 +1,9 @@
+import type { HonoContext } from "../types";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
-import type { HonoContext } from "../types";
-import { font } from "../utils";
 import { ImageResponse } from "../image-response";
+import { font } from "../utils";
 
 export const emojiRouter = new Hono<HonoContext>();
 

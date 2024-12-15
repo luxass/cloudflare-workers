@@ -1,7 +1,7 @@
 import type { Context, Env } from "hono";
 import type { StatusCode } from "hono/utils/http-status";
-import { createMiddleware } from "hono/factory";
 import type { ApiError } from "./schemas";
+import { createMiddleware } from "hono/factory";
 
 export type { ApiError };
 export { ApiErrorSchema } from "./schemas";

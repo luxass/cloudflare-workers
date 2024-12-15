@@ -1,3 +1,4 @@
+import type { HonoContext } from "./types";
 import { type ApiError, createCacheMiddleware, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { apiReference } from "@scalar/hono-api-reference";
@@ -5,7 +6,6 @@ import { createMiddleware } from "hono/factory";
 import { HTTPException } from "hono/http-exception";
 import { BUILTIN_EXTENSIONS_ROUTER } from "./routes/builtin-extensions";
 import { RELEASES_ROUTER } from "./routes/releases";
-import type { HonoContext } from "./types";
 import { $Octokit } from "./utils";
 
 const app = new OpenAPIHono<HonoContext>();

@@ -1,8 +1,8 @@
+import type { HonoContext } from "../types";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
 import { ImageResponse } from "../image-response";
-import type { HonoContext } from "../types";
 import { font } from "../utils";
 
 export const textImageRouter = new Hono<HonoContext>();
