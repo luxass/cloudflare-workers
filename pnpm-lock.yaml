@@ -182,6 +182,9 @@ importers:
         specifier: 'catalog:'
         version: 3.24.1
     devDependencies:
+      '@ast-grep/napi':
+        specifier: ^0.31.1
+        version: 0.31.1
       '@cloudflare/vitest-pool-workers':
         specifier: 'catalog:'
         version: 0.5.36(@cloudflare/workers-types@4.20241205.0)(@vitest/runner@2.1.8)(@vitest/snapshot@2.1.8)(vitest@2.1.8(@types/node@22.5.4))
@@ -257,6 +260,64 @@ packages:
 
   '@antfu/utils@0.7.10':
     resolution: {integrity: sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww==}
+
+  '@ast-grep/napi-darwin-arm64@0.31.1':
+    resolution: {integrity: sha512-i2GOKyowGyGWwnwBmzZj8MFACTh5QzWrYTV7Si7V+4JjYLlrm94A/KgxBWX16mwXQr1qxziS6GjlQDqRSBxCtw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@ast-grep/napi-darwin-x64@0.31.1':
+    resolution: {integrity: sha512-oUyxBoWT6o1hsJ1H0id9PkK2jgwDS1RSziZ+ORJxlV+VuvXbqPC2yrrqjWK60yBSK49GPNQjuQueGC3Js9Zqhg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@ast-grep/napi-linux-arm64-gnu@0.31.1':
+    resolution: {integrity: sha512-UVGjseE/RLW2Qx21t8TSGArFgmud2YPqdpgneLuRiW4unM9FIM1PKyxnm9AKzkQbJJzpG7CSWBnMbVkmvWMB/A==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@ast-grep/napi-linux-arm64-musl@0.31.1':
+    resolution: {integrity: sha512-K6LBPjbd1ugHYG4EPaepYgfg7M2UOpTC1fFGkViLuONDfpiH5A/i0HAkcDBkEbfzcOGv2WU7aqnHJ2rqKDLodg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@ast-grep/napi-linux-x64-gnu@0.31.1':
+    resolution: {integrity: sha512-VeJ5XVFyETypqIxTcB0JaMt+dadOHzXnrU5qSrbUsrnhtIUoleazvxHEzaoXQ0wglCVgl0odLAwgcwkHRxJ/Pg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@ast-grep/napi-linux-x64-musl@0.31.1':
+    resolution: {integrity: sha512-6pGQDPiaMqSHXCahVoJCpThc8TEk7HaJBP/n+xay/OTwqrqe54nS6baRnEm9k5q9vh4V2ceaOVf3754tkg8TSg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@ast-grep/napi-win32-arm64-msvc@0.31.1':
+    resolution: {integrity: sha512-JVIFHBDPoxVjG5c/XauJywypn1wkv0I+WqiwIzlMTNpqmEoJEnJGIom3gJZGqgrFmPpc6/PiATTw6DEjGJs4QA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@ast-grep/napi-win32-ia32-msvc@0.31.1':
+    resolution: {integrity: sha512-PTyEPvJgNuvzj0kWyR9/0+AAL13LftvGijp5sZ0lgXIpig8MfF3czIU62Nf6AMpABhsu0h+u4KmD4DaMxdw0EA==}
+    engines: {node: '>= 10'}
+    cpu: [ia32]
+    os: [win32]
+
+  '@ast-grep/napi-win32-x64-msvc@0.31.1':
+    resolution: {integrity: sha512-tEgj2Fp2Pi5qXXDLR3AWkZwQTj8yeSN3I7Pvw2DOfINu9imE2EY+Aq5kOhfvduGWVPmP8az68xUFC4b29+yrUw==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@ast-grep/napi@0.31.1':
+    resolution: {integrity: sha512-XOFCIeCYdXeRhp1OesRtes/sjPlTSe9Q7tKLLztM8sbDVYgla8k1eCTU3ia7xYIwdK3pjwc39akb8Z7qlOpzHg==}
+    engines: {node: '>= 10'}
 
   '@asteasolutions/zod-to-openapi@7.1.1':
     resolution: {integrity: sha512-lF0d1gAc0lYLO9/BAGivwTwE2Sh9h6CHuDcbk5KnGBfIuAsAkDC+Fdat4dkQY3CS/zUWKHRmFEma0B7X132Ymw==}
@@ -2630,6 +2691,45 @@ snapshots:
       tinyexec: 0.3.1
 
   '@antfu/utils@0.7.10': {}
+
+  '@ast-grep/napi-darwin-arm64@0.31.1':
+    optional: true
+
+  '@ast-grep/napi-darwin-x64@0.31.1':
+    optional: true
+
+  '@ast-grep/napi-linux-arm64-gnu@0.31.1':
+    optional: true
+
+  '@ast-grep/napi-linux-arm64-musl@0.31.1':
+    optional: true
+
+  '@ast-grep/napi-linux-x64-gnu@0.31.1':
+    optional: true
+
+  '@ast-grep/napi-linux-x64-musl@0.31.1':
+    optional: true
+
+  '@ast-grep/napi-win32-arm64-msvc@0.31.1':
+    optional: true
+
+  '@ast-grep/napi-win32-ia32-msvc@0.31.1':
+    optional: true
+
+  '@ast-grep/napi-win32-x64-msvc@0.31.1':
+    optional: true
+
+  '@ast-grep/napi@0.31.1':
+    optionalDependencies:
+      '@ast-grep/napi-darwin-arm64': 0.31.1
+      '@ast-grep/napi-darwin-x64': 0.31.1
+      '@ast-grep/napi-linux-arm64-gnu': 0.31.1
+      '@ast-grep/napi-linux-arm64-musl': 0.31.1
+      '@ast-grep/napi-linux-x64-gnu': 0.31.1
+      '@ast-grep/napi-linux-x64-musl': 0.31.1
+      '@ast-grep/napi-win32-arm64-msvc': 0.31.1
+      '@ast-grep/napi-win32-ia32-msvc': 0.31.1
+      '@ast-grep/napi-win32-x64-msvc': 0.31.1
 
   '@asteasolutions/zod-to-openapi@7.1.1(zod@3.24.1)':
     dependencies:

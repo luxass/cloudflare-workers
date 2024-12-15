@@ -5,6 +5,7 @@ import { apiReference } from "@scalar/hono-api-reference";
 import { createMiddleware } from "hono/factory";
 import { HTTPException } from "hono/http-exception";
 import { BUILTIN_EXTENSIONS_ROUTER } from "./routes/builtin-extensions";
+import { MISC_ROUTER } from "./routes/misc";
 import { RELEASES_ROUTER } from "./routes/releases";
 import { $Octokit } from "./utils";
 
@@ -33,6 +34,7 @@ app.use("/builtin-extensions/*", cacheMiddleware);
 
 app.route("/releases", RELEASES_ROUTER);
 app.route("/builtin-extensions", BUILTIN_EXTENSIONS_ROUTER);
+app.route("/", MISC_ROUTER);
 
 app.get(
   "/",

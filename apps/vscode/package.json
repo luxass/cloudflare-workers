@@ -24,6 +24,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@ast-grep/napi": "^0.31.1",
     "@cloudflare/vitest-pool-workers": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "@luxass/eslint-config": "catalog:",
