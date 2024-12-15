@@ -1,8 +1,9 @@
 name = "assets"
 main = "src/index.ts"
-compatibility_date = "2024-01-01"
+compatibility_date = "2024-12-15"
 
-[vars]
+[observability.logs]
+enabled = true
 
 [env.preview]
 name = "assets-preview"
