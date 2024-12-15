@@ -52,7 +52,7 @@ jobs:
 
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
-        uses: cloudflare/wrangler-action@v3.11.0
+        uses: cloudflare/wrangler-action@v3.13.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: ./apps/vscode
