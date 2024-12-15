@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "test": "vitest --run",
     "test:watch": "vitest",
+    "update:sources": "tsx ./scripts/update-svg-sources.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -31,6 +32,7 @@
     "@types/semver": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-format": "catalog:",
+    "tsx": "^4.19.2",
     "typescript": "catalog:",
     "vitest": "catalog:",
     "wrangler": "catalog:"

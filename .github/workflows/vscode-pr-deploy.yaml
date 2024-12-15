@@ -47,6 +47,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: update sources
+        run: pnpm --filter "vscode" run "update:sources"
+
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.11.0
