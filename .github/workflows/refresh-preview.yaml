@@ -6,11 +6,17 @@ on:
       dry-run:
         description: Run the workflow without creating a deployment
         required: false
-        default: "false"
+        default: false
+        type: boolean
       app:
         description: The app to deploy
         required: true
-        default: assets
+        default: 'assets'
+        type: choice
+        options:
+        - vscode
+        - assets
+        - image
 
 jobs:
   deploy:

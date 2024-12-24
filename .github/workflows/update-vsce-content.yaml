@@ -4,9 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       dry-run:
-        description: run the workflow without creating a pull request
+        description: Run the workflow without creating a deployment
         required: false
-        default: "false"
+        default: false
+        type: boolean
   schedule:
     - cron: "0 0 * * *"
 
