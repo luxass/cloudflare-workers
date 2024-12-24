@@ -47,8 +47,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: update sources
-        run: pnpm --filter "vscode" run "update:sources"
+      - name: update vsce content
+        run: pnpm --filter "vscode" run "update:vsce-content"
 
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}

@@ -1,17 +1,17 @@
-name: Update SVG Sources
+name: update vscode vsce content
 
 on:
   workflow_dispatch:
     inputs:
       dry-run:
-        description: Run the workflow without creating a pull request
+        description: run the workflow without creating a pull request
         required: false
         default: "false"
   schedule:
     - cron: "0 0 * * *"
 
 jobs:
-  update:
+  update-vsce-content:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -21,41 +21,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
 
-      - name: Setup pnpm
+      - name: setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Setup node
+      - name: setup node
         uses: actions/setup-node@v4.1.0
         with:
-          node-version: 22
+          node-version: lts/*
 
-      - name: Install dependencies
+      - name: install dependencies
         run: pnpm install
 
-      - name: update sources
-        run: pnpm --filter "vscode" run "update:sources"
+      - name: update vsce-content
+        run: pnpm --filter "vscode" run "update:vsce-content"
 
-      - name: Lint with fix
+      - name: lint with fix
         run: pnpm run lint --fix
 
-      - name: Create Pull Request
+      - name: create pull request
         uses: peter-evans/create-pull-request@v7.0.5
         if: ${{ github.event.inputs.dry-run != 'true' }}
         with:
-          commit-message: "feat(vscode): updated allowed svg sources"
-          title: "feat(vscode): updated allowed svg sources"
+          commit-message: "feat(vscode): updated hardcoded vsce content"
+          title: "feat(vscode): updated hardcoded vsce content"
           body: |
-            I found some changes in the allowed svg sources for Visual Studio Marketplace
+            I found some changes in the Visual Studio Code VSCE.
 
             I don't know what they changed, but I'm sure it's important.
             If you want you can go take a look yourself.
 
             I will be waiting for your approval 👋.
 
-            This is an automated PR to update the Allowed SVG Sources.
-          branch: vscode/update-svg-sources
+            This is an automated PR to update the hardcoded VSCE content.
+          branch: vscode/vsce-content
           base: main
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           reviewers: luxass
-          add-paths: "apps/vscode/src/trusted-svg-sources.ts"
+          add-paths: "apps/vscode/src/generated-vsce-content.ts"

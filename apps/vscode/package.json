@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "test": "vitest --run",
     "test:watch": "vitest",
-    "update:sources": "tsx ./scripts/update-svg-sources.ts",
+    "update:vsce-content": "tsx ./scripts/update-vsce-content.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

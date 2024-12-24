@@ -5,8 +5,8 @@ import { apiReference } from "@scalar/hono-api-reference";
 import { createMiddleware } from "hono/factory";
 import { HTTPException } from "hono/http-exception";
 import { BUILTIN_EXTENSIONS_ROUTER } from "./routes/builtin-extensions";
-import { MISC_ROUTER } from "./routes/misc";
 import { RELEASES_ROUTER } from "./routes/releases";
+import { VSCE_ROUTER } from "./routes/vsce";
 import { $Octokit } from "./utils";
 
 const app = new OpenAPIHono<HonoContext>();
@@ -34,7 +34,7 @@ app.use("/builtin-extensions/*", cacheMiddleware);
 
 app.route("/releases", RELEASES_ROUTER);
 app.route("/builtin-extensions", BUILTIN_EXTENSIONS_ROUTER);
-app.route("/", MISC_ROUTER);
+app.route("/vsce", VSCE_ROUTER);
 
 app.get(
   "/",
