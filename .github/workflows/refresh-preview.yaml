@@ -24,6 +24,7 @@ permissions: {}
 
 jobs:
   deploy:
+    name: refresh ${{ github.event.inputs.app }} worker in preview
     runs-on: ubuntu-latest
     timeout-minutes: 5
     if: github.repository_owner == 'luxass'

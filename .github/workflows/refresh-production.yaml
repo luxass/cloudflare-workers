@@ -23,6 +23,7 @@ permissions: {}
 
 jobs:
   deploy:
+    name: refresh ${{ github.event.inputs.app }} worker in production
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
