@@ -14,6 +14,10 @@ on:
     paths:
       - "apps/vscode/**"
 
+# remove default permissions of GITHUB_TOKEN for security
+# https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+permissions: {}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest

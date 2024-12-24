@@ -11,6 +11,10 @@ on:
   schedule:
     - cron: "0 0 * * *"
 
+# remove default permissions of GITHUB_TOKEN for security
+# https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+permissions: {}
+
 jobs:
   update-vsce-content:
     runs-on: ubuntu-latest
