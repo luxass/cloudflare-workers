@@ -21,6 +21,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'luxass'
+    env:
+      SELECTED_APP: ${{ github.event.inputs.app }}
     steps:
       - uses: actions/checkout@v4.2.2
 
@@ -30,28 +32,28 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4.1.0
         with:
-          node-version: 20
+          node-version: lts/*
           cache: pnpm
 
       - name: install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: build
-        run: pnpm --filter "${{ github.event.inputs.app }}" run build
+        run: pnpm --filter "$SELECTED_APP" run build
 
       - name: lint
-        run: pnpm --filter "${{ github.event.inputs.app }}" run lint
+        run: pnpm --filter "$SELECTED_APP" run lint
 
       - name: typecheck
-        run: pnpm --filter "${{ github.event.inputs.app }}" run typecheck
+        run: pnpm --filter "$SELECTED_APP" run typecheck
 
       - name: test
-        run: pnpm --filter "${{ github.event.inputs.app }}" run test
+        run: pnpm --filter "$SELECTED_APP" run test
 
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.13.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: ./apps/${{ github.event.inputs.app }}
+          workingDirectory: ./apps/$SELECTED_APP
           environment: production
