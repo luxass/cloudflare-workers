@@ -17,10 +17,14 @@ on:
         - assets
         - image
 
+# remove default permissions of GITHUB_TOKEN for security
+# https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+permissions: {}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'luxass'
+    timeout-minutes: 5
     env:
       SELECTED_APP: ${{ github.event.inputs.app }}
     steps:
@@ -49,6 +53,8 @@ jobs:
 
       - name: test
         run: pnpm --filter "$SELECTED_APP" run test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
