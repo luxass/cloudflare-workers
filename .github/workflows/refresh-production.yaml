@@ -57,10 +57,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: get directory
+        id: get-directory
+        run: echo "dir=./apps/$SELECTED_APP" >> "$GITHUB_OUTPUT"
+
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
         uses: cloudflare/wrangler-action@v3.13.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: ./apps/$SELECTED_APP
+          workingDirectory: ${{ steps.get-directory.outputs.dir }}
           environment: production
