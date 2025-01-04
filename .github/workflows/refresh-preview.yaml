@@ -11,12 +11,12 @@ on:
       app:
         description: The app to deploy
         required: true
-        default: 'assets'
+        default: assets
         type: choice
         options:
-        - vscode
-        - assets
-        - image
+          - vscode
+          - assets
+          - image
 
 # remove default permissions of GITHUB_TOKEN for security
 # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
