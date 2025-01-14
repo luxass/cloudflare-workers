@@ -43,7 +43,7 @@ export const VSCE_TRUSTED_SOURCES = [
   "vsmarketplacebadges.dev",
   "www.bithound.io",
   "www.versioneye.com",
-];
+] as const;
 
 export const VSCE_DEFAULT_IGNORE = [
   ".vscodeignore",
@@ -78,7 +78,7 @@ export const VSCE_DEFAULT_IGNORE = [
   "**/*.vsixmanifest",
   "**/.vscode-test/**",
   "**/.vscode-test-web/**",
-];
+] as const;
 
 export const VSCE_TARGETS = [
   "win32-x64",
@@ -91,4 +91,4 @@ export const VSCE_TARGETS = [
   "alpine-x64",
   "alpine-arm64",
   "web",
-];
+] as const;
