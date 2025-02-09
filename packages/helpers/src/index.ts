@@ -1,12 +1,12 @@
 import type { Context, Env } from "hono";
-import type { StatusCode } from "hono/utils/http-status";
+import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type { ApiError } from "./schemas";
 import { createMiddleware } from "hono/factory";
 
 export type { ApiError };
 export { ApiErrorSchema } from "./schemas";
 
-export function createError<TCtx extends Context, TStatus extends StatusCode>(ctx: TCtx, status: TStatus, message: string) {
+export function createError<TCtx extends Context, TStatus extends ContentfulStatusCode>(ctx: TCtx, status: TStatus, message: string) {
   const url = new URL(ctx.req.url);
   return ctx.json({
     path: url.pathname,
