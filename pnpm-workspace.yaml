@@ -17,6 +17,6 @@ catalog:
   hono: ^4.6.20
   semver: ^7.6.3
   typescript: ^5.7.2
-  vitest: 2.1.8
+  vitest: 2.1.9
   wrangler: ^3.95.0
   zod: ^3.24.1
