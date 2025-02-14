@@ -62,4 +62,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: ./apps/vscode
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
           environment: preview
