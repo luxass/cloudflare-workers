@@ -10,8 +10,8 @@ catalogs:
       specifier: ^0.6.15
       version: 0.6.15
     '@cloudflare/workers-types':
-      specifier: ^4.20241205.0
-      version: 4.20241205.0
+      specifier: ^4.20250204.0
+      version: 4.20250204.0
     '@hono/zod-openapi':
       specifier: ^0.18.4
       version: 0.18.4
@@ -79,7 +79,7 @@ importers:
         version: 2.1.9(@types/node@22.5.4)
       wrangler:
         specifier: 'catalog:'
-        version: 3.109.0(@cloudflare/workers-types@4.20241205.0)
+        version: 3.109.0(@cloudflare/workers-types@4.20250204.0)
 
   apps/assets:
     dependencies:
@@ -92,10 +92,10 @@ importers:
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: 'catalog:'
-        version: 0.6.15(@cloudflare/workers-types@4.20241205.0)(@vitest/runner@2.1.9)(@vitest/snapshot@2.1.9)(vitest@2.1.9(@types/node@22.5.4))
+        version: 0.6.15(@cloudflare/workers-types@4.20250204.0)(@vitest/runner@2.1.9)(@vitest/snapshot@2.1.9)(vitest@2.1.9(@types/node@22.5.4))
       '@cloudflare/workers-types':
         specifier: 'catalog:'
-        version: 4.20241205.0
+        version: 4.20250204.0
       '@luxass/eslint-config':
         specifier: 'catalog:'
         version: 4.15.0(@typescript-eslint/utils@8.24.0(eslint@9.20.1)(typescript@5.7.3))(@vue/compiler-sfc@3.5.3)(eslint-plugin-format@1.0.1(eslint@9.20.1))(eslint@9.20.1)(typescript@5.7.3)(vitest@2.1.9(@types/node@22.5.4))
@@ -110,7 +110,7 @@ importers:
         version: 2.1.9(@types/node@22.5.4)
       wrangler:
         specifier: 'catalog:'
-        version: 3.109.0(@cloudflare/workers-types@4.20241205.0)
+        version: 3.109.0(@cloudflare/workers-types@4.20250204.0)
 
   apps/image:
     dependencies:
@@ -138,7 +138,7 @@ importers:
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 'catalog:'
-        version: 4.20241205.0
+        version: 4.20250204.0
       '@luxass/eslint-config':
         specifier: 'catalog:'
         version: 4.15.0(@typescript-eslint/utils@8.24.0(eslint@9.20.1)(typescript@5.7.3))(@vue/compiler-sfc@3.5.3)(eslint-plugin-format@1.0.1(eslint@9.20.1))(eslint@9.20.1)(typescript@5.7.3)(vitest@2.1.9(@types/node@22.5.4))
@@ -150,7 +150,7 @@ importers:
         version: 5.7.3
       wrangler:
         specifier: 'catalog:'
-        version: 3.109.0(@cloudflare/workers-types@4.20241205.0)
+        version: 3.109.0(@cloudflare/workers-types@4.20250204.0)
 
   apps/vscode:
     dependencies:
@@ -187,10 +187,10 @@ importers:
         version: 0.34.4
       '@cloudflare/vitest-pool-workers':
         specifier: 'catalog:'
-        version: 0.6.15(@cloudflare/workers-types@4.20241205.0)(@vitest/runner@2.1.9)(@vitest/snapshot@2.1.9)(vitest@2.1.9(@types/node@22.5.4))
+        version: 0.6.15(@cloudflare/workers-types@4.20250204.0)(@vitest/runner@2.1.9)(@vitest/snapshot@2.1.9)(vitest@2.1.9(@types/node@22.5.4))
       '@cloudflare/workers-types':
         specifier: 'catalog:'
-        version: 4.20241205.0
+        version: 4.20250204.0
       '@luxass/eslint-config':
         specifier: 'catalog:'
         version: 4.15.0(@typescript-eslint/utils@8.24.0(eslint@9.20.1)(typescript@5.7.3))(@vue/compiler-sfc@3.5.3)(eslint-plugin-format@1.0.1(eslint@9.20.1))(eslint@9.20.1)(typescript@5.7.3)(vitest@2.1.9(@types/node@22.5.4))
@@ -214,7 +214,7 @@ importers:
         version: 2.1.9(@types/node@22.5.4)
       wrangler:
         specifier: 'catalog:'
-        version: 3.109.0(@cloudflare/workers-types@4.20241205.0)
+        version: 3.109.0(@cloudflare/workers-types@4.20250204.0)
 
   packages/helpers:
     dependencies:
@@ -242,7 +242,7 @@ importers:
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 'catalog:'
-        version: 4.20241205.0
+        version: 4.20250204.0
       '@luxass/eslint-config':
         specifier: 'catalog:'
         version: 4.15.0(@typescript-eslint/utils@8.24.0(eslint@9.20.1)(typescript@5.7.3))(@vue/compiler-sfc@3.5.3)(eslint-plugin-format@1.0.1(eslint@9.20.1))(eslint@9.20.1)(typescript@5.7.3)(vitest@2.1.9(@types/node@22.5.4))
@@ -399,8 +399,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@cloudflare/workers-types@4.20241205.0':
-    resolution: {integrity: sha512-pj1VKRHT/ScQbHOIMFODZaNAlJHQHdBSZXNIdr9ebJzwBff9Qz8VdqhbhggV7f+aUEh8WSbrsPIo4a+WtgjUvw==}
+  '@cloudflare/workers-types@4.20250204.0':
+    resolution: {integrity: sha512-mWoQbYaP+nYztx9I7q9sgaiNlT54Cypszz0RfzMxYnT5W3NXDuwGcjGB+5B5H5VB8tEC2dYnBRpa70lX94ueaQ==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -3028,7 +3028,7 @@ snapshots:
     dependencies:
       mime: 3.0.0
 
-  '@cloudflare/vitest-pool-workers@0.6.15(@cloudflare/workers-types@4.20241205.0)(@vitest/runner@2.1.9)(@vitest/snapshot@2.1.9)(vitest@2.1.9(@types/node@22.5.4))':
+  '@cloudflare/vitest-pool-workers@0.6.15(@cloudflare/workers-types@4.20250204.0)(@vitest/runner@2.1.9)(@vitest/snapshot@2.1.9)(vitest@2.1.9(@types/node@22.5.4))':
     dependencies:
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
@@ -3039,7 +3039,7 @@ snapshots:
       miniflare: 3.20250204.1
       semver: 7.6.3
       vitest: 2.1.9(@types/node@22.5.4)
-      wrangler: 3.109.0(@cloudflare/workers-types@4.20241205.0)
+      wrangler: 3.109.0(@cloudflare/workers-types@4.20250204.0)
       zod: 3.24.1
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
@@ -3061,7 +3061,7 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20250204.0':
     optional: true
 
-  '@cloudflare/workers-types@4.20241205.0': {}
+  '@cloudflare/workers-types@4.20250204.0': {}
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
@@ -5627,7 +5627,7 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20250204.0
       '@cloudflare/workerd-windows-64': 1.20250204.0
 
-  wrangler@3.109.0(@cloudflare/workers-types@4.20241205.0):
+  wrangler@3.109.0(@cloudflare/workers-types@4.20250204.0):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
       '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
@@ -5639,7 +5639,7 @@ snapshots:
       unenv: 2.0.0-rc.1
       workerd: 1.20250204.0
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20241205.0
+      '@cloudflare/workers-types': 4.20250204.0
       fsevents: 2.3.3
       sharp: 0.33.5
     transitivePeerDependencies:
