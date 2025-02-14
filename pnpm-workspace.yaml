@@ -2,21 +2,21 @@ packages:
   - apps/*
   - packages/*
 catalog:
-  "@cloudflare/vitest-pool-workers": ^0.5.36
+  "@cloudflare/vitest-pool-workers": ^0.6.15
   "@cloudflare/workers-types": ^4.20241205.0
-  "@hono/zod-openapi": ^0.18.3
-  "@luxass/eslint-config": ^4.14.0
-  "@octokit/core": ^6.1.2
-  "@octokit/graphql": ^8.1.1
-  "@octokit/plugin-paginate-rest": ^11.3.6
-  "@scalar/hono-api-reference": ^0.5.164
+  "@hono/zod-openapi": ^0.18.4
+  "@luxass/eslint-config": ^4.15.0
+  "@octokit/core": ^6.1.4
+  "@octokit/graphql": ^8.2.0
+  "@octokit/plugin-paginate-rest": ^11.4.2
+  "@scalar/hono-api-reference": ^0.5.173
   "@types/semver": ^7.5.8
-  eslint: ^9.17.0
-  eslint-plugin-format: ^0.1.3
-  github-schema: ^1.12.2
-  hono: ^4.6.20
-  semver: ^7.6.3
-  typescript: ^5.7.2
+  eslint: ^9.20.1
+  eslint-plugin-format: ^1.0.1
+  github-schema: ^1.14.0
+  hono: ^4.7.1
+  semver: ^7.7.1
+  typescript: ^5.7.3
   vitest: 2.1.9
-  wrangler: ^3.95.0
-  zod: ^3.24.1
+  wrangler: ^3.109.0
+  zod: ^3.24.2

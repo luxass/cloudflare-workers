@@ -2,7 +2,7 @@
   "name": "image",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.4.0",
   "scripts": {
     "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run --outdir=dist",
@@ -14,7 +14,7 @@
     "@cf-workers/helpers": "workspace:*",
     "@resvg/resvg-wasm": "2.6.2",
     "hono": "catalog:",
-    "hono-jsx-to-react": "^0.1.1",
+    "hono-jsx-to-react": "^0.1.2",
     "satori": "^0.12.0",
     "yoga-wasm-web": "^0.3.3",
     "zod": "catalog:"
