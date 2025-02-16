@@ -42,8 +42,37 @@ app.get(
     spec: {
       url: "/openapi.json",
     },
-    layout: "modern",
-    theme: "bluePlanet",
+    layout: "classic",
+    customCss: /* css */`
+    .tag-section {
+      padding: 0 !important;
+    }
+
+    .endpoint-label-path {
+      display: none !important;
+    }
+
+    .show-api-client-button {
+      background: var(--theme-color-accent) !important;
+    }
+
+    .scalar-codeblock-code {
+      display: unset;
+    }
+
+    :root {
+      --theme-color-accent: rgb(59, 130, 246);
+      --theme-color-background: hsla(348, 71%, 93%, 1);
+      --scalar-api-client-color: var(--theme-color-accent);
+      --scalar-background-1: hsla(241.9, 6.3926%, 10.038%) !important;
+    }
+
+    .dark-mode {
+      --scalar-background-1: hsla(241.9, 6.3926%, 10.038%) !important;
+      --scalar-color-accent: rgb(59, 130, 246) !important;
+      --scalar-color-background: hsla(348, 24%, 12%, 1) !important;
+      }
+    `,
   }),
 );
 
