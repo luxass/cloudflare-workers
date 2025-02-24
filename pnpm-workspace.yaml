@@ -2,7 +2,7 @@ packages:
   - apps/*
   - packages/*
 catalog:
-  "@cloudflare/vitest-pool-workers": ^0.6.15
+  "@cloudflare/vitest-pool-workers": ^0.7.0
   "@cloudflare/workers-types": ^4.20250204.0
   "@hono/zod-openapi": ^0.18.4
   "@luxass/eslint-config": ^4.15.0
