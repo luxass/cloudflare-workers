@@ -2,5 +2,8 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "github>luxass/renovate-config"
+  ],
+  "ignoreDeps": [
+    "@resvg/resvg-wasm"
   ]
 }
