@@ -2,14 +2,14 @@ packages:
   - apps/*
   - packages/*
 catalog:
-  "@cloudflare/vitest-pool-workers": ^0.7.4
+  "@cloudflare/vitest-pool-workers": ^0.8.0
   "@cloudflare/workers-types": ^4.20250224.0
   "@hono/zod-openapi": ^0.19.0
   "@luxass/eslint-config": ^4.15.0
   "@octokit/core": ^6.1.4
   "@octokit/graphql": ^8.2.1
   "@octokit/plugin-paginate-rest": ^11.4.3
-  "@scalar/hono-api-reference": ^0.5.177
+  "@scalar/hono-api-reference": ^0.7.0
   "@types/semver": ^7.5.8
   eslint: ^9.21.0
   eslint-plugin-format: ^1.0.1
