@@ -22,6 +22,7 @@
     "zod": "catalog:prod"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "catalog:dev",
     "@luxass/eslint-config": "catalog:dev",
     "eslint": "catalog:dev",
     "eslint-plugin-format": "catalog:dev",

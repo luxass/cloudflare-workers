@@ -14,7 +14,10 @@
     "dev:assets": "pnpm --filter assets dev",
     "dev:vscode": "pnpm --filter vscode dev",
     "dev:image": "pnpm --filter image dev",
-    "lint": "eslint .",
+    "lint": "pnpm -r lint",
+    "lint:assets": "pnpm --filter assets lint",
+    "lint:vscode": "pnpm --filter vscode lint",
+    "lint:image": "pnpm --filter image lint",
     "typecheck": "pnpm -r typecheck",
     "cf-typegen": "pnpm -r cf-typegen"
   },

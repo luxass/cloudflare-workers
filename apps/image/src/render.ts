@@ -1,6 +1,7 @@
+import type { HonoElement } from "hono-jsx-to-react";
 import type { ImageResponseOptions } from "./types";
 import { initWasm, Resvg } from "@resvg/resvg-wasm";
-import { type HonoElement, toReactNode } from "hono-jsx-to-react";
+import { toReactNode } from "hono-jsx-to-react";
 import satori, { init } from "satori/wasm";
 import initYoga from "yoga-wasm-web";
 import { getIconCode, loadEmoji } from "./emoji";
