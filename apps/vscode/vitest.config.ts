@@ -22,7 +22,7 @@ export default defineWorkersProject({
           },
         },
         wrangler: {
-          configPath: "./wrangler.toml",
+          configPath: "./wrangler.jsonc",
         },
       },
     },

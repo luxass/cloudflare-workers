@@ -6,5 +6,6 @@ export default luxass({
 }, {
   ignores: [
     "**/trusted-svg-sources.ts",
+    "worker-configuration.d.ts",
   ],
 });

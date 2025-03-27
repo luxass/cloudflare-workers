@@ -2,40 +2,39 @@
   "name": "vscode",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.5.2",
+  "packageManager": "pnpm@10.7.0",
   "scripts": {
     "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run --outdir=dist",
     "deploy": "wrangler deploy",
     "lint": "eslint .",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "test": "vitest --run",
     "test:watch": "vitest",
     "update:vsce-content": "tsx ./scripts/update-vsce-content.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "pnpm run cf-typegen && tsc --noEmit"
   },
   "dependencies": {
     "@cf-workers/helpers": "workspace:*",
-    "@hono/zod-openapi": "catalog:",
-    "@octokit/core": "catalog:",
-    "@octokit/plugin-paginate-rest": "catalog:",
-    "@scalar/hono-api-reference": "catalog:",
-    "github-schema": "catalog:",
-    "hono": "catalog:",
-    "semver": "catalog:",
-    "zod": "catalog:"
+    "@hono/zod-openapi": "catalog:prod",
+    "@octokit/core": "catalog:prod",
+    "@octokit/plugin-paginate-rest": "catalog:prod",
+    "@scalar/hono-api-reference": "catalog:prod",
+    "hono": "catalog:prod",
+    "semver": "catalog:prod",
+    "zod": "catalog:prod"
   },
   "devDependencies": {
-    "@ast-grep/napi": "^0.35.0",
-    "@cloudflare/vitest-pool-workers": "catalog:",
-    "@cloudflare/workers-types": "catalog:",
-    "@luxass/eslint-config": "catalog:",
-    "@types/node": "^22.13.9",
-    "@types/semver": "catalog:",
-    "eslint": "catalog:",
-    "eslint-plugin-format": "catalog:",
-    "tsx": "^4.19.3",
-    "typescript": "catalog:",
-    "vitest": "catalog:",
-    "wrangler": "catalog:"
+    "@ast-grep/napi": "catalog:dev",
+    "@cloudflare/vitest-pool-workers": "catalog:dev",
+    "@luxass/eslint-config": "catalog:dev",
+    "@types/node": "catalog:dev",
+    "@types/semver": "catalog:dev",
+    "eslint": "catalog:dev",
+    "eslint-plugin-format": "catalog:dev",
+    "tsx": "catalog:dev",
+    "typescript": "catalog:dev",
+    "vitest": "catalog:dev",
+    "wrangler": "catalog:dev"
   }
 }

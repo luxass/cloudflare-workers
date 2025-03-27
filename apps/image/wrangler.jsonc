@@ -1,0 +1,52 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "image",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-03-13",
+  "observability": {
+    "logs": {
+      "enabled": true
+    },
+    "enabled": true
+  },
+  "vars": {
+    "GITHUB_TOKEN": ""
+  },
+  "placement": { "mode": "smart" },
+  "env": {
+    "preview": {
+      "name": "image-preview",
+      "preview_urls": false,
+      "vars": {
+        "ENVIRONMENT": "preview"
+      },
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "preview.image.luxass.dev"
+        },
+        {
+          "custom_domain": true,
+          "pattern": "preview.image.luxass.com"
+        }
+      ]
+    },
+    "production": {
+      "name": "image",
+      "preview_urls": false,
+      "vars": {
+        "ENVIRONMENT": "production"
+      },
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "image.luxass.dev"
+        },
+        {
+          "custom_domain": true,
+          "pattern": "image.luxass.com"
+        }
+      ]
+    }
+  }
+}

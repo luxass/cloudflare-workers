@@ -2,7 +2,7 @@
   "name": "cloudflare-workers",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.5.2",
+  "packageManager": "pnpm@10.7.0",
   "scripts": {
     "build": "pnpm -r build",
     "build:assets": "pnpm --filter assets build",
@@ -15,21 +15,15 @@
     "dev:vscode": "pnpm --filter vscode dev",
     "dev:image": "pnpm --filter image dev",
     "lint": "eslint .",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "cf-typegen": "pnpm -r cf-typegen"
   },
   "devDependencies": {
-    "@luxass/eslint-config": "catalog:",
-    "eslint": "catalog:",
-    "eslint-plugin-format": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:",
-    "wrangler": "catalog:"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp",
-      "workerd"
-    ]
+    "@luxass/eslint-config": "catalog:dev",
+    "eslint": "catalog:dev",
+    "eslint-plugin-format": "catalog:dev",
+    "typescript": "catalog:dev",
+    "vitest": "catalog:dev",
+    "wrangler": "catalog:dev"
   }
 }

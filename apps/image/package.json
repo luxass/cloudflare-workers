@@ -2,28 +2,28 @@
   "name": "image",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.5.2",
+  "packageManager": "pnpm@10.7.0",
   "scripts": {
     "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run --outdir=dist",
     "deploy": "wrangler deploy",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "typecheck": "pnpm run cf-typegen && tsc --noEmit"
   },
   "dependencies": {
     "@cf-workers/helpers": "workspace:*",
     "@resvg/resvg-wasm": "2.4.1",
-    "hono": "catalog:",
+    "hono": "catalog:prod",
     "hono-jsx-to-react": "^0.1.2",
     "satori": "^0.12.1",
     "yoga-wasm-web": "^0.3.3",
-    "zod": "catalog:"
+    "zod": "catalog:prod"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "catalog:",
-    "@luxass/eslint-config": "catalog:",
-    "eslint": "catalog:",
-    "typescript": "catalog:",
-    "wrangler": "catalog:"
+    "@luxass/eslint-config": "catalog:dev",
+    "eslint": "catalog:dev",
+    "typescript": "catalog:dev",
+    "wrangler": "catalog:dev"
   }
 }

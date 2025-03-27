@@ -1,0 +1,40 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vscode",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-03-13",
+  "observability": {
+    "logs": {
+      "enabled": true
+    },
+    "enabled": true
+  },
+  "vars": {
+    "GITHUB_TOKEN": ""
+  },
+  "placement": { "mode": "smart" },
+  "env": {
+    "preview": {
+      "name": "vscode-preview",
+      "preview_urls": false,
+      "vars": {
+        "ENVIRONMENT": "preview"
+      },
+      "route": {
+        "custom_domain": true,
+        "pattern": "preview.vscode.luxass.dev"
+      }
+    },
+    "production": {
+      "name": "vscode",
+      "preview_urls": false,
+      "vars": {
+        "ENVIRONMENT": "production"
+      },
+      "route": {
+        "custom_domain": true,
+        "pattern": "vscode.luxass.dev"
+      }
+    }
+  }
+}
