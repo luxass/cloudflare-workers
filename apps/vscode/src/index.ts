@@ -40,9 +40,7 @@ app.route("/vsce", VSCE_ROUTER);
 app.get(
   "/",
   apiReference({
-    spec: {
-      url: "/openapi.json",
-    },
+    url: "/openapi.json",
     layout: "classic",
     customCss: /* css */`
     .tag-section {
