@@ -1,5 +1,6 @@
+import type { ApiError } from "@cf-workers/helpers";
 import type { HonoContext } from "./types";
-import { type ApiError, createCacheMiddleware, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
+import { createCacheMiddleware, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { apiReference } from "@scalar/hono-api-reference";
 import { createMiddleware } from "hono/factory";
