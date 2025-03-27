@@ -52,15 +52,27 @@ catalogs:
     '@octokit/plugin-paginate-rest':
       specifier: ^11.6.0
       version: 11.6.0
+    '@resvg/resvg-wasm':
+      specifier: 2.4.1
+      version: 2.4.1
     '@scalar/hono-api-reference':
       specifier: ^0.7.3
       version: 0.7.3
     hono:
       specifier: ^4.7.5
       version: 4.7.5
+    hono-jsx-to-react:
+      specifier: ^0.1.2
+      version: 0.1.2
+    satori:
+      specifier: ^0.12.1
+      version: 0.12.1
     semver:
       specifier: ^7.7.1
       version: 7.7.1
+    yoga-wasm-web:
+      specifier: ^0.3.3
+      version: 0.3.3
     zod:
       specifier: ^3.24.2
       version: 3.24.2
@@ -122,19 +134,19 @@ importers:
         specifier: workspace:*
         version: link:../../packages/helpers
       '@resvg/resvg-wasm':
-        specifier: 2.4.1
+        specifier: catalog:prod
         version: 2.4.1
       hono:
         specifier: catalog:prod
         version: 4.7.5
       hono-jsx-to-react:
-        specifier: ^0.1.2
+        specifier: catalog:prod
         version: 0.1.2(hono@4.7.5)
       satori:
-        specifier: ^0.12.1
+        specifier: catalog:prod
         version: 0.12.1
       yoga-wasm-web:
-        specifier: ^0.3.3
+        specifier: catalog:prod
         version: 0.3.3
       zod:
         specifier: catalog:prod

@@ -13,11 +13,11 @@
   },
   "dependencies": {
     "@cf-workers/helpers": "workspace:*",
-    "@resvg/resvg-wasm": "2.4.1",
+    "@resvg/resvg-wasm": "catalog:prod",
     "hono": "catalog:prod",
-    "hono-jsx-to-react": "^0.1.2",
-    "satori": "^0.12.1",
-    "yoga-wasm-web": "^0.3.3",
+    "hono-jsx-to-react": "catalog:prod",
+    "satori": "catalog:prod",
+    "yoga-wasm-web": "catalog:prod",
     "zod": "catalog:prod"
   },
   "devDependencies": {

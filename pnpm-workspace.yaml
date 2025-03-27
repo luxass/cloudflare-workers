@@ -17,14 +17,19 @@ catalogs:
     typescript: ^5.8.2
     vitest: ^3.0.9
     wrangler: ^4.5.0
+
   prod:
     "@hono/zod-openapi": ^0.19.2
     "@octokit/core": ^6.1.4
     "@octokit/graphql": ^8.2.1
     "@octokit/plugin-paginate-rest": ^11.6.0
+    "@resvg/resvg-wasm": 2.4.1
     "@scalar/hono-api-reference": ^0.7.3
     hono: ^4.7.5
+    hono-jsx-to-react: ^0.1.2
+    satori: ^0.12.1
     semver: ^7.7.1
+    yoga-wasm-web: ^0.3.3
     zod: ^3.24.2
 
 onlyBuiltDependencies:
