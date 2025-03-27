@@ -19,10 +19,7 @@ export interface Entry {
 }
 
 export interface HonoContext {
-  Bindings: {
-    GITHUB_TOKEN: string;
-    ENVIRONMENT: string;
-  };
+  Bindings: CloudflareBindings;
   Variables: {
     octokit?: $$Octokit;
   };

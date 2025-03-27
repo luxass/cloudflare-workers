@@ -102,6 +102,7 @@ describe("openapi spec", () => {
     const request = new Request("https://luxass.dev/openapi.json");
 
     // set environment to local
+    // @ts-expect-error - local is not a valid environment
     env.ENVIRONMENT = "local";
 
     const ctx = createExecutionContext();

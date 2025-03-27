@@ -1,22 +1,38 @@
 packages:
   - apps/*
   - packages/*
-catalog:
-  "@cloudflare/vitest-pool-workers": ^0.7.4
-  "@cloudflare/workers-types": ^4.20250224.0
-  "@hono/zod-openapi": ^0.19.0
-  "@luxass/eslint-config": ^4.15.0
-  "@octokit/core": ^6.1.4
-  "@octokit/graphql": ^8.2.1
-  "@octokit/plugin-paginate-rest": ^11.4.3
-  "@scalar/hono-api-reference": ^0.5.177
-  "@types/semver": ^7.5.8
-  eslint: ^9.21.0
-  eslint-plugin-format: ^1.0.1
-  github-schema: ^1.14.0
-  hono: ^4.7.2
-  semver: ^7.7.1
-  typescript: ^5.8.2
-  vitest: 3.0.7
-  wrangler: ^3.111.0
-  zod: ^3.24.2
+
+catalogs:
+  dev:
+    "@ast-grep/napi": ^0.36.2
+    "@cloudflare/vitest-pool-workers": ^0.8.6
+    "@luxass/eslint-config": ^4.17.1
+    "@types/node": ^22.13.9
+    "@types/semver": ^7.7.0
+    eslint: ^9.23.0
+    eslint-plugin-format: ^1.0.1
+    github-schema: ^1.16.0
+    tsx: ^4.19.3
+    typescript: ^5.8.2
+    vitest: ^3.0.9
+    wrangler: ^4.5.0
+    "@cloudflare/workers-types": ^4.20250321.0
+
+  prod:
+    "@hono/zod-openapi": ^0.19.2
+    "@octokit/core": ^6.1.4
+    "@octokit/graphql": ^8.2.1
+    "@octokit/plugin-paginate-rest": ^11.6.0
+    "@resvg/resvg-wasm": 2.4.1
+    "@scalar/hono-api-reference": ^0.7.3
+    hono: ^4.7.5
+    hono-jsx-to-react: ^0.1.2
+    satori: ^0.12.1
+    semver: ^7.7.1
+    yoga-wasm-web: ^0.3.3
+    zod: ^3.24.2
+
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - workerd

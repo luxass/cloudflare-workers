@@ -2,7 +2,7 @@
   "name": "@cf-workers/helpers",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.5.2",
+  "packageManager": "pnpm@10.7.0",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -14,19 +14,19 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@hono/zod-openapi": "catalog:",
-    "@octokit/core": "catalog:",
-    "@octokit/plugin-paginate-rest": "catalog:",
-    "@scalar/hono-api-reference": "catalog:",
-    "github-schema": "catalog:",
-    "hono": "catalog:",
-    "zod": "catalog:"
+    "@hono/zod-openapi": "catalog:prod",
+    "@octokit/core": "catalog:prod",
+    "@octokit/plugin-paginate-rest": "catalog:prod",
+    "@scalar/hono-api-reference": "catalog:prod",
+    "hono": "catalog:prod",
+    "zod": "catalog:prod"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "catalog:",
-    "@luxass/eslint-config": "catalog:",
-    "eslint": "catalog:",
-    "eslint-plugin-format": "catalog:",
-    "typescript": "catalog:"
+    "@cloudflare/workers-types": "catalog:dev",
+    "@luxass/eslint-config": "catalog:dev",
+    "eslint": "catalog:dev",
+    "eslint-plugin-format": "catalog:dev",
+    "github-schema": "catalog:dev",
+    "typescript": "catalog:dev"
   }
 }

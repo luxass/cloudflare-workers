@@ -1,8 +1,9 @@
+import type { SgNode } from "@ast-grep/napi";
 import { exec } from "node:child_process";
 import { writeFile } from "node:fs/promises";
 import process from "node:process";
 import { promisify } from "node:util";
-import { Lang, parse, type SgNode } from "@ast-grep/napi";
+import { Lang, parse } from "@ast-grep/napi";
 
 const execPromise = promisify(exec);
 

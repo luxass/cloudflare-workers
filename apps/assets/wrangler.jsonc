@@ -1,0 +1,49 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "assets",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-03-13",
+  "observability": {
+    "logs": {
+      "enabled": true
+    },
+    "enabled": true
+  },
+  "placement": { "mode": "smart" },
+  "env": {
+    "preview": {
+      "name": "assets-preview",
+      "preview_urls": false,
+      "vars": {
+        "ENVIRONMENT": "preview"
+      },
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "preview.assets.luxass.dev"
+        },
+        {
+          "custom_domain": true,
+          "pattern": "preview.assets.luxass.com"
+        }
+      ]
+    },
+    "production": {
+      "name": "assets",
+      "preview_urls": false,
+      "vars": {
+        "ENVIRONMENT": "production"
+      },
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "assets.luxass.dev"
+        },
+        {
+          "custom_domain": true,
+          "pattern": "assets.luxass.com"
+        }
+      ]
+    }
+  }
+}
