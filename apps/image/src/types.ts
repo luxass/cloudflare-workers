@@ -2,10 +2,7 @@ import type { SatoriOptions } from "satori";
 import type { EmojiType } from "./emoji";
 
 export interface HonoContext {
-  Bindings: {
-    ENVIRONMENT: string;
-    GITHUB_TOKEN: string;
-  };
+  Bindings: CloudflareBindings;
 }
 
 export type HonoBindings = HonoContext["Bindings"];
