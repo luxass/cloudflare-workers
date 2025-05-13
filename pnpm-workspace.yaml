@@ -4,7 +4,7 @@ packages:
 
 catalogs:
   dev:
-    "@ast-grep/napi": ^0.36.2
+    "@ast-grep/napi": ^0.37.0
     "@cloudflare/vitest-pool-workers": ^0.8.6
     "@luxass/eslint-config": ^4.17.1
     "@types/node": ^22.13.9
@@ -24,7 +24,7 @@ catalogs:
     "@octokit/graphql": ^8.2.1
     "@octokit/plugin-paginate-rest": ^11.6.0
     "@resvg/resvg-wasm": 2.4.1
-    "@scalar/hono-api-reference": ^0.7.3
+    "@scalar/hono-api-reference": ^0.8.0
     hono: ^4.7.5
     hono-jsx-to-react: ^0.1.2
     satori: ^0.12.1
