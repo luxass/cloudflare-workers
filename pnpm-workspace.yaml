@@ -4,36 +4,36 @@ packages:
 
 catalogs:
   dev:
-    "@cloudflare/vitest-pool-workers": ^0.8.6
-    "@luxass/eslint-config": ^4.17.1
+    "@cloudflare/vitest-pool-workers": ^0.8.30
+    "@luxass/eslint-config": ^4.18.1
     "@types/node": ^22.13.9
     "@types/semver": ^7.7.0
-    eslint: ^9.23.0
+    eslint: ^9.27.0
     eslint-plugin-format: ^1.0.1
-    github-schema: ^1.16.0
-    tsx: ^4.19.3
-    typescript: ^5.8.2
-    vitest: ^3.0.9
-    wrangler: ^4.5.0
-    "@cloudflare/workers-types": ^4.20250321.0
+    github-schema: ^1.17.1
+    tsx: ^4.19.4
+    typescript: ^5.8.3
+    vitest: ^3.1.3
+    wrangler: ^4.15.2
+    "@cloudflare/workers-types": ^4.20250517.0
 
   prod:
-    "@hono/zod-openapi": ^0.19.2
-    "@octokit/core": ^6.1.4
-    "@octokit/graphql": ^8.2.1
-    "@octokit/plugin-paginate-rest": ^11.6.0
-    "@scalar/hono-api-reference": ^0.8.0
-    hono: ^4.7.5
-    semver: ^7.7.1
-    zod: ^3.24.2
+    "@hono/zod-openapi": ^0.19.6
+    "@octokit/core": ^6.1.5
+    "@octokit/graphql": ^8.2.2
+    "@octokit/plugin-paginate-rest": ^12.0.0
+    "@scalar/hono-api-reference": ^0.8.10
+    hono: ^4.7.9
+    semver: ^7.7.2
+    zod: ^3.24.4
 
   vscode:
-    "@ast-grep/napi": ^0.37.0
+    "@ast-grep/napi": ^0.38.1
 
   image:
     "@resvg/resvg-wasm": 2.4.1
     hono-jsx-to-react: ^0.1.2
-    satori: ^0.12.1
+    satori: ^0.13.1
     yoga-wasm-web: ^0.3.3
 
 onlyBuiltDependencies:
