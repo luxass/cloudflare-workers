@@ -49,7 +49,7 @@ describe("/api/unicode-versions", () => {
     expect(await response.json()).toEqual({
       message: "failed to fetch unicode data",
       status: 502,
-      path: "/api/unicode-versions",
+      path: "/api/v1/unicode-versions",
       timestamp: expect.any(String),
     });
   });
