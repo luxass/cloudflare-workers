@@ -1,0 +1,60 @@
+name: deploy unicode-tools worker to production
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Run the workflow without creating a deployment
+        required: false
+        default: false
+        type: boolean
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/unicode-tools/**"
+
+# remove default permissions of GITHUB_TOKEN for security
+# https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+permissions: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'luxass'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+
+      - name: setup node
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: lts/*
+
+      - name: install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: build
+        run: pnpm build:unicode-tools
+
+      - name: lint
+        run: pnpm --filter "unicode-tools" run lint
+
+      - name: typecheck
+        run: pnpm --filter "unicode-tools" run typecheck
+
+      - name: test
+        run: pnpm --filter "unicode-tools" run test
+
+      - name: deploy
+        if: ${{ github.event.inputs.dry-run != 'true' }}
+        uses: cloudflare/wrangler-action@392082e81ffbcb9ebdde27400634aa004b35ea37 # v3.14.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: ./apps/unicode-tools
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          environment: production
