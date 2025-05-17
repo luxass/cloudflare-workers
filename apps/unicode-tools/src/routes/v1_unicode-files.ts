@@ -34,6 +34,12 @@ V1_UNICODE_FILES_ROUTER.get(
       return createError(c, 400, "Invalid Unicode version");
     }
 
+    // eslint-disable-next-line no-console
+    console.info({
+      version,
+      mappedVersion,
+    });
+
     async function processDirectory(entries: UnicodeEntry[]): Promise<Entry[]> {
     // process all directories in parallel
       const dirPromises = entries
