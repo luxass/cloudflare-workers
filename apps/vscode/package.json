@@ -25,7 +25,7 @@
     "zod": "catalog:prod"
   },
   "devDependencies": {
-    "@ast-grep/napi": "catalog:dev",
+    "@ast-grep/napi": "catalog:vscode",
     "@cloudflare/vitest-pool-workers": "catalog:dev",
     "@luxass/eslint-config": "catalog:dev",
     "@types/node": "catalog:dev",

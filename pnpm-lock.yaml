@@ -6,9 +6,6 @@ settings:
 
 catalogs:
   dev:
-    '@ast-grep/napi':
-      specifier: ^0.37.0
-      version: 0.37.0
     '@cloudflare/vitest-pool-workers':
       specifier: ^0.8.6
       version: 0.8.6
@@ -45,6 +42,19 @@ catalogs:
     wrangler:
       specifier: ^4.5.0
       version: 4.5.0
+  image:
+    '@resvg/resvg-wasm':
+      specifier: 2.4.1
+      version: 2.4.1
+    hono-jsx-to-react:
+      specifier: ^0.1.2
+      version: 0.1.2
+    satori:
+      specifier: ^0.12.1
+      version: 0.12.1
+    yoga-wasm-web:
+      specifier: ^0.3.3
+      version: 0.3.3
   prod:
     '@hono/zod-openapi':
       specifier: ^0.19.2
@@ -55,30 +65,22 @@ catalogs:
     '@octokit/plugin-paginate-rest':
       specifier: ^11.6.0
       version: 11.6.0
-    '@resvg/resvg-wasm':
-      specifier: 2.4.1
-      version: 2.4.1
     '@scalar/hono-api-reference':
       specifier: ^0.8.0
       version: 0.8.9
     hono:
       specifier: ^4.7.5
       version: 4.7.5
-    hono-jsx-to-react:
-      specifier: ^0.1.2
-      version: 0.1.2
-    satori:
-      specifier: ^0.12.1
-      version: 0.12.1
     semver:
       specifier: ^7.7.1
       version: 7.7.1
-    yoga-wasm-web:
-      specifier: ^0.3.3
-      version: 0.3.3
     zod:
       specifier: ^3.24.2
       version: 3.24.2
+  vscode:
+    '@ast-grep/napi':
+      specifier: ^0.37.0
+      version: 0.37.0
 
 importers:
 
@@ -137,19 +139,19 @@ importers:
         specifier: workspace:*
         version: link:../../packages/helpers
       '@resvg/resvg-wasm':
-        specifier: catalog:prod
+        specifier: catalog:image
         version: 2.4.1
       hono:
         specifier: catalog:prod
         version: 4.7.5
       hono-jsx-to-react:
-        specifier: catalog:prod
+        specifier: catalog:image
         version: 0.1.2(hono@4.7.5)
       satori:
-        specifier: catalog:prod
+        specifier: catalog:image
         version: 0.12.1
       yoga-wasm-web:
-        specifier: catalog:prod
+        specifier: catalog:image
         version: 0.3.3
       zod:
         specifier: catalog:prod
@@ -196,7 +198,7 @@ importers:
         version: 3.24.2
     devDependencies:
       '@ast-grep/napi':
-        specifier: catalog:dev
+        specifier: catalog:vscode
         version: 0.37.0
       '@cloudflare/vitest-pool-workers':
         specifier: catalog:dev
