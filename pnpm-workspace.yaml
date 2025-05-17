@@ -37,7 +37,7 @@ catalogs:
     yoga-wasm-web: ^0.3.3
 
   unicode-tools:
-    "@luxass/unicode-tools": "https://pkg.pr.new/@luxass/unicode-utils@25"
+    "@luxass/unicode-utils": "https://pkg.pr.new/@luxass/unicode-utils@25"
 
 onlyBuiltDependencies:
   - esbuild

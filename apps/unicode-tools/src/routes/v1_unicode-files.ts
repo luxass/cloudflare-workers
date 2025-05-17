@@ -1,6 +1,6 @@
 import type { HonoContext } from "../types";
 import { cache, createError } from "@cf-workers/helpers";
-import { mapUnicodeVersion, UNICODE_VERSIONS_WITH_UCD } from "@luxass/unicode-tools";
+import { hasUCDPath, mapUnicodeVersion, UNICODE_VERSIONS_WITH_UCD } from "@luxass/unicode-utils";
 import { Hono } from "hono";
 
 export const V1_UNICODE_FILES_ROUTER = new Hono<HonoContext>();
@@ -40,12 +40,14 @@ V1_UNICODE_FILES_ROUTER.get(
       mappedVersion,
     });
 
+    const extraPath = hasUCDPath(mappedVersion) ? "/ucd" : "";
+
     async function processDirectory(entries: UnicodeEntry[]): Promise<Entry[]> {
     // process all directories in parallel
       const dirPromises = entries
         .filter((entry) => entry.type === "directory")
         .map(async (dir) => {
-          const response = await fetch(`${c.env.PROXY_URL}/${mappedVersion}/ucd/${dir.path}`);
+          const response = await fetch(`${c.env.PROXY_URL}/${mappedVersion}${extraPath}/${dir.path}`);
           if (!response.ok) {
             throw new Error(`Failed to fetch directory: ${dir.path}`);
           }
@@ -70,7 +72,7 @@ V1_UNICODE_FILES_ROUTER.get(
     }
 
     try {
-      const response = await fetch(`${c.env.PROXY_URL}/${mappedVersion}/ucd`);
+      const response = await fetch(`${c.env.PROXY_URL}/${mappedVersion}${extraPath}`);
       if (!response.ok) {
         return createError(c, 502, "Failed to fetch root directory");
       }
