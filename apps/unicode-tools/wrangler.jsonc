@@ -15,7 +15,8 @@
       "name": "unicode-tools",
       "preview_urls": false,
       "vars": {
-        "ENVIRONMENT": "preview"
+        "ENVIRONMENT": "preview",
+        "PROXY_URL": "https://preview.unicode-proxy.ucdjs.dev"
       },
       "routes": [
         {
@@ -28,7 +29,8 @@
       "name": "unicode-tools",
       "preview_urls": false,
       "vars": {
-        "ENVIRONMENT": "production"
+        "ENVIRONMENT": "production",
+        "PROXY_URL": "https://unicode-proxy.ucdjs.dev"
       },
       "routes": [
         {

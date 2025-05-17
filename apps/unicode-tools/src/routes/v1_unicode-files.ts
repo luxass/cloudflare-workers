@@ -29,7 +29,7 @@ V1_UNICODE_FILES_ROUTER.get("/:version", async (c) => {
     const dirPromises = entries
       .filter((entry) => entry.type === "directory")
       .map(async (dir) => {
-        const response = await fetch(`https://unicode-proxy.ucdjs.dev/${mappedVersion}/ucd/${dir.path}`);
+        const response = await fetch(`${c.env.PROXY_URL}/${mappedVersion}/ucd/${dir.path}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch directory: ${dir.path}`);
         }
@@ -54,7 +54,7 @@ V1_UNICODE_FILES_ROUTER.get("/:version", async (c) => {
   }
 
   try {
-    const response = await fetch(`https://unicode-proxy.ucdjs.dev/${mappedVersion}/ucd`);
+    const response = await fetch(`${c.env.PROXY_URL}/${mappedVersion}/ucd`);
     if (!response.ok) {
       return createError(c, 502, "Failed to fetch root directory");
     }
