@@ -36,9 +36,6 @@ catalogs:
     satori: ^0.13.1
     yoga-wasm-web: ^0.3.3
 
-  unicode-tools:
-    "@luxass/unicode-utils": "https://pkg.pr.new/@luxass/unicode-utils@25"
-
 onlyBuiltDependencies:
   - esbuild
   - sharp
