@@ -1,6 +1,6 @@
 import type { HonoContext } from "../types";
 import { cache, createError } from "@cf-workers/helpers";
-import { mapUnicodeVersion } from "@luxass/unicode-tools";
+import { mapUnicodeVersion, UNICODE_VERSIONS_WITH_UCD } from "@luxass/unicode-tools";
 import { Hono } from "hono";
 
 export const V1_UNICODE_FILES_ROUTER = new Hono<HonoContext>();
@@ -28,6 +28,10 @@ V1_UNICODE_FILES_ROUTER.get(
     const mappedVersion = mapUnicodeVersion(version);
     if (!mappedVersion) {
       return createError(c, 400, "Invalid Unicode version");
+    }
+
+    if (!UNICODE_VERSIONS_WITH_UCD.map((v) => v.version).includes(mappedVersion as typeof UNICODE_VERSIONS_WITH_UCD[number]["version"])) {
+      return createError(c, 400, "Unicode version does not have UCD");
     }
 
     async function processDirectory(entries: UnicodeEntry[]): Promise<Entry[]> {
