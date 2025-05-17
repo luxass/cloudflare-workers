@@ -17,7 +17,7 @@ describe("/api/unicode-versions", () => {
 
   it("should return unicode versions", async () => {
     fetchMock.enableNetConnect();
-    const request = new Request("https://unicode-tools.luxass.dev/api/unicode-versions");
+    const request = new Request("https://unicode-tools.luxass.dev/api/v1/unicode-versions");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
@@ -40,7 +40,7 @@ describe("/api/unicode-versions", () => {
       .intercept({ path: "/versions/enumeratedversions.html" })
       .reply(500, "Internal Server Error");
 
-    const request = new Request("https://unicode-tools.luxass.dev/api/unicode-versions");
+    const request = new Request("https://unicode-tools.luxass.dev/api/v1/unicode-versions");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
