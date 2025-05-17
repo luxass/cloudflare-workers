@@ -3,7 +3,7 @@ import type { HonoContext } from "./types";
 import { createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { V1_FILE_MAPPINGS_ROUTER } from "./routes/v1_file-mappings";
+import { V1_UNICODE_FILES_ROUTER } from "./routes/v1_unicode-files";
 import { V1_UNICODE_VERSION_ROUTER } from "./routes/v1_unicode-versions";
 
 const app = new Hono<HonoContext>();
@@ -12,7 +12,7 @@ app.get("/view-source", createViewSourceRedirect("unicode-tools"));
 app.get("/ping", createPingPongRoute());
 
 app.route("/api/v1/unicode-versions", V1_UNICODE_VERSION_ROUTER);
-app.route("/api/v1/file-mappings", V1_FILE_MAPPINGS_ROUTER);
+app.route("/api/v1/unicode-files", V1_UNICODE_FILES_ROUTER);
 
 app.onError(async (err, c) => {
   console.error(err);

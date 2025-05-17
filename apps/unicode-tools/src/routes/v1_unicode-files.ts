@@ -3,7 +3,7 @@ import { createError } from "@cf-workers/helpers";
 import { mapUnicodeVersion } from "@luxass/unicode-tools";
 import { Hono } from "hono";
 
-export const V1_FILE_MAPPINGS_ROUTER = new Hono<HonoContext>();
+export const V1_UNICODE_FILES_ROUTER = new Hono<HonoContext>();
 
 interface Entry {
   name: string;
@@ -16,7 +16,7 @@ interface UnicodeEntry {
   path: string;
 }
 
-V1_FILE_MAPPINGS_ROUTER.get("/:version", async (c) => {
+V1_UNICODE_FILES_ROUTER.get("/:version", async (c) => {
   const version = c.req.param("version");
 
   const mappedVersion = mapUnicodeVersion(version);
