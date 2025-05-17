@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@cf-workers/helpers": "workspace:*",
+    "@luxass/unicode-tools": "catalog:unicode-tools",
     "hono": "catalog:prod"
   },
   "devDependencies": {
