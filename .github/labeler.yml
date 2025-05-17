@@ -12,6 +12,10 @@
   - changed-files:
       - any-glob-to-any-file: apps/image/**
 
+"worker: unicode-tools":
+  - changed-files:
+      - any-glob-to-any-file: apps/unicode-tools/**
+
 "package: helpers":
   - changed-files:
       - any-glob-to-any-file: packages/helpers/**

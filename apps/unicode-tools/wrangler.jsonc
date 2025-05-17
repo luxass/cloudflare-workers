@@ -1,0 +1,41 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "unicode-tools",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-03-13",
+  "observability": {
+    "logs": {
+      "enabled": true
+    },
+    "enabled": true
+  },
+  "placement": { "mode": "smart" },
+  "env": {
+    "preview": {
+      "name": "unicode-tools",
+      "preview_urls": false,
+      "vars": {
+        "ENVIRONMENT": "preview"
+      },
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "preview.unicode-tools.luxass.dev"
+        }
+      ]
+    },
+    "production": {
+      "name": "unicode-tools",
+      "preview_urls": false,
+      "vars": {
+        "ENVIRONMENT": "production"
+      },
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "unicode-tools.luxass.dev"
+        }
+      ]
+    }
+  }
+}
