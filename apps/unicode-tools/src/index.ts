@@ -19,7 +19,7 @@ type UnicodeVersion = Record<keyof UnicodeToolsUnicodeVersion, string>;
 app.get("/api/unicode-versions", async (c) => {
   const response = await fetch("https://www.unicode.org/versions/enumeratedversions.html");
   if (!response.ok) {
-    return createError(c, 500, "Failed to fetch Unicode versions");
+    return createError(c, 502, "failed to fetch unicode data");
   }
 
   const html = await response.text();
@@ -31,7 +31,7 @@ app.get("/api/unicode-versions", async (c) => {
   );
 
   if (!tableMatch) {
-    return createError(c, 404, "Unicode versions table not found");
+    return createError(c, 500, "Unicode versions table not found");
   }
 
   const versions: UnicodeVersion[] = [];
