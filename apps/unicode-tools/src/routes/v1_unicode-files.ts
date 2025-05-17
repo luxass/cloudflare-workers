@@ -43,7 +43,7 @@ V1_UNICODE_FILES_ROUTER.get(
     });
 
     async function processDirectory(entries: UnicodeEntry[]): Promise<Entry[]> {
-    // process all directories in parallel
+      // process all directories in parallel
       const dirPromises = entries
         .filter((entry) => entry.type === "directory")
         .map(async (dir) => {
@@ -61,7 +61,12 @@ V1_UNICODE_FILES_ROUTER.get(
 
       // process all files
       const fileEntries = entries
-        .filter((entry) => entry.type === "file")
+        .filter((entry) => {
+          return entry.type === "file"
+            && (entry.name !== "ReadMe.txt.txt"
+              || !entry.path.includes("draft")
+              || !entry.path.includes("latest"));
+        })
         .map((file) => ({
           name: file.name,
         }));
