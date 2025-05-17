@@ -34,13 +34,13 @@ V1_UNICODE_FILES_ROUTER.get(
       return createError(c, 400, "Invalid Unicode version");
     }
 
+    const extraPath = hasUCDPath(mappedVersion) ? "/ucd" : "";
     // eslint-disable-next-line no-console
     console.info({
       version,
       mappedVersion,
+      extraPath,
     });
-
-    const extraPath = hasUCDPath(mappedVersion) ? "/ucd" : "";
 
     async function processDirectory(entries: UnicodeEntry[]): Promise<Entry[]> {
     // process all directories in parallel
