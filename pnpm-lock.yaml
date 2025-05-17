@@ -77,6 +77,10 @@ catalogs:
     zod:
       specifier: ^3.24.4
       version: 3.24.4
+  unicode-tools:
+    '@luxass/unicode-tools':
+      specifier: https://pkg.pr.new/@luxass/unicode-utils@25
+      version: 0.6.0
   vscode:
     '@ast-grep/napi':
       specifier: ^0.38.1
@@ -175,6 +179,9 @@ importers:
       '@cf-workers/helpers':
         specifier: workspace:*
         version: link:../../packages/helpers
+      '@luxass/unicode-tools':
+        specifier: catalog:unicode-tools
+        version: '@luxass/unicode-utils@https://pkg.pr.new/@luxass/unicode-utils@25'
       hono:
         specifier: catalog:prod
         version: 4.7.9
@@ -1165,6 +1172,14 @@ packages:
         optional: true
       prettier-plugin-astro:
         optional: true
+
+  '@luxass/unicode-utils@https://pkg.pr.new/@luxass/unicode-utils@25':
+    resolution: {tarball: https://pkg.pr.new/@luxass/unicode-utils@25}
+    version: 0.6.0
+
+  '@luxass/utils@2.1.0':
+    resolution: {integrity: sha512-TZj7ktGHuoXiOTypAagFQ87pjPEcX82bSepu8fIdFlzlOrh4ccXBvqKPQbJi88j481Q8H7QCV5VOgV32bqJb9A==}
+    engines: {node: '>=20'}
 
   '@napi-rs/wasm-runtime@0.2.9':
     resolution: {integrity: sha512-OKRBiajrrxB9ATokgEQoG87Z25c67pCpYcCwmXYX8PBftC9pBfN18gnm/fh1wurSLEKIAt+QRFLFCQISrb66Jg==}
@@ -3676,6 +3691,12 @@ snapshots:
       - supports-color
       - typescript
       - vitest
+
+  '@luxass/unicode-utils@https://pkg.pr.new/@luxass/unicode-utils@25':
+    dependencies:
+      '@luxass/utils': 2.1.0
+
+  '@luxass/utils@2.1.0': {}
 
   '@napi-rs/wasm-runtime@0.2.9':
     dependencies:
