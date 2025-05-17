@@ -1,76 +1,18 @@
 import type { ApiError } from "@cf-workers/helpers";
-import type { UnicodeVersion as UnicodeToolsUnicodeVersion } from "@luxass/unicode-tools";
-import { createError, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
-import { mapUnicodeVersion } from "@luxass/unicode-tools";
+import type { HonoContext } from "./types";
+import { createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-
-export interface HonoContext {
-  Bindings: CloudflareBindings;
-}
+import { V1_FILE_MAPPINGS_ROUTER } from "./routes/v1_file-mappings";
+import { V1_UNICODE_VERSION_ROUTER } from "./routes/v1_unicode-versions";
 
 const app = new Hono<HonoContext>();
 
 app.get("/view-source", createViewSourceRedirect("unicode-tools"));
 app.get("/ping", createPingPongRoute());
 
-type UnicodeVersion = Record<keyof UnicodeToolsUnicodeVersion, string>;
-
-app.get("/api/unicode-versions", async (c) => {
-  const response = await fetch("https://www.unicode.org/versions/enumeratedversions.html");
-  if (!response.ok) {
-    return createError(c, 502, "failed to fetch unicode data");
-  }
-
-  const html = await response.text();
-
-  // find any table that contains Unicode version information
-  const versionPattern = /Unicode \d+\.\d+\.\d+/;
-  const tableMatch = html.match(/<table[^>]*>[\s\S]*?<\/table>/g)?.find((table) =>
-    versionPattern.test(table),
-  );
-
-  if (!tableMatch) {
-    return createError(c, 500, "Unicode versions table not found");
-  }
-
-  const versions: UnicodeVersion[] = [];
-
-  // match any row that contains a cell
-  const rows = tableMatch.match(/<tr>[\s\S]*?<\/tr>/g) || [];
-
-  for (const row of rows) {
-    // look for Unicode version pattern in the row
-    const versionMatch = row.match(new RegExp(`<a[^>]+href="([^"]+)"[^>]*>\\s*(${versionPattern.source})\\s*</a>`));
-    if (!versionMatch) continue;
-
-    const documentationUrl = versionMatch[1];
-    const version = versionMatch[2].replace("Unicode ", "");
-
-    // look for a year pattern anywhere in the row
-    const dateMatch = row.match(/<td[^>]*>(\d{4})<\/td>/);
-    if (!dateMatch) continue;
-    const ucdVersion = mapUnicodeVersion(version);
-
-    const ucdUrl = `https://www.unicode.org/Public/${ucdVersion}/${ucdVersion.includes("Update") ? "" : "ucd"}`;
-
-    versions.push({
-      version,
-      documentationUrl,
-      date: dateMatch[1],
-      ucdUrl,
-    });
-  }
-
-  if (versions.length === 0) {
-    return createError(c, 404, "No Unicode versions found");
-  }
-
-  // sort versions by date in descending order
-  versions.sort((a, b) => Number.parseInt(b.date) - Number.parseInt(a.date));
-
-  return c.json(versions, 200);
-});
+app.route("/api/v1/unicode-versions", V1_UNICODE_VERSION_ROUTER);
+app.route("/api/v1/file-mappings", V1_FILE_MAPPINGS_ROUTER);
 
 app.onError(async (err, c) => {
   console.error(err);

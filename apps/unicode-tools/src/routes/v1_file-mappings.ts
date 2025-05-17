@@ -1,0 +1,69 @@
+import type { HonoContext } from "../types";
+import { createError } from "@cf-workers/helpers";
+import { mapUnicodeVersion } from "@luxass/unicode-tools";
+import { Hono } from "hono";
+
+export const V1_FILE_MAPPINGS_ROUTER = new Hono<HonoContext>();
+
+interface Entry {
+  name: string;
+  children?: Entry[];
+}
+
+interface UnicodeEntry {
+  type: "file" | "directory";
+  name: string;
+  path: string;
+}
+
+V1_FILE_MAPPINGS_ROUTER.get("/:version", async (c) => {
+  const version = c.req.param("version");
+
+  const mappedVersion = mapUnicodeVersion(version);
+  if (!mappedVersion) {
+    return createError(c, 400, "Invalid Unicode version");
+  }
+
+  async function processDirectory(entries: UnicodeEntry[]): Promise<Entry[]> {
+    // process all directories in parallel
+    const dirPromises = entries
+      .filter((entry) => entry.type === "directory")
+      .map(async (dir) => {
+        const response = await fetch(`https://unicode-proxy.ucdjs.dev/${mappedVersion}/ucd/${dir.path}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch directory: ${dir.path}`);
+        }
+        const children = await response.json() as UnicodeEntry[];
+        const processedChildren = await processDirectory(children);
+        return {
+          name: dir.name,
+          children: processedChildren,
+        };
+      });
+
+    // process all files
+    const fileEntries = entries
+      .filter((entry) => entry.type === "file")
+      .map((file) => ({
+        name: file.name,
+      }));
+
+    const dirEntries = await Promise.all(dirPromises);
+
+    return [...fileEntries, ...dirEntries];
+  }
+
+  try {
+    const response = await fetch(`https://unicode-proxy.ucdjs.dev/${mappedVersion}/ucd`);
+    if (!response.ok) {
+      return createError(c, 502, "Failed to fetch root directory");
+    }
+
+    const rootEntries = await response.json() as UnicodeEntry[];
+    const result = await processDirectory(rootEntries);
+    return c.json(result, 200);
+  } catch (error) {
+    console.error("Error processing directory:", error);
+    return createError(c, 500, "Failed to fetch file mappings");
+  }
+});
