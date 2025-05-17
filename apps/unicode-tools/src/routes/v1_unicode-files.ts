@@ -25,13 +25,13 @@ V1_UNICODE_FILES_ROUTER.get(
   async (c) => {
     const version = c.req.param("version");
 
+    if (!UNICODE_VERSIONS_WITH_UCD.map((v) => v.version).includes(version as typeof UNICODE_VERSIONS_WITH_UCD[number]["version"])) {
+      return createError(c, 400, "Unicode version does not have UCD");
+    }
+
     const mappedVersion = mapUnicodeVersion(version);
     if (!mappedVersion) {
       return createError(c, 400, "Invalid Unicode version");
-    }
-
-    if (!UNICODE_VERSIONS_WITH_UCD.map((v) => v.version).includes(mappedVersion as typeof UNICODE_VERSIONS_WITH_UCD[number]["version"])) {
-      return createError(c, 400, "Unicode version does not have UCD");
     }
 
     async function processDirectory(entries: UnicodeEntry[]): Promise<Entry[]> {
