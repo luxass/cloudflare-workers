@@ -63,6 +63,7 @@ V1_UNICODE_FILES_ROUTER.get(
       const fileEntries = entries
         .filter((entry) => {
           return entry.type === "file"
+            && entry.name.endsWith(".txt")
             && (entry.name !== "ReadMe.txt.txt"
               || !entry.path.includes("draft")
               || !entry.path.includes("latest"));
