@@ -1,6 +1,6 @@
 import type { ApiError } from "@cf-workers/helpers";
 import type { HonoContext } from "./types";
-import { createCacheMiddleware, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
+import { cache, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { emojiRouter } from "./routes/emoji";
@@ -12,7 +12,10 @@ const app = new Hono<HonoContext>();
 
 app.get("/view-source", createViewSourceRedirect("image"));
 app.get("/ping", createPingPongRoute());
-app.get("/api/image/*", createCacheMiddleware("og-images"));
+app.get("/api/image/*", cache({
+  cacheName: "image",
+  cacheControl: "max-age=3600, stale-while-revalidate=3600",
+}));
 
 app.route("/api/image/text", textImageRouter);
 app.route("/api/image/emoji", emojiRouter);

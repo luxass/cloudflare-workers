@@ -1,8 +1,8 @@
 import type { ApiError } from "@cf-workers/helpers";
 import type { HonoContext } from "./types";
-import { createCacheMiddleware, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
+import { cache, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { apiReference } from "@scalar/hono-api-reference";
+import { Scalar } from "@scalar/hono-api-reference";
 import { createMiddleware } from "hono/factory";
 import { HTTPException } from "hono/http-exception";
 import { BUILTIN_EXTENSIONS_ROUTER } from "./routes/builtin-extensions";
@@ -22,7 +22,10 @@ const octokitMiddleware = createMiddleware<HonoContext>(async (c, next) => {
   await next();
 });
 
-const cacheMiddleware = createCacheMiddleware("vscode");
+const cacheMiddleware = cache({
+  cacheName: "vscode",
+  cacheControl: "max-age=3600, stale-while-revalidate=3600",
+});
 
 app.get("/view-source", createViewSourceRedirect("vscode"));
 app.get("/ping", createPingPongRoute());
@@ -39,7 +42,7 @@ app.route("/vsce", VSCE_ROUTER);
 
 app.get(
   "/",
-  apiReference({
+  Scalar({
     url: "/openapi.json",
     layout: "classic",
     customCss: /* css */`

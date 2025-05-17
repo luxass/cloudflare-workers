@@ -1,5 +1,5 @@
 import type { ApiError } from "@cf-workers/helpers";
-import { createCacheMiddleware, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
+import { cache, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 
@@ -11,7 +11,10 @@ const app = new Hono<HonoContext>();
 
 app.get("/view-source", createViewSourceRedirect("assets"));
 app.get("/ping", createPingPongRoute());
-app.get("/api/fonts/*", createCacheMiddleware("fonts"));
+app.get("/api/fonts/*", cache({
+  cacheName: "fonts",
+  cacheControl: "max-age=3600, stale-while-revalidate=3600",
+}));
 
 app.get("/api/fonts/:family/:weight/:text?", async (c) => {
   const url = new URL(c.req.url);

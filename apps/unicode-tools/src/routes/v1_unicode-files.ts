@@ -1,5 +1,5 @@
 import type { HonoContext } from "../types";
-import { createError } from "@cf-workers/helpers";
+import { cache, createError } from "@cf-workers/helpers";
 import { mapUnicodeVersion } from "@luxass/unicode-tools";
 import { Hono } from "hono";
 
@@ -16,54 +16,61 @@ interface UnicodeEntry {
   path: string;
 }
 
-V1_UNICODE_FILES_ROUTER.get("/:version", async (c) => {
-  const version = c.req.param("version");
+V1_UNICODE_FILES_ROUTER.get(
+  "/:version",
+  cache({
+    cacheName: "unicode-tools-files",
+    cacheControl: "max-age=604800, stale-while-revalidate=86400",
+  }),
+  async (c) => {
+    const version = c.req.param("version");
 
-  const mappedVersion = mapUnicodeVersion(version);
-  if (!mappedVersion) {
-    return createError(c, 400, "Invalid Unicode version");
-  }
-
-  async function processDirectory(entries: UnicodeEntry[]): Promise<Entry[]> {
-    // process all directories in parallel
-    const dirPromises = entries
-      .filter((entry) => entry.type === "directory")
-      .map(async (dir) => {
-        const response = await fetch(`${c.env.PROXY_URL}/${mappedVersion}/ucd/${dir.path}`);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch directory: ${dir.path}`);
-        }
-        const children = await response.json() as UnicodeEntry[];
-        const processedChildren = await processDirectory(children);
-        return {
-          name: dir.name,
-          children: processedChildren,
-        };
-      });
-
-    // process all files
-    const fileEntries = entries
-      .filter((entry) => entry.type === "file")
-      .map((file) => ({
-        name: file.name,
-      }));
-
-    const dirEntries = await Promise.all(dirPromises);
-
-    return [...fileEntries, ...dirEntries];
-  }
-
-  try {
-    const response = await fetch(`${c.env.PROXY_URL}/${mappedVersion}/ucd`);
-    if (!response.ok) {
-      return createError(c, 502, "Failed to fetch root directory");
+    const mappedVersion = mapUnicodeVersion(version);
+    if (!mappedVersion) {
+      return createError(c, 400, "Invalid Unicode version");
     }
 
-    const rootEntries = await response.json() as UnicodeEntry[];
-    const result = await processDirectory(rootEntries);
-    return c.json(result, 200);
-  } catch (error) {
-    console.error("Error processing directory:", error);
-    return createError(c, 500, "Failed to fetch file mappings");
-  }
-});
+    async function processDirectory(entries: UnicodeEntry[]): Promise<Entry[]> {
+    // process all directories in parallel
+      const dirPromises = entries
+        .filter((entry) => entry.type === "directory")
+        .map(async (dir) => {
+          const response = await fetch(`${c.env.PROXY_URL}/${mappedVersion}/ucd/${dir.path}`);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch directory: ${dir.path}`);
+          }
+          const children = await response.json() as UnicodeEntry[];
+          const processedChildren = await processDirectory(children);
+          return {
+            name: dir.name,
+            children: processedChildren,
+          };
+        });
+
+      // process all files
+      const fileEntries = entries
+        .filter((entry) => entry.type === "file")
+        .map((file) => ({
+          name: file.name,
+        }));
+
+      const dirEntries = await Promise.all(dirPromises);
+
+      return [...fileEntries, ...dirEntries];
+    }
+
+    try {
+      const response = await fetch(`${c.env.PROXY_URL}/${mappedVersion}/ucd`);
+      if (!response.ok) {
+        return createError(c, 502, "Failed to fetch root directory");
+      }
+
+      const rootEntries = await response.json() as UnicodeEntry[];
+      const result = await processDirectory(rootEntries);
+      return c.json(result, 200);
+    } catch (error) {
+      console.error("Error processing directory:", error);
+      return createError(c, 500, "Failed to fetch file mappings");
+    }
+  },
+);
