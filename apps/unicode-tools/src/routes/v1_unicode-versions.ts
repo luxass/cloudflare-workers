@@ -1,7 +1,7 @@
-import type { UnicodeVersion as UnicodeToolsUnicodeVersion } from "@luxass/unicode-tools";
+import type { UnicodeVersion as UnicodeToolsUnicodeVersion } from "@luxass/unicode-utils";
 import type { HonoContext } from "../types";
 import { cache, createError } from "@cf-workers/helpers";
-import { mapUnicodeVersion } from "@luxass/unicode-tools";
+import { mapUnicodeVersion } from "@luxass/unicode-utils";
 import { Hono } from "hono";
 
 export const V1_UNICODE_VERSION_ROUTER = new Hono<HonoContext>();
