@@ -108,14 +108,4 @@ app.notFound(async (c) => {
   } satisfies ApiError, 404);
 });
 
-app.notFound(async (c) => {
-  const url = new URL(c.req.url);
-  return c.json({
-    path: url.pathname,
-    status: 404,
-    message: "Not found",
-    timestamp: new Date().toISOString(),
-  }, 404);
-});
-
 export default app;
