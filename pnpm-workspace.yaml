@@ -19,9 +19,9 @@ catalogs:
 
   prod:
     "@hono/zod-openapi": ^0.19.6
-    "@octokit/core": ^6.1.5
-    "@octokit/graphql": ^8.2.2
-    "@octokit/plugin-paginate-rest": ^12.0.0
+    "@octokit/core": ^7.0.0
+    "@octokit/graphql": ^9.0.0
+    "@octokit/plugin-paginate-rest": ^13.0.0
     "@scalar/hono-api-reference": ^0.8.10
     hono: ^4.7.9
     semver: ^7.7.2
