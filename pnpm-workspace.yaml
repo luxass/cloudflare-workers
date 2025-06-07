@@ -22,7 +22,7 @@ catalogs:
     "@octokit/core": ^7.0.0
     "@octokit/graphql": ^9.0.0
     "@octokit/plugin-paginate-rest": ^13.0.0
-    "@scalar/hono-api-reference": ^0.8.10
+    "@scalar/hono-api-reference": ^0.9.0
     hono: ^4.7.9
     semver: ^7.7.2
     zod: ^3.24.4
