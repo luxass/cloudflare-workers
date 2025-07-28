@@ -28,12 +28,12 @@ catalogs:
     zod: ^3.25.67
 
   vscode:
-    "@ast-grep/napi": ^0.38.5
+    "@ast-grep/napi": ^0.39.0
 
   image:
     "@resvg/resvg-wasm": 2.4.1
     hono-jsx-to-react: ^0.1.2
-    satori: ^0.15.2
+    satori: ^0.16.0
     yoga-wasm-web: ^0.3.3
 
 onlyBuiltDependencies:
