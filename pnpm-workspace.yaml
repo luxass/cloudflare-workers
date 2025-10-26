@@ -18,7 +18,7 @@ catalogs:
     "@cloudflare/workers-types": 4.20250710.0
 
   prod:
-    "@hono/zod-openapi": 0.19.9
+    "@hono/zod-openapi": 1.1.4
     "@octokit/core": 7.0.2
     "@octokit/graphql": 9.0.2
     "@octokit/plugin-paginate-rest": 13.1.1
