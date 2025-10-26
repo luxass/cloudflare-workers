@@ -7,19 +7,19 @@ settings:
 catalogs:
   dev:
     '@cloudflare/vitest-pool-workers':
-      specifier: ^0.8.43
+      specifier: 0.8.51
       version: 0.8.51
     '@cloudflare/workers-types':
-      specifier: ^4.20250620.0
+      specifier: 4.20250710.0
       version: 4.20250710.0
     '@luxass/eslint-config':
-      specifier: ^5.0.0
+      specifier: 5.1.0
       version: 5.1.0
     '@types/node':
-      specifier: ^22.13.9
+      specifier: 22.16.2
       version: 22.16.2
     '@types/semver':
-      specifier: ^7.7.0
+      specifier: 7.7.0
       version: 7.7.0
     eslint:
       specifier: ^9.29.0
@@ -28,58 +28,58 @@ catalogs:
       specifier: ^1.0.1
       version: 1.0.1
     github-schema:
-      specifier: ^1.19.0
+      specifier: 1.20.0
       version: 1.20.0
     tsx:
-      specifier: ^4.20.3
+      specifier: 4.20.3
       version: 4.20.3
     typescript:
-      specifier: ^5.8.3
+      specifier: 5.8.3
       version: 5.8.3
     vitest:
       specifier: 3.2.4
       version: 3.2.4
     wrangler:
-      specifier: ^4.20.5
+      specifier: 4.24.1
       version: 4.24.1
   image:
     '@resvg/resvg-wasm':
       specifier: 2.4.1
       version: 2.4.1
     hono-jsx-to-react:
-      specifier: ^0.1.2
+      specifier: 0.1.2
       version: 0.1.2
     satori:
-      specifier: ^0.15.2
+      specifier: 0.15.2
       version: 0.15.2
     yoga-wasm-web:
-      specifier: ^0.3.3
+      specifier: 0.3.3
       version: 0.3.3
   prod:
     '@hono/zod-openapi':
-      specifier: ^0.19.8
+      specifier: 0.19.9
       version: 0.19.9
     '@octokit/core':
-      specifier: ^7.0.2
+      specifier: 7.0.2
       version: 7.0.2
     '@octokit/plugin-paginate-rest':
-      specifier: ^13.1.0
+      specifier: 13.1.1
       version: 13.1.1
     '@scalar/hono-api-reference':
-      specifier: ^0.9.6
+      specifier: 0.9.9
       version: 0.9.9
     hono:
-      specifier: ^4.8.2
+      specifier: 4.10.3
       version: 4.10.3
     semver:
-      specifier: ^7.7.2
+      specifier: 7.7.2
       version: 7.7.2
     zod:
-      specifier: ^3.25.67
+      specifier: 3.25.76
       version: 3.25.76
   vscode:
     '@ast-grep/napi':
-      specifier: ^0.38.5
+      specifier: 0.38.7
       version: 0.38.7
 
 importers:
