@@ -5,7 +5,7 @@ packages:
 catalogs:
   dev:
     "@cloudflare/vitest-pool-workers": 0.8.51
-    "@luxass/eslint-config": 5.1.0
+    "@luxass/eslint-config": 6.0.1
     "@types/node": 22.16.2
     "@types/semver": 7.7.0
     eslint: ^9.29.0
