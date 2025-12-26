@@ -8,13 +8,13 @@
     "types": [
       "./worker-configuration.d.ts",
       // for `cloudflare:test` types
-      "@cloudflare/vitest-pool-workers"
+      "@cloudflare/vitest-pool-workers/types",
     ],
     "strict": true,
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "skipLibCheck": true
-  }
+    "skipLibCheck": true,
+  },
 }
