@@ -1,6 +1,6 @@
 import { ApiErrorSchema } from "@cf-workers/helpers";
-import { createRoute, z } from "@hono/zod-openapi";
-import { BuiltinExtensionSchema, BuiltinExtensionsSchema } from "../schemas";
+import { createRoute } from "@hono/zod-openapi";
+import { BuiltinExtensionSchema, BuiltinExtensionsSchema, ConfigurationSchema, ContributesSchema } from "./builtin-extensions.schemas";
 
 export const ALL_BUILTIN_EXTENSIONS_ROUTE = createRoute({
   method: "get",
@@ -108,8 +108,7 @@ export const BUILTIN_EXTENSION_CONTRIBUTES_ROUTE = createRoute({
     200: {
       content: {
         "application/json": {
-          schema: z
-            .record(z.unknown()),
+          schema: ContributesSchema,
         },
       },
       description: "Retrieve a list of contributes for a specific builtin extension",
@@ -157,7 +156,7 @@ export const BUILTIN_EXTENSION_CONFIGURATION_ROUTE = createRoute({
     200: {
       content: {
         "application/json": {
-          schema: z.unknown(),
+          schema: ConfigurationSchema,
         },
       },
       description: "Retrieve the package.json for a specific builtin extension",

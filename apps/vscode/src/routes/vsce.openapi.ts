@@ -1,5 +1,6 @@
 import { ApiErrorSchema } from "@cf-workers/helpers";
-import { createRoute, z } from "@hono/zod-openapi";
+import { createRoute } from "@hono/zod-openapi";
+import { AllowedSvgSourcesSchema, DefaultIgnoreSchema, TargetsSchema } from "./vsce.schemas";
 
 export const ALLOWED_SVG_SOURCES_ROUTE = createRoute({
   method: "get",
@@ -9,10 +10,7 @@ export const ALLOWED_SVG_SOURCES_ROUTE = createRoute({
     200: {
       content: {
         "application/json": {
-          schema: z
-            .array(
-              z.string(),
-            ),
+          schema: AllowedSvgSourcesSchema,
         },
       },
       description: "Retrieve a list of allowed SVG sources",
@@ -36,10 +34,7 @@ export const DEFAULT_IGNORE_ROUTE = createRoute({
     200: {
       content: {
         "application/json": {
-          schema: z
-            .array(
-              z.string(),
-            ),
+          schema: DefaultIgnoreSchema,
         },
       },
       description: "Retrieve a list of default ignore",
@@ -63,10 +58,7 @@ export const TARGETS_ROUTE = createRoute({
     200: {
       content: {
         "application/json": {
-          schema: z
-            .array(
-              z.string(),
-            ),
+          schema: TargetsSchema,
         },
       },
       description: "Retrieve a list of allowed targets",

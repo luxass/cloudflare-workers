@@ -1,9 +1,9 @@
 import type { HonoContext, Repository } from "../types";
 import { createError } from "@cf-workers/helpers";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { BuiltinExtensionSchema } from "../schemas";
 import { base64ToRawText, BUILTIN_QUERY, getBuiltinExtensionFiles, translate } from "../utils";
 import { ALL_BUILTIN_EXTENSIONS_ROUTE, BUILTIN_EXTENSION_CONFIGURATION_ROUTE, BUILTIN_EXTENSION_CONTRIBUTES_ROUTE, BUILTIN_EXTENSION_ROUTE } from "./builtin-extensions.openapi";
+import { BuiltinExtensionSchema } from "./builtin-extensions.schemas";
 
 type BuiltinExtensionHonoContext = HonoContext & {
   Variables: {

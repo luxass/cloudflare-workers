@@ -1,6 +1,6 @@
 import { ApiErrorSchema } from "@cf-workers/helpers";
-import { createRoute, z } from "@hono/zod-openapi";
-import { ReleaseSchema } from "../schemas";
+import { createRoute } from "@hono/zod-openapi";
+import { ReleasesArraySchema, ReleaseSchema } from "./releases.schemas";
 
 export const ALL_RELEASES_ROUTE = createRoute({
   method: "get",
@@ -10,10 +10,7 @@ export const ALL_RELEASES_ROUTE = createRoute({
     200: {
       content: {
         "application/json": {
-          schema: z
-            .array(
-              ReleaseSchema,
-            ),
+          schema: ReleasesArraySchema,
         },
       },
       description: "Retrieve a list of all releases",

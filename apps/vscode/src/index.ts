@@ -24,7 +24,7 @@ const octokitMiddleware = createMiddleware<HonoContext>(async (c, next) => {
 
 const cacheMiddleware = cache({
   cacheName: "vscode",
-  cacheControl: "max-age=3600, stale-while-revalidate=3600",
+  cacheControl: "max-age=86400, stale-while-revalidate=86400",
 });
 
 app.get("/view-source", createViewSourceRedirect("vscode"));

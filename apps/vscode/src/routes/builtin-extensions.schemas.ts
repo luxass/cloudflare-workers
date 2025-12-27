@@ -1,27 +1,5 @@
 import { z } from "@hono/zod-openapi";
 
-export const ReleaseSchema = z.object({
-  tag: z.string().openapi({
-    description: "The tag of the release",
-  }),
-  url: z.string().openapi({
-    description: "The URL of the release",
-  }),
-  commit: z.string().optional().openapi({
-    description: "The commit SHA of the release",
-  }),
-}).openapi("Release");
-
-export const BuiltinExtensionsSchema = z.object({
-  extensions: z.array(
-    z.string(),
-  ).openapi({
-    description: "The list of builtin extensions",
-  }),
-}).openapi("BuiltinExtensions", {
-  description: "A list of builtin extensions",
-});
-
 const Person = z.union([
   z.string(),
   z.object({
@@ -61,6 +39,16 @@ const Repository = z.union([
     directory: z.string().optional(),
   }),
 ]);
+
+export const BuiltinExtensionsSchema = z.object({
+  extensions: z.array(
+    z.string(),
+  ).openapi({
+    description: "The list of builtin extensions",
+  }),
+}).openapi("BuiltinExtensions", {
+  description: "A list of builtin extensions",
+});
 
 export const BuiltinExtensionSchema = z.object({
   name: z.string().openapi({
@@ -275,4 +263,12 @@ export const BuiltinExtensionSchema = z.object({
   }),
 }).loose().openapi("BuiltinExtension", {
   description: "A package.json that describes a builtin extension",
+});
+
+export const ContributesSchema = z.record(z.string(), z.unknown()).openapi({
+  description: "A record of contributes for a builtin extension",
+});
+
+export const ConfigurationSchema = z.unknown().openapi({
+  description: "The configuration for a builtin extension",
 });
