@@ -4,7 +4,7 @@ import { z } from "zod";
 type Primitives = string | number | boolean | null;
 type JsonValue = Primitives | JsonValue[] | { [key: string]: JsonValue };
 
-const jsonStr = z.string().transform((str, ctx) => {
+const jsonStr = z.string().transform<unknown>((str, ctx) => {
   try {
     return JSON.parse(str) as JsonValue;
   } catch {
@@ -12,7 +12,7 @@ const jsonStr = z.string().transform((str, ctx) => {
   }
 });
 
-export function params<TType>(schema: z.ZodType<TType>) {
+export function params<TSchema extends z.ZodTypeAny>(schema: TSchema) {
   const querySchema = z.object({
     input: jsonStr.pipe(schema),
   });
@@ -23,7 +23,7 @@ export function params<TType>(schema: z.ZodType<TType>) {
 
       return querySchema.safeParse(obj);
     },
-    toSearchString: (obj: (typeof schema)["_input"]) => {
+    toSearchString: (obj: z.input<TSchema>) => {
       schema.parse(obj);
       return `input=${encodeURIComponent(JSON.stringify(obj))}`;
     },
