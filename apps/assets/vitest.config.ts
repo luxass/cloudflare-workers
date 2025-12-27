@@ -1,21 +1,21 @@
-import { defineWorkersProject } from "@cloudflare/vitest-pool-workers/config";
+import { cloudflareTest } from "@cloudflare/vitest-pool-workers";
+import { defineProject } from "vitest/config";
 
-export default defineWorkersProject({
+export default defineProject({
   test: {
     name: "assets",
-    poolOptions: {
-      workers: {
-        singleWorker: true,
-        miniflare: {
-          compatibilityFlags: ["nodejs_compat"],
-          bindings: {
-            ENVIRONMENT: "production",
-          },
-        },
-        wrangler: {
-          configPath: "./wrangler.jsonc",
+  },
+  plugins: [
+    cloudflareTest({
+      miniflare: {
+        compatibilityFlags: ["nodejs_compat"],
+        bindings: {
+          ENVIRONMENT: "production",
         },
       },
-    },
-  },
+      wrangler: {
+        configPath: "./wrangler.jsonc",
+      },
+    }),
+  ],
 });

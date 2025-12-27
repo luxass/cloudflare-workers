@@ -1,27 +1,5 @@
 import { z } from "@hono/zod-openapi";
 
-export const ReleaseSchema = z.object({
-  tag: z.string().openapi({
-    description: "The tag of the release",
-  }),
-  url: z.string().openapi({
-    description: "The URL of the release",
-  }),
-  commit: z.string().optional().openapi({
-    description: "The commit SHA of the release",
-  }),
-}).openapi("Release");
-
-export const BuiltinExtensionsSchema = z.object({
-  extensions: z.array(
-    z.string(),
-  ).openapi({
-    description: "The list of builtin extensions",
-  }),
-}).openapi("BuiltinExtensions", {
-  description: "A list of builtin extensions",
-});
-
 const Person = z.union([
   z.string(),
   z.object({
@@ -61,6 +39,16 @@ const Repository = z.union([
     directory: z.string().optional(),
   }),
 ]);
+
+export const BuiltinExtensionsSchema = z.object({
+  extensions: z.array(
+    z.string(),
+  ).openapi({
+    description: "The list of builtin extensions",
+  }),
+}).openapi("BuiltinExtensions", {
+  description: "A list of builtin extensions",
+});
 
 export const BuiltinExtensionSchema = z.object({
   name: z.string().openapi({
@@ -132,37 +120,37 @@ export const BuiltinExtensionSchema = z.object({
     @see {@link https://docs.npmjs.com/cli/v10/configuring-npm/package-json#browser}
     @see {@link https://gist.github.com/defunctzombie/4339901/49493836fb873ddaa4b8a7aa0ef2352119f69211}
    */
-  browser: z.union([z.string(), z.record(z.union([z.string(), z.boolean()]))]).optional(),
+  browser: z.union([z.string(), z.record(z.string(), z.union([z.string(), z.boolean()]))]).optional(),
 
   /** Executable files. */
-  bin: z.union([z.string(), z.record(z.string())]).optional(),
+  bin: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
 
   /** Documentation to be used with the `man` command. */
   man: z.union([z.string(), z.array(z.string())]).optional(),
 
   /** Directories in the package. */
-  directories: z.record(z.string()).optional(),
+  directories: z.record(z.string(), z.string()).optional(),
 
   /** Repository for the package's source code. */
   repository: Repository.optional(),
 
   /** Scripts used in the package. */
-  scripts: z.record(z.string()).optional(),
+  scripts: z.record(z.string(), z.string()).optional(),
 
   /** Configuration values for scripts. */
-  config: z.record(z.unknown()).optional(),
+  config: z.record(z.string(), z.unknown()).optional(),
 
   /** Production dependencies. */
-  dependencies: z.record(z.string()).optional(),
+  dependencies: z.record(z.string(), z.string()).optional(),
 
   /** Development dependencies. */
-  devDependencies: z.record(z.string()).optional(),
+  devDependencies: z.record(z.string(), z.string()).optional(),
 
   /** Peer dependencies. */
-  peerDependencies: z.record(z.string()).optional(),
+  peerDependencies: z.record(z.string(), z.string()).optional(),
 
   /** Metadata about peer dependencies. */
-  peerDependenciesMeta: z.record(z.object({ optional: z.boolean() })).optional(),
+  peerDependenciesMeta: z.record(z.string(), z.object({ optional: z.boolean() })).optional(),
 
   /** Dependencies bundled with the package. */
   bundleDependencies: z.union([z.boolean(), z.array(z.string())]).optional(),
@@ -171,14 +159,14 @@ export const BuiltinExtensionSchema = z.object({
   bundledDependencies: z.union([z.boolean(), z.array(z.string())]).optional(),
 
   /** Optional dependencies. */
-  optionalDependencies: z.record(z.string()).optional(),
+  optionalDependencies: z.record(z.string(), z.string()).optional(),
 
   /** Overrides for dependency resolution using npm. */
-  overrides: z.record(z.unknown()).optional(),
+  overrides: z.record(z.string(), z.unknown()).optional(),
 
   /** Runtime systems supported by the package. */
   engines: z.union([
-    z.record(z.string()),
+    z.record(z.string(), z.string()),
     z.object({
       vscode: z.string().openapi({
         description: "For VS Code extensions, specifies the VS Code version that the extension is compatible with. Cannot be *. For example: ^0.10.5 indicates compatibility with a minimum VS Code version of 0.10.5.",
@@ -199,7 +187,7 @@ export const BuiltinExtensionSchema = z.object({
   private: z.boolean().optional(),
 
   /** Configuration values used at publishing time. */
-  publishConfig: z.record(z.unknown()).optional(),
+  publishConfig: z.record(z.string(), z.unknown()).optional(),
 
   /** File patterns for locating local workspaces. */
   workspaces: z.array(z.string()).optional(),
@@ -223,7 +211,7 @@ export const BuiltinExtensionSchema = z.object({
     TypeScript types resolutions.
     @see {@link https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html#version-selection-with-typesversions}
    */
-  typesVersions: z.record(z.record(z.array(z.string()))).optional(),
+  typesVersions: z.record(z.string(), z.record(z.string(), z.array(z.string()))).optional(),
 
   /**
     Corepack package manager.
@@ -242,13 +230,13 @@ export const BuiltinExtensionSchema = z.object({
     Imports map.
     @see {@link https://nodejs.org/api/packages.html#imports}
    */
-  imports: z.record(z.unknown()).optional(),
+  imports: z.record(z.string(), z.unknown()).optional(),
 
   /**
     Package exports.
     @see {@link https://nodejs.org/api/packages.html#exports}
    */
-  exports: z.union([z.null(), z.string(), z.array(z.string()), z.record(z.unknown())]).optional(),
+  exports: z.union([z.null(), z.string(), z.array(z.string()), z.record(z.string(), z.unknown())]).optional(),
 
   publisher: z.string().openapi({
     description: "The publisher of the extension",
@@ -273,6 +261,14 @@ export const BuiltinExtensionSchema = z.object({
   pricing: z.enum(["Free", "Trial"]).optional().openapi({
     description: "The pricing model for the extension",
   }),
-}).passthrough().openapi("BuiltinExtension", {
+}).loose().openapi("BuiltinExtension", {
   description: "A package.json that describes a builtin extension",
+});
+
+export const ContributesSchema = z.record(z.string(), z.unknown()).openapi({
+  description: "A record of contributes for a builtin extension",
+});
+
+export const ConfigurationSchema = z.unknown().openapi({
+  description: "The configuration for a builtin extension",
 });
