@@ -8,8 +8,8 @@ import { font } from "../utils";
 export const textImageRouter = new Hono<HonoContext>();
 
 const schema = z.object({
-  width: z.coerce.number().min(300).max(1500).default(1200),
-  height: z.coerce.number().min(300).max(1500).default(630),
+  width: z.coerce.number().min(0).max(1500).default(1200),
+  height: z.coerce.number().min(0).max(1500).default(630),
   text: z.string().default("LN"),
   textColor: z.string().default("blue-600"),
   bgColor: z.string().default("white"),
