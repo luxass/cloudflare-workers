@@ -16,7 +16,7 @@ catalogs:
     typescript: 5.9.3
     vitest: 4.0.16
     wrangler: 4.54.0
-    "@cloudflare/workers-types": 4.20251225.0
+    "@cloudflare/workers-types": 4.20260103.0
 
   prod:
     "@hono/zod-openapi": 1.2.0
@@ -24,9 +24,9 @@ catalogs:
     "@octokit/graphql": 9.0.3
     "@octokit/plugin-paginate-rest": 14.0.0
     "@scalar/hono-api-reference": 0.9.30
-    hono: 4.11.2
+    hono: 4.11.3
     semver: 7.7.3
-    zod: 4.2.1
+    zod: 4.3.4
 
   vscode:
     "@ast-grep/napi": 0.40.3
@@ -34,7 +34,7 @@ catalogs:
   image:
     "@resvg/resvg-wasm": 2.4.1
     hono-jsx-to-react: 0.2.1
-    satori: 0.15.2
+    satori: 0.18.3
     yoga-wasm-web: 0.3.3
 
 onlyBuiltDependencies:
