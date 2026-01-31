@@ -2,14 +2,12 @@ import type { HonoElement } from "hono-jsx-to-react";
 import type { ImageResponseOptions } from "./types";
 import { initWasm, Resvg } from "@resvg/resvg-wasm";
 import { toReactNode } from "hono-jsx-to-react";
-import satori, { init } from "satori/wasm";
+import satori, { init } from "satori";
 import initYoga from "yoga-wasm-web";
 import { getIconCode, loadEmoji } from "./emoji";
 // @ts-expect-error .wasm files are not typed
 import resvgWasm from "./resvg.wasm";
 import { font } from "./utils";
-// @ts-expect-error .wasm files are not typed
-import yogaWasm from "./yoga.wasm";
 
 async function initResvgWasm() {
   try {
@@ -18,16 +16,6 @@ async function initResvgWasm() {
     if (err instanceof Error && err.message.includes("Already initialized")) {
       return;
     }
-    throw err;
-  }
-}
-
-async function initYogaWasm() {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    const yoga = await initYoga(yogaWasm);
-    await init(yoga);
-  } catch (err) {
     throw err;
   }
 }
@@ -59,7 +47,6 @@ interface RenderOptions {
 
 export async function render({ element, options }: RenderOptions) {
   await initResvgWasm();
-  await initYogaWasm();
 
   const width = options.width;
   const height = options.height;
