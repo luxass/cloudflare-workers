@@ -3,7 +3,6 @@ import type { ImageResponseOptions } from "./types";
 import { initWasm, Resvg } from "@resvg/resvg-wasm";
 import { toReactNode } from "hono-jsx-to-react";
 import satori, { init } from "satori";
-import initYoga from "yoga-wasm-web";
 import { getIconCode, loadEmoji } from "./emoji";
 // @ts-expect-error .wasm files are not typed
 import resvgWasm from "./resvg.wasm";

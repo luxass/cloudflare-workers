@@ -35,7 +35,6 @@ catalogs:
     "@resvg/resvg-wasm": 2.4.1
     hono-jsx-to-react: 0.2.1
     satori: 0.19.1
-    yoga-wasm-web: 0.3.3
 
 onlyBuiltDependencies:
   - esbuild

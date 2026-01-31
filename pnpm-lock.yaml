@@ -52,9 +52,6 @@ catalogs:
     satori:
       specifier: 0.19.1
       version: 0.19.1
-    yoga-wasm-web:
-      specifier: 0.3.3
-      version: 0.3.3
   prod:
     '@hono/zod-openapi':
       specifier: 1.2.0
@@ -150,9 +147,6 @@ importers:
       satori:
         specifier: catalog:image
         version: 0.19.1
-      yoga-wasm-web:
-        specifier: catalog:image
-        version: 0.3.3
       zod:
         specifier: catalog:prod
         version: 4.3.6
@@ -371,7 +365,7 @@ packages:
     engines: {node: '>=18.0.0'}
 
   '@cloudflare/kv-asset-handler@https://pkg.pr.new/cloudflare/workers-sdk/@cloudflare/kv-asset-handler@79a1932':
-    resolution: {integrity: sha512-elqwj+rI7CRHg8sv/6yKFEXmi4nzF1DA9I/v5DW+RXA6xQlhq8r8BhpWOK2VPEiiCtlSNRZV4iph87dxe8790Q==, tarball: https://pkg.pr.new/cloudflare/workers-sdk/@cloudflare/kv-asset-handler@79a1932}
+    resolution: {tarball: https://pkg.pr.new/cloudflare/workers-sdk/@cloudflare/kv-asset-handler@79a1932}
     version: 0.4.2
     engines: {node: '>=18.0.0'}
 
@@ -385,7 +379,7 @@ packages:
         optional: true
 
   '@cloudflare/unenv-preset@https://pkg.pr.new/cloudflare/workers-sdk/@cloudflare/unenv-preset@79a1932':
-    resolution: {integrity: sha512-doJDJJGwtJ8jrY19dUZA3L3jDNJMayioGwUaHqz4wE6CIBTHzEAinF9DJhQl0l1l7OAHkhZw/Lk4yRCGHxmP8w==, tarball: https://pkg.pr.new/cloudflare/workers-sdk/@cloudflare/unenv-preset@79a1932}
+    resolution: {tarball: https://pkg.pr.new/cloudflare/workers-sdk/@cloudflare/unenv-preset@79a1932}
     version: 2.11.0
     peerDependencies:
       unenv: 2.0.0-rc.24
@@ -2494,7 +2488,7 @@ packages:
     hasBin: true
 
   miniflare@https://pkg.pr.new/cloudflare/workers-sdk/miniflare@79a1932:
-    resolution: {integrity: sha512-AzGelopZDQwEVqzT1spQKyBn0J12EsD52GlkJUB0HaQ6oNWLRM66hiQJ66sqpIzwQ7+DC2Qtgv4gqTyED3IBRw==, tarball: https://pkg.pr.new/cloudflare/workers-sdk/miniflare@79a1932}
+    resolution: {tarball: https://pkg.pr.new/cloudflare/workers-sdk/miniflare@79a1932}
     version: 4.20260120.0
     engines: {node: '>=18.0.0'}
     hasBin: true
@@ -2994,7 +2988,7 @@ packages:
         optional: true
 
   wrangler@https://pkg.pr.new/cloudflare/workers-sdk/wrangler@79a1932:
-    resolution: {integrity: sha512-80QJYzDgs4Eo3763D6W3HETK86ZcTYxdyj8sOgJaShyUAAX/HXLg8ylitJBoh0G8ZuBtNKgD8Gf9Hc1rqgSiPA==, tarball: https://pkg.pr.new/cloudflare/workers-sdk/wrangler@79a1932}
+    resolution: {tarball: https://pkg.pr.new/cloudflare/workers-sdk/wrangler@79a1932}
     version: 4.60.0
     engines: {node: '>=20.0.0'}
     hasBin: true
@@ -3035,9 +3029,6 @@ packages:
 
   yoga-layout@3.2.1:
     resolution: {integrity: sha512-0LPOt3AxKqMdFBZA3HBAt/t/8vIKq7VaQYbuA8WxCgung+p9TVyKRYdpvCb80HcdTN2NkbIKbhNwKUfm3tQywQ==}
-
-  yoga-wasm-web@0.3.3:
-    resolution: {integrity: sha512-N+d4UJSJbt/R3wqY7Coqs5pcV0aUj2j9IaQ3rNj9bVCLld8tTGKRa2USARjnvZJWVx1NDmQev8EknoczaOQDOA==}
 
   youch-core@0.3.3:
     resolution: {integrity: sha512-ho7XuGjLaJ2hWHoK8yFnsUGy2Y5uDpqSTq1FkHLK4/oqKtyUU1AFbOOxY4IpC9f0fTLjwYbslUz0Po5BpD1wrA==}
@@ -5768,8 +5759,6 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   yoga-layout@3.2.1: {}
-
-  yoga-wasm-web@0.3.3: {}
 
   youch-core@0.3.3:
     dependencies:
