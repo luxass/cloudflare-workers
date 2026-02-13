@@ -10,14 +10,14 @@ catalogs:
       specifier: https://pkg.pr.new/@cloudflare/vitest-pool-workers@11632
       version: 0.12.6
     '@cloudflare/workers-types':
-      specifier: 4.20260131.0
-      version: 4.20260131.0
+      specifier: 4.20260206.0
+      version: 4.20260206.0
     '@luxass/eslint-config':
       specifier: 6.0.3
       version: 6.0.3
     '@types/node':
-      specifier: 25.0.9
-      version: 25.0.9
+      specifier: 25.2.1
+      version: 25.2.1
     '@types/semver':
       specifier: 7.7.1
       version: 7.7.1
@@ -28,8 +28,8 @@ catalogs:
       specifier: 1.3.1
       version: 1.3.1
     github-schema:
-      specifier: 1.22.5
-      version: 1.22.5
+      specifier: 1.22.6
+      version: 1.22.6
     tsx:
       specifier: 4.21.0
       version: 4.21.0
@@ -40,8 +40,8 @@ catalogs:
       specifier: 4.1.0-beta.1
       version: 4.1.0-beta.1
     wrangler:
-      specifier: 4.61.1
-      version: 4.61.1
+      specifier: 4.63.0
+      version: 4.63.0
   image:
     '@resvg/resvg-wasm':
       specifier: 2.4.1
@@ -54,8 +54,8 @@ catalogs:
       version: 0.19.1
   prod:
     '@hono/zod-openapi':
-      specifier: 1.2.0
-      version: 1.2.0
+      specifier: 1.2.1
+      version: 1.2.1
     '@octokit/core':
       specifier: 7.0.6
       version: 7.0.6
@@ -63,14 +63,14 @@ catalogs:
       specifier: 14.0.0
       version: 14.0.0
     '@scalar/hono-api-reference':
-      specifier: 0.9.39
-      version: 0.9.39
+      specifier: 0.9.40
+      version: 0.9.40
     hono:
-      specifier: 4.11.7
-      version: 4.11.7
+      specifier: 4.11.8
+      version: 4.11.8
     semver:
-      specifier: 7.7.3
-      version: 7.7.3
+      specifier: 7.7.4
+      version: 7.7.4
     zod:
       specifier: 4.3.6
       version: 4.3.6
@@ -85,7 +85,7 @@ importers:
     devDependencies:
       '@luxass/eslint-config':
         specifier: catalog:dev
-        version: 6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))
+        version: 6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))
       eslint:
         specifier: catalog:dev
         version: 9.39.2
@@ -97,10 +97,10 @@ importers:
         version: 5.9.3
       vitest:
         specifier: catalog:dev
-        version: 4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2)
+        version: 4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2)
       wrangler:
         specifier: catalog:dev
-        version: 4.61.1(@cloudflare/workers-types@4.20260131.0)
+        version: 4.63.0(@cloudflare/workers-types@4.20260206.0)
 
   apps/assets:
     dependencies:
@@ -109,14 +109,14 @@ importers:
         version: link:../../packages/helpers
       hono:
         specifier: catalog:prod
-        version: 4.11.7
+        version: 4.11.8
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: catalog:dev
-        version: https://pkg.pr.new/@cloudflare/vitest-pool-workers@11632(@cloudflare/workers-types@4.20260131.0)(@vitest/runner@4.1.0-beta.2)(@vitest/snapshot@4.1.0-beta.2)(vitest@4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))
+        version: https://pkg.pr.new/@cloudflare/vitest-pool-workers@11632(@cloudflare/workers-types@4.20260206.0)(@vitest/runner@4.1.0-beta.2)(@vitest/snapshot@4.1.0-beta.2)(vitest@4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))
       '@luxass/eslint-config':
         specifier: catalog:dev
-        version: 6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))
+        version: 6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))
       eslint:
         specifier: catalog:dev
         version: 9.39.2
@@ -125,10 +125,10 @@ importers:
         version: 5.9.3
       vitest:
         specifier: catalog:dev
-        version: 4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2)
+        version: 4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2)
       wrangler:
         specifier: catalog:dev
-        version: 4.61.1(@cloudflare/workers-types@4.20260131.0)
+        version: 4.63.0(@cloudflare/workers-types@4.20260206.0)
 
   apps/image:
     dependencies:
@@ -140,10 +140,10 @@ importers:
         version: 2.4.1
       hono:
         specifier: catalog:prod
-        version: 4.11.7
+        version: 4.11.8
       hono-jsx-to-react:
         specifier: catalog:image
-        version: 0.2.1(hono@4.11.7)
+        version: 0.2.1(hono@4.11.8)
       satori:
         specifier: catalog:image
         version: 0.19.1
@@ -153,7 +153,7 @@ importers:
     devDependencies:
       '@luxass/eslint-config':
         specifier: catalog:dev
-        version: 6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))
+        version: 6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))
       eslint:
         specifier: catalog:dev
         version: 9.39.2
@@ -162,7 +162,7 @@ importers:
         version: 5.9.3
       wrangler:
         specifier: catalog:dev
-        version: 4.61.1(@cloudflare/workers-types@4.20260131.0)
+        version: 4.63.0(@cloudflare/workers-types@4.20260206.0)
 
   apps/vscode:
     dependencies:
@@ -171,7 +171,7 @@ importers:
         version: link:../../packages/helpers
       '@hono/zod-openapi':
         specifier: catalog:prod
-        version: 1.2.0(hono@4.11.7)(zod@4.3.6)
+        version: 1.2.1(hono@4.11.8)(zod@4.3.6)
       '@octokit/core':
         specifier: catalog:prod
         version: 7.0.6
@@ -180,13 +180,13 @@ importers:
         version: 14.0.0(@octokit/core@7.0.6)
       '@scalar/hono-api-reference':
         specifier: catalog:prod
-        version: 0.9.39(hono@4.11.7)
+        version: 0.9.40(hono@4.11.8)
       hono:
         specifier: catalog:prod
-        version: 4.11.7
+        version: 4.11.8
       semver:
         specifier: catalog:prod
-        version: 7.7.3
+        version: 7.7.4
       zod:
         specifier: catalog:prod
         version: 4.3.6
@@ -196,13 +196,13 @@ importers:
         version: 0.40.5
       '@cloudflare/vitest-pool-workers':
         specifier: catalog:dev
-        version: https://pkg.pr.new/@cloudflare/vitest-pool-workers@11632(@cloudflare/workers-types@4.20260131.0)(@vitest/runner@4.1.0-beta.2)(@vitest/snapshot@4.1.0-beta.2)(vitest@4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))
+        version: https://pkg.pr.new/@cloudflare/vitest-pool-workers@11632(@cloudflare/workers-types@4.20260206.0)(@vitest/runner@4.1.0-beta.2)(@vitest/snapshot@4.1.0-beta.2)(vitest@4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))
       '@luxass/eslint-config':
         specifier: catalog:dev
-        version: 6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))
+        version: 6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))
       '@types/node':
         specifier: catalog:dev
-        version: 25.0.9
+        version: 25.2.1
       '@types/semver':
         specifier: catalog:dev
         version: 7.7.1
@@ -220,16 +220,16 @@ importers:
         version: 5.9.3
       vitest:
         specifier: catalog:dev
-        version: 4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2)
+        version: 4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2)
       wrangler:
         specifier: catalog:dev
-        version: 4.61.1(@cloudflare/workers-types@4.20260131.0)
+        version: 4.63.0(@cloudflare/workers-types@4.20260206.0)
 
   packages/helpers:
     dependencies:
       '@hono/zod-openapi':
         specifier: catalog:prod
-        version: 1.2.0(hono@4.11.7)(zod@4.3.6)
+        version: 1.2.1(hono@4.11.8)(zod@4.3.6)
       '@octokit/core':
         specifier: catalog:prod
         version: 7.0.6
@@ -238,20 +238,20 @@ importers:
         version: 14.0.0(@octokit/core@7.0.6)
       '@scalar/hono-api-reference':
         specifier: catalog:prod
-        version: 0.9.39(hono@4.11.7)
+        version: 0.9.40(hono@4.11.8)
       hono:
         specifier: catalog:prod
-        version: 4.11.7
+        version: 4.11.8
       zod:
         specifier: catalog:prod
         version: 4.3.6
     devDependencies:
       '@cloudflare/workers-types':
         specifier: catalog:dev
-        version: 4.20260131.0
+        version: 4.20260206.0
       '@luxass/eslint-config':
         specifier: catalog:dev
-        version: 6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))
+        version: 6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))
       eslint:
         specifier: catalog:dev
         version: 9.39.2
@@ -260,7 +260,7 @@ importers:
         version: 1.3.1(eslint@9.39.2)
       github-schema:
         specifier: catalog:dev
-        version: 1.22.5
+        version: 1.22.6
       typescript:
         specifier: catalog:dev
         version: 5.9.3
@@ -389,7 +389,7 @@ packages:
         optional: true
 
   '@cloudflare/vitest-pool-workers@https://pkg.pr.new/@cloudflare/vitest-pool-workers@11632':
-    resolution: {integrity: sha512-NmzXfKgEcR1I9xQMeQGZODB9N4wBzTbl9PJMxLzeq5smYatje18ZRDxeN2P4bS3pRCa6XI/aRNTAEYyAR4C4ew==, tarball: https://pkg.pr.new/@cloudflare/vitest-pool-workers@11632}
+    resolution: {tarball: https://pkg.pr.new/@cloudflare/vitest-pool-workers@11632}
     version: 0.12.6
     peerDependencies:
       '@vitest/runner': 4.1.0-beta.1
@@ -402,8 +402,8 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@cloudflare/workerd-darwin-64@1.20260128.0':
-    resolution: {integrity: sha512-XJN8zWWNG3JwAUqqwMLNKJ9fZfdlQkx/zTTHW/BB8wHat9LjKD6AzxqCu432YmfjR+NxEKCzUOxMu1YOxlVxmg==}
+  '@cloudflare/workerd-darwin-64@1.20260205.0':
+    resolution: {integrity: sha512-ToOItqcirmWPwR+PtT+Q4bdjTn/63ZxhJKEfW4FNn7FxMTS1Tw5dml0T0mieOZbCpcvY8BdvPKFCSlJuI8IVHQ==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [darwin]
@@ -414,8 +414,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@cloudflare/workerd-darwin-arm64@1.20260128.0':
-    resolution: {integrity: sha512-vKnRcmnm402GQ5DOdfT5H34qeR2m07nhnTtky8mTkNWP+7xmkz32AMdclwMmfO/iX9ncyKwSqmml2wPG32eq/w==}
+  '@cloudflare/workerd-darwin-arm64@1.20260205.0':
+    resolution: {integrity: sha512-402ZqLz+LrG0NDXp7Hn7IZbI0DyhjNfjAlVenb0K3yod9KCuux0u3NksNBvqJx0mIGHvVR4K05h+jfT5BTHqGA==}
     engines: {node: '>=16'}
     cpu: [arm64]
     os: [darwin]
@@ -426,8 +426,8 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@cloudflare/workerd-linux-64@1.20260128.0':
-    resolution: {integrity: sha512-RiaR+Qugof/c6oI5SagD2J5wJmIfI8wQWaV2Y9905Raj6sAYOFaEKfzkKnoLLLNYb4NlXicBrffJi1j7R/ypUA==}
+  '@cloudflare/workerd-linux-64@1.20260205.0':
+    resolution: {integrity: sha512-rz9jBzazIA18RHY+osa19hvsPfr0LZI1AJzIjC6UqkKKphcTpHBEQ25Xt8cIA34ivMIqeENpYnnmpDFesLkfcQ==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [linux]
@@ -438,8 +438,8 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@cloudflare/workerd-linux-arm64@1.20260128.0':
-    resolution: {integrity: sha512-U39U9vcXLXYDbrJ112Q7D0LDUUnM54oXfAxPgrL2goBwio7Z6RnsM25TRvm+Q06F4+FeDOC4D51JXlFHb9t1OA==}
+  '@cloudflare/workerd-linux-arm64@1.20260205.0':
+    resolution: {integrity: sha512-jr6cKpMM/DBEbL+ATJ9rYue758CKp0SfA/nXt5vR32iINVJrb396ye9iat2y9Moa/PgPKnTrFgmT6urUmG3IUg==}
     engines: {node: '>=16'}
     cpu: [arm64]
     os: [linux]
@@ -450,14 +450,14 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@cloudflare/workerd-windows-64@1.20260128.0':
-    resolution: {integrity: sha512-fdJwSqRkJsAJFJ7+jy0th2uMO6fwaDA8Ny6+iFCssfzlNkc4dP/twXo+3F66FMLMe/6NIqjzVts0cpiv7ERYbQ==}
+  '@cloudflare/workerd-windows-64@1.20260205.0':
+    resolution: {integrity: sha512-SMPW5jCZYOG7XFIglSlsgN8ivcl0pCrSAYxCwxtWvZ88whhcDB/aISNtiQiDZujPH8tIo2hE5dEkxW7tGEwc3A==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [win32]
 
-  '@cloudflare/workers-types@4.20260131.0':
-    resolution: {integrity: sha512-ELgvb2mp68Al50p+FmpgCO2hgU5o4tmz8pi7kShN+cRXc0UZoEdxpDIikR0CeT7b3tV7wlnEnsUzd0UoJLS0oQ==}
+  '@cloudflare/workers-types@4.20260206.0':
+    resolution: {integrity: sha512-rHbE1XM3mfwzoyOiKm1oFRTp00Cv4U5UiuMDQwmu/pc79yOA3nDiOC0lue8aOpobBrP4tPHQqsPcWG606Zrw/w==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -1012,8 +1012,8 @@ packages:
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@hono/zod-openapi@1.2.0':
-    resolution: {integrity: sha512-KDfHqv/Wy4elVseZXgokbHxeWuqBL+AZfqsOMpEihBMUsk/fJ+bLIi3Sf70JFVpt1Ihui8RasYrInozt7ZBDIA==}
+  '@hono/zod-openapi@1.2.1':
+    resolution: {integrity: sha512-aZza4V8wkqpdHBWFNPiCeWd0cGOXbYuQW9AyezHs/jwQm5p67GkUyXwfthAooAwnG7thTpvOJkThZpCoY6us8w==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       hono: '>=4.3.6'
@@ -1418,22 +1418,22 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@scalar/core@0.3.36':
-    resolution: {integrity: sha512-gdgoF/XP2RkvhqGlI0l2MWTR/2522GPdaiQkWwS348Po8oCkJy2npxFuZbC2jtp6DIrWDrOD6qYgHssyzMmcrA==}
+  '@scalar/core@0.3.37':
+    resolution: {integrity: sha512-cQWMHsGD9jCiYHi91acR3tOsj+qGk+dRQ2W+N5+au1NZ/GkUNT5TUEufekn/sj1S8af+lOnn3y0xXoTI34jCog==}
     engines: {node: '>=20'}
 
-  '@scalar/helpers@0.2.10':
-    resolution: {integrity: sha512-VS32setBEAGY9JifuDZKHIq8SUCUWLEfL1V+h3s5V4wcmE8OZVkzaJemsMq/YAM9e7gb9ZbkvJLL4zzEvPSrVg==}
+  '@scalar/helpers@0.2.11':
+    resolution: {integrity: sha512-Y7DLt1bIZF9dvHzJwSJTcC1lpSr1Tbf4VBhHOCRIHu23Rr7/lhQnddRxFmPV1tZXwEQKz7F7yRrubwCfKPCucw==}
     engines: {node: '>=20'}
 
-  '@scalar/hono-api-reference@0.9.39':
-    resolution: {integrity: sha512-ui1Z01GactnBy/2UCtgLgbr4OJSqJ5fm7l48nam19ROUskimValoHPB7DfqN/sr470jwq7DhcLncufxUWwS41w==}
+  '@scalar/hono-api-reference@0.9.40':
+    resolution: {integrity: sha512-0tQOxyEwuu1QGcoA5aCJg2eSmNfF35mxeGx13TND9ud5ZBeuOqli8jyfykgkqV3gFTnDDlQYgQcOvB6Rgk2beA==}
     engines: {node: '>=20'}
     peerDependencies:
       hono: ^4.11.5
 
-  '@scalar/types@0.6.1':
-    resolution: {integrity: sha512-2u/pZTauRLoUDD2PpJF8XDflZX3PgaYSD72cFDBL1WVM/jb0IxoWggxWKm34OR03LnNYbTvXlwfyr2QZ0hm3Xg==}
+  '@scalar/types@0.6.2':
+    resolution: {integrity: sha512-VWfY/z9R5NT8PpKVmvmIj6QSh56MMcl8x3JsGiNxR+w7txGQEq+QzEl35aU56uSBFmLfPk1oyInoaHhkosKooA==}
     engines: {node: '>=20'}
 
   '@shuding/opentype.js@1.4.0-beta.0':
@@ -1485,8 +1485,8 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/node@25.0.9':
-    resolution: {integrity: sha512-/rpCXHlCWeqClNBwUhDcusJxXYDjZTyE8v5oTO7WbL8eij2nKhUeU89/6xgjU7N4/Vh3He0BtyhJdQbDyhiXAw==}
+  '@types/node@25.2.1':
+    resolution: {integrity: sha512-CPrnr8voK8vC6eEtyRzvMpgp3VyVRhgclonE7qYi6P9sXwYb59ucfrnmFBTaP0yUi8Gk4yZg/LlTJULGxvTNsg==}
 
   '@types/semver@7.7.1':
     resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
@@ -2219,8 +2219,8 @@ packages:
   get-tsconfig@4.10.1:
     resolution: {integrity: sha512-auHyJ4AgMz7vgS8Hp3N6HXSmlMdUyhSUrfBF16w153rxtLIEOE+HGqaBppczZvnHLqQJfiHotCYpNhl0lUROFQ==}
 
-  github-schema@1.22.5:
-    resolution: {integrity: sha512-44tcwqykwQQWT9i9mOhQfNtOTot9dq+IN3PGibj4w4clP4v1se7U5Cmde4AWJm0S0bbuFmsqc3E6ru0LDWQj9g==}
+  github-schema@1.22.6:
+    resolution: {integrity: sha512-2fIjUQqNxavEj6DWQ+9HX7d2kV2LxWvh43/vkOq/Ds8TwfVAvYa+OJ5oPtu2WtbeH7G4p066ouh841y73VYB8g==}
     engines: {node: '>=20'}
 
   github-slugger@2.0.0:
@@ -2279,8 +2279,8 @@ packages:
     peerDependencies:
       hono: '>=4'
 
-  hono@4.11.7:
-    resolution: {integrity: sha512-l7qMiNee7t82bH3SeyUCt9UF15EVmaBvsppY2zQtrbIhl/yzBTny+YUxsVjSjQ6gaqaeVtZmGocom8TzBlA4Yw==}
+  hono@4.11.8:
+    resolution: {integrity: sha512-eVkB/CYCCei7K2WElZW9yYQFWssG0DhaDhVvr7wy5jJ22K+ck8fWW0EsLpB0sITUTvPnc97+rrbQqIr5iqiy9Q==}
     engines: {node: '>=16.9.0'}
 
   html-entities@2.6.0:
@@ -2523,8 +2523,8 @@ packages:
     resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
     engines: {node: '>=8.6'}
 
-  miniflare@4.20260128.0:
-    resolution: {integrity: sha512-AVCn3vDRY+YXu1sP4mRn81ssno6VUqxo29uY2QVfgxXU2TMLvhRIoGwm7RglJ3Gzfuidit5R86CMQ6AvdFTGAw==}
+  miniflare@4.20260205.0:
+    resolution: {integrity: sha512-jG1TknEDeFqcq/z5gsOm1rKeg4cNG7ruWxEuiPxl3pnQumavxo8kFpeQC6XKVpAhh2PI9ODGyIYlgd77sTHl5g==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -2736,8 +2736,8 @@ packages:
     resolution: {integrity: sha512-3A6sD0WYP7+QrjbfNA2FN3FsOaGGFoekCVgTyypy53gPxhbkCIjtO6YWgdrfM+n/8sI8JeXZOIxsHjMTNxQ4nQ==}
     engines: {node: ^14.0.0 || >=16.0.0}
 
-  semver@7.7.3:
-    resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
+  semver@7.7.4:
+    resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -3047,17 +3047,17 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  workerd@1.20260128.0:
-    resolution: {integrity: sha512-EhLJGptSGFi8AEErLiamO3PoGpbRqL+v4Ve36H2B38VxmDgFOSmDhfepBnA14sCQzGf1AEaoZX2DCwZsmO74yQ==}
+  workerd@1.20260205.0:
+    resolution: {integrity: sha512-CcMH5clHwrH8VlY7yWS9C/G/C8g9czIz1yU3akMSP9Z3CkEMFSoC3GGdj5G7Alw/PHEeez1+1IrlYger4pwu+w==}
     engines: {node: '>=16'}
     hasBin: true
 
-  wrangler@4.61.1:
-    resolution: {integrity: sha512-hfYQ16VLPkNi8xE1/V3052S2stM5e+vq3Idpt83sXoDC3R7R1CLgMkK6M6+Qp3G+9GVDNyHCkvohMPdfFTaD4Q==}
+  wrangler@4.63.0:
+    resolution: {integrity: sha512-+R04jF7Eb8K3KRMSgoXpcIdLb8GC62eoSGusYh1pyrSMm/10E0hbKkd7phMJO4HxXc6R7mOHC5SSoX9eof30Uw==}
     engines: {node: '>=20.0.0'}
     hasBin: true
     peerDependencies:
-      '@cloudflare/workers-types': ^4.20260128.0
+      '@cloudflare/workers-types': ^4.20260205.0
     peerDependenciesMeta:
       '@cloudflare/workers-types':
         optional: true
@@ -3199,11 +3199,11 @@ snapshots:
 
   '@cloudflare/kv-asset-handler@https://pkg.pr.new/cloudflare/workers-sdk/@cloudflare/kv-asset-handler@79a1932': {}
 
-  '@cloudflare/unenv-preset@2.12.0(unenv@2.0.0-rc.24)(workerd@1.20260128.0)':
+  '@cloudflare/unenv-preset@2.12.0(unenv@2.0.0-rc.24)(workerd@1.20260205.0)':
     dependencies:
       unenv: 2.0.0-rc.24
     optionalDependencies:
-      workerd: 1.20260128.0
+      workerd: 1.20260205.0
 
   '@cloudflare/unenv-preset@https://pkg.pr.new/cloudflare/workers-sdk/@cloudflare/unenv-preset@79a1932(unenv@2.0.0-rc.24)(workerd@1.20260122.0)':
     dependencies:
@@ -3211,15 +3211,15 @@ snapshots:
     optionalDependencies:
       workerd: 1.20260122.0
 
-  '@cloudflare/vitest-pool-workers@https://pkg.pr.new/@cloudflare/vitest-pool-workers@11632(@cloudflare/workers-types@4.20260131.0)(@vitest/runner@4.1.0-beta.2)(@vitest/snapshot@4.1.0-beta.2)(vitest@4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))':
+  '@cloudflare/vitest-pool-workers@https://pkg.pr.new/@cloudflare/vitest-pool-workers@11632(@cloudflare/workers-types@4.20260206.0)(@vitest/runner@4.1.0-beta.2)(@vitest/snapshot@4.1.0-beta.2)(vitest@4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))':
     dependencies:
       '@vitest/runner': 4.1.0-beta.2
       '@vitest/snapshot': 4.1.0-beta.2
       cjs-module-lexer: 1.4.3
       esbuild: 0.27.0
       miniflare: https://pkg.pr.new/cloudflare/workers-sdk/miniflare@79a1932
-      vitest: 4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2)
-      wrangler: https://pkg.pr.new/cloudflare/workers-sdk/wrangler@79a1932(@cloudflare/workers-types@4.20260131.0)
+      vitest: 4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2)
+      wrangler: https://pkg.pr.new/cloudflare/workers-sdk/wrangler@79a1932(@cloudflare/workers-types@4.20260206.0)
       zod: 3.25.76
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
@@ -3229,34 +3229,34 @@ snapshots:
   '@cloudflare/workerd-darwin-64@1.20260122.0':
     optional: true
 
-  '@cloudflare/workerd-darwin-64@1.20260128.0':
+  '@cloudflare/workerd-darwin-64@1.20260205.0':
     optional: true
 
   '@cloudflare/workerd-darwin-arm64@1.20260122.0':
     optional: true
 
-  '@cloudflare/workerd-darwin-arm64@1.20260128.0':
+  '@cloudflare/workerd-darwin-arm64@1.20260205.0':
     optional: true
 
   '@cloudflare/workerd-linux-64@1.20260122.0':
     optional: true
 
-  '@cloudflare/workerd-linux-64@1.20260128.0':
+  '@cloudflare/workerd-linux-64@1.20260205.0':
     optional: true
 
   '@cloudflare/workerd-linux-arm64@1.20260122.0':
     optional: true
 
-  '@cloudflare/workerd-linux-arm64@1.20260128.0':
+  '@cloudflare/workerd-linux-arm64@1.20260205.0':
     optional: true
 
   '@cloudflare/workerd-windows-64@1.20260122.0':
     optional: true
 
-  '@cloudflare/workerd-windows-64@1.20260128.0':
+  '@cloudflare/workerd-windows-64@1.20260205.0':
     optional: true
 
-  '@cloudflare/workers-types@4.20260131.0': {}
+  '@cloudflare/workers-types@4.20260206.0': {}
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
@@ -3595,17 +3595,17 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@hono/zod-openapi@1.2.0(hono@4.11.7)(zod@4.3.6)':
+  '@hono/zod-openapi@1.2.1(hono@4.11.8)(zod@4.3.6)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.2.0(zod@4.3.6)
-      '@hono/zod-validator': 0.7.6(hono@4.11.7)(zod@4.3.6)
-      hono: 4.11.7
+      '@hono/zod-validator': 0.7.6(hono@4.11.8)(zod@4.3.6)
+      hono: 4.11.8
       openapi3-ts: 4.5.0
       zod: 4.3.6
 
-  '@hono/zod-validator@0.7.6(hono@4.11.7)(zod@4.3.6)':
+  '@hono/zod-validator@0.7.6(hono@4.11.8)(zod@4.3.6)':
     dependencies:
-      hono: 4.11.7
+      hono: 4.11.8
       zod: 4.3.6
 
   '@humanfs/core@0.19.1': {}
@@ -3726,7 +3726,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@luxass/eslint-config@6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))':
+  '@luxass/eslint-config@6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))':
     dependencies:
       '@antfu/install-pkg': 1.1.0
       '@clack/prompts': 0.11.0
@@ -3735,7 +3735,7 @@ snapshots:
       '@stylistic/eslint-plugin': 5.5.0(eslint@9.39.2)
       '@typescript-eslint/eslint-plugin': 8.46.3(@typescript-eslint/parser@8.46.3(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)
       '@typescript-eslint/parser': 8.46.3(eslint@9.39.2)(typescript@5.9.3)
-      '@vitest/eslint-plugin': 1.4.1(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitest/eslint-plugin': 1.4.1(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))
       eslint: 9.39.2
       eslint-config-flat-gitignore: 2.1.0(eslint@9.39.2)
       eslint-flat-config-utils: 2.1.4
@@ -3771,7 +3771,7 @@ snapshots:
       - typescript
       - vitest
 
-  '@luxass/eslint-config@6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))':
+  '@luxass/eslint-config@6.0.3(@vue/compiler-sfc@3.5.14)(eslint-plugin-format@1.3.1(eslint@9.39.2))(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))':
     dependencies:
       '@antfu/install-pkg': 1.1.0
       '@clack/prompts': 0.11.0
@@ -3780,7 +3780,7 @@ snapshots:
       '@stylistic/eslint-plugin': 5.5.0(eslint@9.39.2)
       '@typescript-eslint/eslint-plugin': 8.46.3(@typescript-eslint/parser@8.46.3(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)
       '@typescript-eslint/parser': 8.46.3(eslint@9.39.2)(typescript@5.9.3)
-      '@vitest/eslint-plugin': 1.4.1(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitest/eslint-plugin': 1.4.1(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))
       eslint: 9.39.2
       eslint-config-flat-gitignore: 2.1.0(eslint@9.39.2)
       eslint-flat-config-utils: 2.1.4
@@ -3950,20 +3950,20 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.43.0':
     optional: true
 
-  '@scalar/core@0.3.36':
+  '@scalar/core@0.3.37':
     dependencies:
-      '@scalar/types': 0.6.1
+      '@scalar/types': 0.6.2
 
-  '@scalar/helpers@0.2.10': {}
+  '@scalar/helpers@0.2.11': {}
 
-  '@scalar/hono-api-reference@0.9.39(hono@4.11.7)':
+  '@scalar/hono-api-reference@0.9.40(hono@4.11.8)':
     dependencies:
-      '@scalar/core': 0.3.36
-      hono: 4.11.7
+      '@scalar/core': 0.3.37
+      hono: 4.11.8
 
-  '@scalar/types@0.6.1':
+  '@scalar/types@0.6.2':
     dependencies:
-      '@scalar/helpers': 0.2.10
+      '@scalar/helpers': 0.2.11
       nanoid: 5.1.6
       type-fest: 5.4.2
       zod: 4.3.6
@@ -4013,7 +4013,7 @@ snapshots:
 
   '@types/ms@2.1.0': {}
 
-  '@types/node@25.0.9':
+  '@types/node@25.2.1':
     dependencies:
       undici-types: 7.16.0
 
@@ -4112,7 +4112,7 @@ snapshots:
       fast-glob: 3.3.3
       is-glob: 4.0.3
       minimatch: 9.0.5
-      semver: 7.7.3
+      semver: 7.7.4
       ts-api-utils: 2.1.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -4126,7 +4126,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.50.1
       debug: 4.4.3
       minimatch: 9.0.5
-      semver: 7.7.3
+      semver: 7.7.4
       tinyglobby: 0.2.15
       ts-api-utils: 2.1.0(typescript@5.9.3)
       typescript: 5.9.3
@@ -4165,25 +4165,25 @@ snapshots:
       '@typescript-eslint/types': 8.50.1
       eslint-visitor-keys: 4.2.1
 
-  '@vitest/eslint-plugin@1.4.1(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))':
+  '@vitest/eslint-plugin@1.4.1(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.18(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))':
     dependencies:
       '@typescript-eslint/scope-manager': 8.50.1
       '@typescript-eslint/utils': 8.50.1(eslint@9.39.2)(typescript@5.9.3)
       eslint: 9.39.2
     optionalDependencies:
       typescript: 5.9.3
-      vitest: 4.0.18(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2)
+      vitest: 4.0.18(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/eslint-plugin@1.4.1(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))':
+  '@vitest/eslint-plugin@1.4.1(eslint@9.39.2)(typescript@5.9.3)(vitest@4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))':
     dependencies:
       '@typescript-eslint/scope-manager': 8.50.1
       '@typescript-eslint/utils': 8.50.1(eslint@9.39.2)(typescript@5.9.3)
       eslint: 9.39.2
     optionalDependencies:
       typescript: 5.9.3
-      vitest: 4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2)
+      vitest: 4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -4206,22 +4206,22 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.18(vite@6.3.5(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))':
+  '@vitest/mocker@4.0.18(vite@6.3.5(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))':
     dependencies:
       '@vitest/spy': 4.0.18
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 6.3.5(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2)
+      vite: 6.3.5(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2)
     optional: true
 
-  '@vitest/mocker@4.1.0-beta.1(vite@6.3.5(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))':
+  '@vitest/mocker@4.1.0-beta.1(vite@6.3.5(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))':
     dependencies:
       '@vitest/spy': 4.1.0-beta.1
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 6.3.5(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2)
+      vite: 6.3.5(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2)
 
   '@vitest/pretty-format@4.0.18':
     dependencies:
@@ -4586,12 +4586,12 @@ snapshots:
   eslint-compat-utils@0.5.1(eslint@9.39.2):
     dependencies:
       eslint: 9.39.2
-      semver: 7.7.3
+      semver: 7.7.4
 
   eslint-compat-utils@0.6.5(eslint@9.39.2):
     dependencies:
       eslint: 9.39.2
-      semver: 7.7.3
+      semver: 7.7.4
 
   eslint-config-flat-gitignore@2.1.0(eslint@9.39.2):
     dependencies:
@@ -4669,7 +4669,7 @@ snapshots:
       html-entities: 2.6.0
       object-deep-merge: 2.0.0
       parse-imports-exports: 0.2.4
-      semver: 7.7.3
+      semver: 7.7.4
       spdx-expression-parse: 4.0.0
       to-valid-identifier: 1.0.0
     transitivePeerDependencies:
@@ -4700,7 +4700,7 @@ snapshots:
       globals: 15.15.0
       globrex: 0.1.2
       ignore: 5.3.2
-      semver: 7.7.3
+      semver: 7.7.4
       ts-declaration-location: 1.0.7(typescript@5.9.3)
     transitivePeerDependencies:
       - typescript
@@ -4765,7 +4765,7 @@ snapshots:
       pluralize: 8.0.0
       regexp-tree: 0.1.27
       regjsparser: 0.13.0
-      semver: 7.7.3
+      semver: 7.7.4
       strip-indent: 4.1.1
 
   eslint-plugin-unused-imports@4.3.0(@typescript-eslint/eslint-plugin@8.46.3(@typescript-eslint/parser@8.46.3(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2):
@@ -4781,7 +4781,7 @@ snapshots:
       natural-compare: 1.4.0
       nth-check: 2.1.1
       postcss-selector-parser: 6.1.2
-      semver: 7.7.3
+      semver: 7.7.4
       vue-eslint-parser: 10.2.0(eslint@9.39.2)
       xml-name-validator: 4.0.0
     optionalDependencies:
@@ -4950,7 +4950,7 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  github-schema@1.22.5:
+  github-schema@1.22.6:
     dependencies:
       graphql: 16.12.0
       graphql-tag: 2.12.6(graphql@16.12.0)
@@ -4988,11 +4988,11 @@ snapshots:
 
   hex-rgb@4.3.0: {}
 
-  hono-jsx-to-react@0.2.1(hono@4.11.7):
+  hono-jsx-to-react@0.2.1(hono@4.11.8):
     dependencies:
-      hono: 4.11.7
+      hono: 4.11.8
 
-  hono@4.11.7: {}
+  hono@4.11.8: {}
 
   html-entities@2.6.0: {}
 
@@ -5044,7 +5044,7 @@ snapshots:
       acorn: 8.15.0
       eslint-visitor-keys: 3.4.3
       espree: 9.6.1
-      semver: 7.7.3
+      semver: 7.7.4
 
   keyv@4.5.4:
     dependencies:
@@ -5402,12 +5402,12 @@ snapshots:
       braces: 3.0.3
       picomatch: 2.3.1
 
-  miniflare@4.20260128.0:
+  miniflare@4.20260205.0:
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       sharp: 0.34.5
       undici: 7.18.2
-      workerd: 1.20260128.0
+      workerd: 1.20260205.0
       ws: 8.18.0
       youch: 4.1.0-beta.10
     transitivePeerDependencies:
@@ -5638,13 +5638,13 @@ snapshots:
       refa: 0.12.1
       regexp-ast-analysis: 0.7.1
 
-  semver@7.7.3: {}
+  semver@7.7.4: {}
 
   sharp@0.34.5:
     dependencies:
       '@img/colour': 1.0.0
       detect-libc: 2.1.2
-      semver: 7.7.3
+      semver: 7.7.4
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.34.5
       '@img/sharp-darwin-x64': 0.34.5
@@ -5818,7 +5818,7 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  vite@6.3.5(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2):
+  vite@6.3.5(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2):
     dependencies:
       esbuild: 0.25.6
       fdir: 6.5.0(picomatch@4.0.3)
@@ -5827,15 +5827,15 @@ snapshots:
       rollup: 4.43.0
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 25.0.9
+      '@types/node': 25.2.1
       fsevents: 2.3.3
       tsx: 4.21.0
       yaml: 2.8.2
 
-  vitest@4.0.18(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2):
+  vitest@4.0.18(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2):
     dependencies:
       '@vitest/expect': 4.0.18
-      '@vitest/mocker': 4.0.18(vite@6.3.5(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitest/mocker': 4.0.18(vite@6.3.5(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))
       '@vitest/pretty-format': 4.0.18
       '@vitest/runner': 4.0.18
       '@vitest/snapshot': 4.0.18
@@ -5852,10 +5852,10 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 6.3.5(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2)
+      vite: 6.3.5(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 25.0.9
+      '@types/node': 25.2.1
     transitivePeerDependencies:
       - jiti
       - less
@@ -5870,10 +5870,10 @@ snapshots:
       - yaml
     optional: true
 
-  vitest@4.1.0-beta.1(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2):
+  vitest@4.1.0-beta.1(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2):
     dependencies:
       '@vitest/expect': 4.1.0-beta.1
-      '@vitest/mocker': 4.1.0-beta.1(vite@6.3.5(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitest/mocker': 4.1.0-beta.1(vite@6.3.5(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2))
       '@vitest/pretty-format': 4.1.0-beta.1
       '@vitest/runner': 4.1.0-beta.1
       '@vitest/snapshot': 4.1.0-beta.1
@@ -5890,10 +5890,10 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 6.3.5(@types/node@25.0.9)(tsx@4.21.0)(yaml@2.8.2)
+      vite: 6.3.5(@types/node@25.2.1)(tsx@4.21.0)(yaml@2.8.2)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 25.0.9
+      '@types/node': 25.2.1
     transitivePeerDependencies:
       - jiti
       - less
@@ -5915,7 +5915,7 @@ snapshots:
       eslint-visitor-keys: 4.2.1
       espree: 10.4.0
       esquery: 1.6.0
-      semver: 7.7.3
+      semver: 7.7.4
     transitivePeerDependencies:
       - supports-color
 
@@ -5938,32 +5938,32 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20260122.0
       '@cloudflare/workerd-windows-64': 1.20260122.0
 
-  workerd@1.20260128.0:
+  workerd@1.20260205.0:
     optionalDependencies:
-      '@cloudflare/workerd-darwin-64': 1.20260128.0
-      '@cloudflare/workerd-darwin-arm64': 1.20260128.0
-      '@cloudflare/workerd-linux-64': 1.20260128.0
-      '@cloudflare/workerd-linux-arm64': 1.20260128.0
-      '@cloudflare/workerd-windows-64': 1.20260128.0
+      '@cloudflare/workerd-darwin-64': 1.20260205.0
+      '@cloudflare/workerd-darwin-arm64': 1.20260205.0
+      '@cloudflare/workerd-linux-64': 1.20260205.0
+      '@cloudflare/workerd-linux-arm64': 1.20260205.0
+      '@cloudflare/workerd-windows-64': 1.20260205.0
 
-  wrangler@4.61.1(@cloudflare/workers-types@4.20260131.0):
+  wrangler@4.63.0(@cloudflare/workers-types@4.20260206.0):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.2
-      '@cloudflare/unenv-preset': 2.12.0(unenv@2.0.0-rc.24)(workerd@1.20260128.0)
+      '@cloudflare/unenv-preset': 2.12.0(unenv@2.0.0-rc.24)(workerd@1.20260205.0)
       blake3-wasm: 2.1.5
       esbuild: 0.27.0
-      miniflare: 4.20260128.0
+      miniflare: 4.20260205.0
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.24
-      workerd: 1.20260128.0
+      workerd: 1.20260205.0
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20260131.0
+      '@cloudflare/workers-types': 4.20260206.0
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  wrangler@https://pkg.pr.new/cloudflare/workers-sdk/wrangler@79a1932(@cloudflare/workers-types@4.20260131.0):
+  wrangler@https://pkg.pr.new/cloudflare/workers-sdk/wrangler@79a1932(@cloudflare/workers-types@4.20260206.0):
     dependencies:
       '@cloudflare/kv-asset-handler': https://pkg.pr.new/cloudflare/workers-sdk/@cloudflare/kv-asset-handler@79a1932
       '@cloudflare/unenv-preset': https://pkg.pr.new/cloudflare/workers-sdk/@cloudflare/unenv-preset@79a1932(unenv@2.0.0-rc.24)(workerd@1.20260122.0)
@@ -5974,7 +5974,7 @@ snapshots:
       unenv: 2.0.0-rc.24
       workerd: 1.20260122.0
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20260131.0
+      '@cloudflare/workers-types': 4.20260206.0
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil
