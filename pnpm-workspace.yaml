@@ -7,23 +7,23 @@ catalogs:
     # "@cloudflare/vitest-pool-workers": 0.11.1
     "@cloudflare/vitest-pool-workers": https://pkg.pr.new/@cloudflare/vitest-pool-workers@11632
     "@luxass/eslint-config": 6.0.3
-    "@types/node": 25.2.1
+    "@types/node": 25.2.3
     "@types/semver": 7.7.1
     eslint: 9.39.2
     eslint-plugin-format: 1.3.1
-    github-schema: 1.22.6
+    github-schema: 1.22.7
     tsx: 4.21.0
     typescript: 5.9.3
     vitest: 4.1.0-beta.1
-    wrangler: 4.63.0
-    "@cloudflare/workers-types": 4.20260206.0
+    wrangler: 4.65.0
+    "@cloudflare/workers-types": 4.20260217.0
 
   prod:
-    "@hono/zod-openapi": 1.2.1
+    "@hono/zod-openapi": 1.2.2
     "@octokit/core": 7.0.6
     "@octokit/graphql": 9.0.3
     "@octokit/plugin-paginate-rest": 14.0.0
-    "@scalar/hono-api-reference": 0.9.40
+    "@scalar/hono-api-reference": 0.9.41
     hono: 4.11.8
     semver: 7.7.4
     zod: 4.3.6
@@ -34,7 +34,7 @@ catalogs:
   image:
     "@resvg/resvg-wasm": 2.4.1
     hono-jsx-to-react: 0.2.1
-    satori: 0.19.1
+    satori: 0.19.2
 
 onlyBuiltDependencies:
   - esbuild
