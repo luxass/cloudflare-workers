@@ -13,7 +13,6 @@ on:
         default: assets
         type: choice
         options:
-          - vscode
           - assets
           - image
 
