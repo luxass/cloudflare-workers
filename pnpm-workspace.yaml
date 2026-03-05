@@ -20,7 +20,7 @@ catalogs:
     "@octokit/core": 7.0.6
     "@octokit/plugin-paginate-rest": 14.0.0
     "@scalar/hono-api-reference": 0.9.41
-    hono: 4.11.8
+    hono: 4.12.4
     zod: 4.3.6
 
   image:
