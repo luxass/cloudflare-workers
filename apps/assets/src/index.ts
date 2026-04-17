@@ -16,37 +16,80 @@ app.get("/api/fonts/*", cache({
   cacheControl: "max-age=3600, stale-while-revalidate=3600",
 }));
 
-app.get("/api/fonts/:family/:weight/:text?", async (c) => {
-  const url = new URL(c.req.url);
-  const { family: _family, weight, text } = c.req.param();
+const fontsUserAgent = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; de-at) AppleWebKit/533.21.1 (KHTML, like Gecko) Version/5.0.5 Safari/533.21.1";
 
-  const family = _family[0].toUpperCase() + _family.slice(1);
-
-  let fontsUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}`;
-  if (text) {
-    // allow font optimization if we pass text => only getting the characters we need
-    fontsUrl += `&text=${encodeURIComponent(text)}`;
+function isFontContentType(contentType: string | null): boolean {
+  if (!contentType) {
+    return false;
   }
 
-  const css = await (
-    await fetch(fontsUrl, {
-      headers: {
-        // Make sure it returns TTF.
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; de-at) AppleWebKit/533.21.1 (KHTML, like Gecko) Version/5.0.5 Safari/533.21.1",
-      },
-    })
-  ).text();
+  return contentType.startsWith("font/")
+    || contentType.startsWith("application/font")
+    || contentType.startsWith("application/octet-stream");
+}
+
+async function fetchFont(fontsUrl: string): Promise<Response | null> {
+  const cssResponse = await fetch(fontsUrl, {
+    headers: {
+      // Make sure it returns TTF.
+      "User-Agent": fontsUserAgent,
+    },
+  });
+  const css = await cssResponse.text();
 
   const resource = css.match(
     /src: url\((.+)\) format\('(opentype|truetype)'\)/,
   );
 
   if (!resource || !resource[1]) {
-    return new Response("No resource found", { status: 404 });
+    return null;
   }
 
-  const res = await fetch(resource[1]);
+  const response = await fetch(resource[1]);
+  if (!response.ok || !isFontContentType(response.headers.get("content-type"))) {
+    return null;
+  }
+
+  return response;
+}
+
+function createFontsCssUrl(family: string, weight: string, text?: string): string {
+  let fontsUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}`;
+  if (text) {
+    // allow font optimization if we pass text => only getting the characters we need
+    fontsUrl += `&text=${encodeURIComponent(text)}`;
+  }
+
+  return fontsUrl;
+}
+
+app.get("/api/fonts/:family/:weight/:text?", async (c) => {
+  const url = new URL(c.req.url);
+  const { family: _family, weight, text } = c.req.param();
+
+  const family = _family[0].toUpperCase() + _family.slice(1);
+  const fontsUrl = createFontsCssUrl(family, weight, text);
+
+  let res: Response | null = null;
+  try {
+    res = await fetchFont(fontsUrl);
+    if (!res && text) {
+      // Retry without text optimization because the upstream API can intermittently return invalid non-font responses.
+      res = await fetchFont(createFontsCssUrl(family, weight));
+    }
+  } catch (error) {
+    console.error("Failed to fetch font resource", {
+      family,
+      weight,
+      text,
+      error,
+    });
+    return new Response("Failed to fetch font resource", { status: 502 });
+  }
+
+  if (!res) {
+    return new Response("No resource found", { status: 404 });
+  }
 
   const arrayBuffer = await res.arrayBuffer();
   const body = new Uint8Array(arrayBuffer);
