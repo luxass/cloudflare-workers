@@ -53,25 +53,31 @@ async function fetchFont(fontsUrl: string): Promise<Response | null> {
   return response;
 }
 
-app.get("/api/fonts/:family/:weight/:text?", async (c) => {
-  const url = new URL(c.req.url);
-  const { family: _family, weight, text } = c.req.param();
-
-  const family = _family[0].toUpperCase() + _family.slice(1);
-
+function createFontsCssUrl(family: string, weight: string, text?: string): string {
   let fontsUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}`;
   if (text) {
     // allow font optimization if we pass text => only getting the characters we need
     fontsUrl += `&text=${encodeURIComponent(text)}`;
   }
 
+  return fontsUrl;
+}
+
+app.get("/api/fonts/:family/:weight/:text?", async (c) => {
+  const url = new URL(c.req.url);
+  const { family: _family, weight, text } = c.req.param();
+
+  const family = _family[0].toUpperCase() + _family.slice(1);
+  const fontsUrl = createFontsCssUrl(family, weight, text);
+
   let res: Response | null = null;
   try {
     res = await fetchFont(fontsUrl);
     if (!res && text) {
-      res = await fetchFont(`https://fonts.googleapis.com/css2?family=${family}:wght@${weight}`);
+      res = await fetchFont(createFontsCssUrl(family, weight));
     }
-  } catch {
+  } catch (error) {
+    console.error(error);
     return new Response("No resource found", { status: 404 });
   }
 
