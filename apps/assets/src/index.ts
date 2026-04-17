@@ -74,11 +74,17 @@ app.get("/api/fonts/:family/:weight/:text?", async (c) => {
   try {
     res = await fetchFont(fontsUrl);
     if (!res && text) {
+      // Retry without text optimization because the upstream API can intermittently return invalid non-font responses.
       res = await fetchFont(createFontsCssUrl(family, weight));
     }
   } catch (error) {
-    console.error(error);
-    return new Response("No resource found", { status: 404 });
+    console.error("Failed to fetch font resource", {
+      family,
+      weight,
+      text,
+      error,
+    });
+    return new Response("Failed to fetch font resource", { status: 502 });
   }
 
   if (!res) {
