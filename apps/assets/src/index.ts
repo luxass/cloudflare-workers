@@ -11,21 +11,27 @@ const app = new Hono<HonoContext>();
 
 app.get("/view-source", createViewSourceRedirect("assets"));
 app.get("/ping", createPingPongRoute());
-app.get("/api/fonts/*", cache({
-  cacheName: "fonts",
-  cacheControl: "max-age=3600, stale-while-revalidate=3600",
-}));
+app.get(
+  "/api/fonts/*",
+  cache({
+    cacheName: "fonts",
+    cacheControl: "max-age=3600, stale-while-revalidate=3600",
+  }),
+);
 
-const fontsUserAgent = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; de-at) AppleWebKit/533.21.1 (KHTML, like Gecko) Version/5.0.5 Safari/533.21.1";
+const fontsUserAgent =
+  "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; de-at) AppleWebKit/533.21.1 (KHTML, like Gecko) Version/5.0.5 Safari/533.21.1";
 
 function isFontContentType(contentType: string | null): boolean {
   if (!contentType) {
     return false;
   }
 
-  return contentType.startsWith("font/")
-    || contentType.startsWith("application/font")
-    || contentType.startsWith("application/octet-stream");
+  return (
+    contentType.startsWith("font/") ||
+    contentType.startsWith("application/font") ||
+    contentType.startsWith("application/octet-stream")
+  );
 }
 
 async function fetchFont(fontsUrl: string): Promise<Response | null> {
@@ -37,9 +43,7 @@ async function fetchFont(fontsUrl: string): Promise<Response | null> {
   });
   const css = await cssResponse.text();
 
-  const resource = css.match(
-    /src: url\((.+)\) format\('(opentype|truetype)'\)/,
-  );
+  const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
 
   if (!resource || !resource[1]) {
     return null;
@@ -112,7 +116,9 @@ app.get("*", async (c) => {
   }
 
   const branch = url.searchParams.get("branch") || "main";
-  const res = await fetch(`https://raw.githubusercontent.com/luxass/assets/${branch}/${url.pathname}`);
+  const res = await fetch(
+    `https://raw.githubusercontent.com/luxass/assets/${branch}/${url.pathname}`,
+  );
 
   if (!res.ok) {
     return c.notFound();
@@ -128,30 +134,39 @@ app.onError(async (err, c) => {
   console.error(err);
   const url = new URL(c.req.url);
   if (err instanceof HTTPException) {
-    return c.json({
-      path: url.pathname,
-      status: err.status,
-      message: err.message,
-      timestamp: new Date().toISOString(),
-    } satisfies ApiError, err.status);
+    return c.json(
+      {
+        path: url.pathname,
+        status: err.status,
+        message: err.message,
+        timestamp: new Date().toISOString(),
+      } satisfies ApiError,
+      err.status,
+    );
   }
 
-  return c.json({
-    path: url.pathname,
-    status: 500,
-    message: "Internal server error",
-    timestamp: new Date().toISOString(),
-  } satisfies ApiError, 500);
+  return c.json(
+    {
+      path: url.pathname,
+      status: 500,
+      message: "Internal server error",
+      timestamp: new Date().toISOString(),
+    } satisfies ApiError,
+    500,
+  );
 });
 
 app.notFound(async (c) => {
   const url = new URL(c.req.url);
-  return c.json({
-    path: url.pathname,
-    status: 404,
-    message: "Not found",
-    timestamp: new Date().toISOString(),
-  } satisfies ApiError, 404);
+  return c.json(
+    {
+      path: url.pathname,
+      status: 404,
+      message: "Not found",
+      timestamp: new Date().toISOString(),
+    } satisfies ApiError,
+    404,
+  );
 });
 
 export default app;

@@ -22,53 +22,26 @@ on:
 permissions: {}
 
 jobs:
-  deploy:
-    name: refresh ${{ github.event.inputs.app }} worker in preview
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    if: github.repository_owner == 'luxass'
-    env:
-      SELECTED_APP: ${{ github.event.inputs.app }}
-    steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-        with:
-          persist-credentials: false
+  deploy-assets:
+    if: ${{ github.event.inputs.app == 'assets' }}
+    uses: ./.github/workflows/deploy-worker.yaml
+    secrets: inherit
+    with:
+      app: assets
+      environment: preview
+      dry_run: ${{ github.event.inputs.dry-run == 'true' }}
+      build_command: pnpm build:assets
+      lint_command: pnpm --filter "assets" run lint
+      typecheck_command: pnpm --filter "assets" run typecheck
+      test_command: pnpm --filter "assets" run test
 
-      - name: setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
-
-      - name: setup node
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
-        with:
-          node-version: lts/*
-          package-manager-cache: false
-
-      - name: install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: build
-        run: pnpm --filter "$SELECTED_APP" run build
-
-      - name: lint
-        run: pnpm --filter "$SELECTED_APP" run lint
-
-      - name: typecheck
-        run: pnpm --filter "$SELECTED_APP" run typecheck
-
-      - name: test
-        run: pnpm --filter "$SELECTED_APP" run test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: get directory
-        id: get-directory
-        run: echo "dir=./apps/$SELECTED_APP" >> "$GITHUB_OUTPUT"
-
-      - name: deploy
-        if: ${{ github.event.inputs.dry-run != 'true' }}
-        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65 # v3.14.1
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: ${{ steps.get-directory.outputs.dir }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          environment: preview
+  deploy-image:
+    if: ${{ github.event.inputs.app == 'image' }}
+    uses: ./.github/workflows/deploy-worker.yaml
+    secrets: inherit
+    with:
+      app: image
+      environment: preview
+      dry_run: ${{ github.event.inputs.dry-run == 'true' }}
+      build_command: pnpm build:image
+      typecheck_command: pnpm --filter "image" run typecheck

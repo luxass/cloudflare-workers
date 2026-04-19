@@ -36,4 +36,5 @@ export default defineConfig({
       },
     },
   ],
+  ignorePatterns: ["worker-configuration.d.ts"],
 });

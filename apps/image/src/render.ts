@@ -1,11 +1,12 @@
-import type { HonoElement } from "hono-jsx-to-react";
-import type { ImageResponseOptions } from "./types";
 import { initWasm, Resvg } from "@resvg/resvg-wasm";
+import type { HonoElement } from "hono-jsx-to-react";
 import { toReactNode } from "hono-jsx-to-react";
 import satori from "satori";
+
 import { getIconCode, loadEmoji } from "./emoji";
 // @ts-expect-error .wasm files are not typed
 import resvgWasm from "./resvg.wasm";
+import type { ImageResponseOptions } from "./types";
 import { font } from "./utils";
 
 async function initResvgWasm() {
@@ -50,13 +51,10 @@ export async function render({ element, options }: RenderOptions) {
   const width = options.width;
   const height = options.height;
 
-  let widthHeight:
-    | { width: number; height: number }
-    | { width: number }
-    | { height: number } = {
-      width: 1200,
-      height: 630,
-    };
+  let widthHeight: { width: number; height: number } | { width: number } | { height: number } = {
+    width: 1200,
+    height: 630,
+  };
 
   if (width && height) {
     widthHeight = { width, height };

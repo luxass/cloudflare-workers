@@ -1,9 +1,7 @@
-import {
-  createExecutionContext,
-  waitOnExecutionContext,
-} from "cloudflare:test";
+import { createExecutionContext, waitOnExecutionContext } from "cloudflare:test";
 import { env } from "cloudflare:workers";
 import { describe, expect, it } from "vitest";
+
 import worker from "../src";
 
 it("respond with a 404", async () => {
@@ -21,7 +19,7 @@ it("respond with a 404", async () => {
   });
 });
 
-it("respond with a \"pong!\"", async () => {
+it('respond with a "pong!"', async () => {
   const request = new Request("https://luxass.dev/ping");
   const ctx = createExecutionContext();
   const response = await worker.fetch(request, env, ctx);
@@ -148,7 +146,9 @@ describe("assets", () => {
   });
 
   it("fetch a non-existent asset on a different branch", async () => {
-    const request = new Request("https://luxass.dev/thisdoesnotexist?branch=do-not-delete-you-will-be-fired");
+    const request = new Request(
+      "https://luxass.dev/thisdoesnotexist?branch=do-not-delete-you-will-be-fired",
+    );
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
@@ -163,7 +163,9 @@ describe("assets", () => {
   });
 
   it("fetch a existing asset on a different branch", async () => {
-    const request = new Request("https://luxass.dev/hello.md?branch=do-not-delete-you-will-be-fired");
+    const request = new Request(
+      "https://luxass.dev/hello.md?branch=do-not-delete-you-will-be-fired",
+    );
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);

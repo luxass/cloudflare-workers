@@ -55,7 +55,11 @@ export interface FontOptions {
   text?: string;
 }
 
-export async function font({ family, weight, text }: FontOptions & {
+export async function font({
+  family,
+  weight,
+  text,
+}: FontOptions & {
   HOST?: string;
 }) {
   const res = await fetch(

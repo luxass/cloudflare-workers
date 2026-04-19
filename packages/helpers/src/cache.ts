@@ -33,14 +33,14 @@ export function cache(options: {
   // See: https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.4
   if (options.vary?.includes("*")) {
     throw new Error(
-      "Middleware vary configuration cannot include \"*\", as it disallows effective caching.",
+      'Middleware vary configuration cannot include "*", as it disallows effective caching.',
     );
   }
 
   const addHeader = (c: Context) => {
     if (cacheControlDirectives) {
-      const existingDirectives
-        = c.res.headers
+      const existingDirectives =
+        c.res.headers
           .get("Cache-Control")
           ?.split(",")
           .map((d) => d.trim().split("=", 1)[0]) ?? [];
@@ -54,8 +54,8 @@ export function cache(options: {
     }
 
     if (varyDirectives) {
-      const existingDirectives
-        = c.res.headers
+      const existingDirectives =
+        c.res.headers
           .get("Vary")
           ?.split(",")
           .map((d) => d.trim()) ?? [];
@@ -64,7 +64,7 @@ export function cache(options: {
         new Set(
           [...existingDirectives, ...varyDirectives].map((directive) => directive.toLowerCase()),
         ),
-      ).sort();
+      ).toSorted();
 
       if (vary.includes("*")) {
         c.header("Vary", "*");
@@ -74,6 +74,7 @@ export function cache(options: {
     }
   };
 
+  // oxlint-disable-next-line unicorn/consistent-function-scoping
   const parseCacheControl = (header: string): Record<string, number | boolean | string> => {
     const directives: Record<string, number | boolean | string> = {};
     const parts = header.split(",");
@@ -113,7 +114,7 @@ export function cache(options: {
     }
 
     // Check if content is stale but within the stale-while-revalidate window
-    return age > maxAge && age <= (maxAge + staleWhileRevalidate);
+    return age > maxAge && age <= maxAge + staleWhileRevalidate;
   };
 
   return async function cache(c, next) {
@@ -122,8 +123,8 @@ export function cache(options: {
       key = await options.keyGenerator(c);
     }
 
-    const cacheName
-      = typeof options.cacheName === "function" ? await options.cacheName(c) : options.cacheName;
+    const cacheName =
+      typeof options.cacheName === "function" ? await options.cacheName(c) : options.cacheName;
     const cache = await caches.open(cacheName);
     const response = await cache.match(key);
 

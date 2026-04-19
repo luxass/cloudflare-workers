@@ -1,8 +1,9 @@
-import type { HonoContext } from "../types";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
+
 import { ImageResponse } from "../image-response";
+import type { HonoContext } from "../types";
 import { font } from "../utils";
 
 export const emojiRouter = new Hono<HonoContext>();
@@ -54,13 +55,9 @@ emojiRouter.get(
     const bg = `bg-${bgColor}`;
 
     return new ImageResponse(
-      (
-        <div
-          tw={`${bg} flex h-screen w-screen items-center justify-center p-5 text-center`}
-        >
-          <p tw="text-[12rem]">{text}</p>
-        </div>
-      ),
+      <div tw={`${bg} flex h-screen w-screen items-center justify-center p-5 text-center`}>
+        <p tw="text-[12rem]">{text}</p>
+      </div>,
       {
         width,
         height,

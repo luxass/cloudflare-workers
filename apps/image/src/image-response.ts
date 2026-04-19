@@ -1,12 +1,10 @@
 import type { HonoElement } from "hono-jsx-to-react";
-import type { ImageResponseOptions } from "./types";
+
 import { render } from "./render";
+import type { ImageResponseOptions } from "./types";
 
 export class ImageResponse extends Response {
-  constructor(
-    element: string | HonoElement,
-    options: ImageResponseOptions,
-  ) {
+  constructor(element: string | HonoElement, options: ImageResponseOptions) {
     const extendedOptions = Object.assign(
       {
         width: 1200,

@@ -1,4 +1,5 @@
 import type { SatoriOptions } from "satori";
+
 import type { EmojiType } from "./emoji";
 
 export interface HonoContext {

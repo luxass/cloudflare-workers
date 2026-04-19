@@ -1,8 +1,9 @@
-import type { HonoContext } from "../types";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
+
 import { ImageResponse } from "../image-response";
+import type { HonoContext } from "../types";
 import { font } from "../utils";
 
 export const textImageRouter = new Hono<HonoContext>();
@@ -25,13 +26,7 @@ textImageRouter.get(
     return parsed.data;
   }),
   async (c) => {
-    const {
-      bgColor: _bgColor,
-      height,
-      text,
-      textColor: _textColor,
-      width,
-    } = c.req.valid("query");
+    const { bgColor: _bgColor, height, text, textColor: _textColor, width } = c.req.valid("query");
 
     const inter400 = await font({
       family: "Inter",
@@ -42,14 +37,12 @@ textImageRouter.get(
     const textColor = `text-${_textColor}`;
 
     return new ImageResponse(
-      (
-        <div
-          tw={`${bgColor} flex h-screen w-screen items-center justify-center p-5 text-center`}
-          style={{ fontFamily: "Inter" }}
-        >
-          <p tw={`text-[12rem] ${textColor}`}>{text}</p>
-        </div>
-      ),
+      <div
+        tw={`${bgColor} flex h-screen w-screen items-center justify-center p-5 text-center`}
+        style={{ fontFamily: "Inter" }}
+      >
+        <p tw={`text-[12rem] ${textColor}`}>{text}</p>
+      </div>,
       {
         width,
         height,
