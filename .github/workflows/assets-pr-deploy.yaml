@@ -28,12 +28,14 @@ permissions: {}
 jobs:
   deploy:
     uses: ./.github/workflows/deploy-worker.yaml
-    secrets: inherit
+    secrets:
+      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
     with:
       app: assets
       environment: preview
       dry_run: ${{ github.event.inputs.dry-run == 'true' }}
-      build_command: pnpm build:assets
-      lint_command: pnpm --filter "assets" run lint
-      typecheck_command: pnpm --filter "assets" run typecheck
-      test_command: pnpm --filter "assets" run test
+      build_arg: build:assets
+      lint_arg: --filter assets run lint
+      typecheck_arg: --filter assets run typecheck
+      test_arg: --filter assets run test
