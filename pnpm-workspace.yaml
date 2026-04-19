@@ -25,7 +25,7 @@ catalogs:
     "@octokit/core": 7.0.6
     "@octokit/plugin-paginate-rest": 14.0.0
     "@scalar/hono-api-reference": 0.10.7
-    hono: 4.12.12
+    hono: 4.12.14
     zod: 4.3.6
 
   image:
@@ -37,3 +37,6 @@ onlyBuiltDependencies:
   - esbuild
   - sharp
   - workerd
+minimumReleaseAgeExclude:
+  # Renovate security update: hono@4.12.14
+  - hono@4.12.14
