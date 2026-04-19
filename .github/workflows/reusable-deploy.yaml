@@ -7,7 +7,7 @@ on:
         description: The app to deploy
         required: true
         type: string
-      environment:
+      wrangler_environment:
         description: The Wrangler environment to deploy
         required: true
         type: string
@@ -20,11 +20,6 @@ on:
         description: The pnpm args used to build the app
         required: true
         type: string
-      lint_arg:
-        description: The pnpm args used to lint the app
-        required: false
-        default: ""
-        type: string
       typecheck_arg:
         description: The pnpm args used to typecheck the app
         required: true
@@ -34,24 +29,18 @@ on:
         required: false
         default: ""
         type: string
-    secrets:
-      CF_API_TOKEN:
-        required: true
-      CF_ACCOUNT_ID:
-        required: true
-
 permissions: {}
 
 jobs:
   deploy:
-    name: deploy ${{ inputs.app }} worker to ${{ inputs.environment }}
+    name: deploy ${{ inputs.app }} worker to ${{ inputs.wrangler_environment }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     if: github.repository_owner == 'luxass'
+    environment: deploy
     env:
       APP_DIRECTORY: ${{ format('./apps/{0}', inputs.app) }}
       BUILD_ARG: ${{ inputs.build_arg }}
-      LINT_ARG: ${{ inputs.lint_arg }}
       TYPECHECK_ARG: ${{ inputs.typecheck_arg }}
       TEST_ARG: ${{ inputs.test_arg }}
     steps:
@@ -74,10 +63,6 @@ jobs:
       - name: build
         run: pnpm $BUILD_ARG
 
-      - name: lint
-        if: ${{ inputs.lint_arg != '' }}
-        run: pnpm $LINT_ARG
-
       - name: typecheck
         run: pnpm $TYPECHECK_ARG
 
@@ -94,4 +79,4 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: ${{ env.APP_DIRECTORY }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          environment: ${{ inputs.environment }}
+          environment: ${{ inputs.wrangler_environment }}

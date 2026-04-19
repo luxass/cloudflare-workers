@@ -15,25 +15,20 @@ on:
     paths:
       - "apps/image/**"
       - ".github/workflows/image-pr-deploy.yaml"
-      - ".github/workflows/deploy-worker.yaml"
+      - ".github/workflows/reusable-deploy.yaml"
       - "packages/**"
       - "pnpm-workspace.yaml"
       - "package.json"
       - "pnpm-lock.yaml"
 
-# remove default permissions of GITHUB_TOKEN for security
-# https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
 permissions: {}
 
 jobs:
   deploy:
-    uses: ./.github/workflows/deploy-worker.yaml
-    secrets:
-      CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-      CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+    uses: ./.github/workflows/reusable-deploy.yaml
     with:
       app: image
-      environment: preview
-      dry_run: ${{ github.event.inputs.dry-run == 'true' }}
+      wrangler_environment: preview
+      dry_run: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['dry-run'] == 'true' }}
       build_arg: build:image
       typecheck_arg: --filter image run typecheck
