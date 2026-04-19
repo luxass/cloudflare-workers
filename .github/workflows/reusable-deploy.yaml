@@ -29,6 +29,11 @@ on:
         required: false
         default: ""
         type: string
+    secrets:
+      CF_API_TOKEN:
+        required: true
+      CF_ACCOUNT_ID:
+        required: true
 permissions: {}
 
 jobs:
@@ -37,7 +42,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     if: github.repository_owner == 'luxass'
-    environment: deploy
+    environment:
+      name: deploy
+      deployment: false
     env:
       APP_DIRECTORY: ${{ format('./apps/{0}', inputs.app) }}
       BUILD_ARG: ${{ inputs.build_arg }}
