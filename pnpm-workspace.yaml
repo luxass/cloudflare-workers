@@ -12,11 +12,10 @@ packages:
 catalogs:
   dev:
     "@cloudflare/vitest-pool-workers": 0.14.6
-    "@luxass/eslint-config": 7.4.2
-    "@types/node": 25.6.0
-    eslint: 10.2.0
-    eslint-plugin-format: 2.0.1
     typescript: 6.0.2
+    oxfmt: 0.43.0
+    oxlint: 1.58.0
+    oxlint-tsgolint: 0.19.0
     vitest: 4.1.4
     wrangler: 4.82.2
     "@cloudflare/workers-types": 4.20260414.1
