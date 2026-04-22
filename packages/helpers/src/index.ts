@@ -4,6 +4,12 @@ import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type { ApiError } from "./schemas";
 
 export { cache } from "./cache";
+export {
+  deleteRequestLogger,
+  getRequestLogger,
+  setRequestLogger,
+  toLogError,
+} from "./logging";
 
 export type { ApiError };
 export { ApiErrorSchema } from "./schemas";

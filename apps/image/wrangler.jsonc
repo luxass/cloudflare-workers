@@ -7,8 +7,9 @@
   "observability": {
     "logs": {
       "enabled": true,
+      "invocation_logs": false
     },
-    "enabled": true,
+    "enabled": true
   },
   "vars": {
     "GITHUB_TOKEN": "",

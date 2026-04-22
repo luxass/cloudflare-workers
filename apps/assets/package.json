@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@cf-workers/helpers": "workspace:*",
+    "evlog": "catalog:prod",
     "hono": "catalog:prod"
   },
   "devDependencies": {

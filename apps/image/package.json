@@ -12,6 +12,7 @@
   "dependencies": {
     "@cf-workers/helpers": "workspace:*",
     "@resvg/resvg-wasm": "catalog:image",
+    "evlog": "catalog:prod",
     "hono": "catalog:prod",
     "hono-jsx-to-react": "catalog:image",
     "satori": "catalog:image",

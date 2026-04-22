@@ -6,8 +6,9 @@
   "observability": {
     "logs": {
       "enabled": true,
+      "invocation_logs": false
     },
-    "enabled": true,
+    "enabled": true
   },
   "placement": { "mode": "smart" },
   "env": {

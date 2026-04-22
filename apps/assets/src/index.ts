@@ -1,11 +1,24 @@
 import type { ApiError } from "@cf-workers/helpers";
-import { cache, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
+import {
+  cache,
+  createPingPongRoute,
+  createViewSourceRedirect,
+  deleteRequestLogger,
+  getRequestLogger,
+  setRequestLogger,
+  toLogError,
+} from "@cf-workers/helpers";
+import { createWorkersLogger, initWorkersLogger } from "evlog/workers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 
 export interface HonoContext {
   Bindings: CloudflareBindings;
 }
+
+initWorkersLogger({
+  env: { service: "assets" },
+});
 
 const app = new Hono<HonoContext>();
 
@@ -70,9 +83,15 @@ function createFontsCssUrl(family: string, weight: string, text?: string): strin
 app.get("/api/fonts/:family/:weight/:text?", async (c) => {
   const url = new URL(c.req.url);
   const { family: _family, weight, text } = c.req.param();
+  const log = getRequestLogger(c.req.raw);
 
   const family = _family[0].toUpperCase() + _family.slice(1);
   const fontsUrl = createFontsCssUrl(family, weight, text);
+  log?.set({
+    message: "Fetching font asset",
+    font: { family, weight, text: text ?? null },
+    route: url.pathname,
+  });
 
   let res: Response | null = null;
   try {
@@ -82,12 +101,7 @@ app.get("/api/fonts/:family/:weight/:text?", async (c) => {
       res = await fetchFont(createFontsCssUrl(family, weight));
     }
   } catch (error) {
-    console.error("Failed to fetch font resource", {
-      family,
-      weight,
-      text,
-      error,
-    });
+    log?.error(toLogError(error), { font: { family, weight, text: text ?? null } });
     return new Response("Failed to fetch font resource", { status: 502 });
   }
 
@@ -116,6 +130,8 @@ app.get("*", async (c) => {
   }
 
   const branch = url.searchParams.get("branch") || "main";
+  const log = getRequestLogger(c.req.raw);
+  log?.set({ message: "Fetching GitHub asset", asset: { branch, path: url.pathname } });
   const res = await fetch(
     `https://raw.githubusercontent.com/luxass/assets/${branch}/${url.pathname}`,
   );
@@ -131,7 +147,8 @@ app.get("*", async (c) => {
 });
 
 app.onError(async (err, c) => {
-  console.error(err);
+  const log = getRequestLogger(c.req.raw);
+  log?.error(toLogError(err), { message: "Assets request failed" });
   const url = new URL(c.req.url);
   if (err instanceof HTTPException) {
     return c.json(
@@ -158,6 +175,8 @@ app.onError(async (err, c) => {
 
 app.notFound(async (c) => {
   const url = new URL(c.req.url);
+  const log = getRequestLogger(c.req.raw);
+  log?.set({ message: "Assets route not found", response: { status: 404 }, route: url.pathname });
   return c.json(
     {
       path: url.pathname,
@@ -169,4 +188,26 @@ app.notFound(async (c) => {
   );
 });
 
-export default app;
+export default {
+  async fetch(
+    request: Request,
+    env: CloudflareBindings,
+    executionCtx: ExecutionContext,
+  ): Promise<Response> {
+    const log = setRequestLogger(request, createWorkersLogger(request));
+    log.set({ message: "Handling assets request", environment: env.ENVIRONMENT ?? "local" });
+
+    try {
+      const response = await app.fetch(request, env, executionCtx);
+      log.set({ response: { status: response.status } });
+      log.emit();
+      return response;
+    } catch (error) {
+      log.error(toLogError(error));
+      log.emit();
+      throw error;
+    } finally {
+      deleteRequestLogger(request);
+    }
+  },
+};

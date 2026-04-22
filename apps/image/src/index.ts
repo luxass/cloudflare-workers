@@ -1,5 +1,14 @@
 import type { ApiError } from "@cf-workers/helpers";
-import { cache, createPingPongRoute, createViewSourceRedirect } from "@cf-workers/helpers";
+import {
+  cache,
+  createPingPongRoute,
+  createViewSourceRedirect,
+  deleteRequestLogger,
+  getRequestLogger,
+  setRequestLogger,
+  toLogError,
+} from "@cf-workers/helpers";
+import { createWorkersLogger, initWorkersLogger } from "evlog/workers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 
@@ -8,6 +17,10 @@ import { postImageRouter } from "./routes/post";
 import { projectImageRouter } from "./routes/project";
 import { textImageRouter } from "./routes/text";
 import type { HonoContext } from "./types";
+
+initWorkersLogger({
+  env: { service: "image" },
+});
 
 const app = new Hono<HonoContext>();
 
@@ -27,7 +40,8 @@ app.route("/api/image/post", postImageRouter);
 app.route("/api/image/project", projectImageRouter);
 
 app.onError(async (err, c) => {
-  console.error(err);
+  const log = getRequestLogger(c.req.raw);
+  log?.error(toLogError(err), { message: "Image request failed" });
   const url = new URL(c.req.url);
   if (err instanceof HTTPException) {
     return c.json(
@@ -54,6 +68,8 @@ app.onError(async (err, c) => {
 
 app.notFound(async (c) => {
   const url = new URL(c.req.url);
+  const log = getRequestLogger(c.req.raw);
+  log?.set({ message: "Image route not found", response: { status: 404 }, route: url.pathname });
   return c.json(
     {
       path: url.pathname,
@@ -65,4 +81,26 @@ app.notFound(async (c) => {
   );
 });
 
-export default app;
+export default {
+  async fetch(
+    request: Request,
+    env: CloudflareBindings,
+    executionCtx: ExecutionContext,
+  ): Promise<Response> {
+    const log = setRequestLogger(request, createWorkersLogger(request));
+    log.set({ message: "Handling image request", environment: env.ENVIRONMENT ?? "local" });
+
+    try {
+      const response = await app.fetch(request, env, executionCtx);
+      log.set({ response: { status: response.status } });
+      log.emit();
+      return response;
+    } catch (error) {
+      log.error(toLogError(error));
+      log.emit();
+      throw error;
+    } finally {
+      deleteRequestLogger(request);
+    }
+  },
+};

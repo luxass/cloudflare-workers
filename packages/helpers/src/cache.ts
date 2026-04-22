@@ -1,4 +1,5 @@
 import type { Context, MiddlewareHandler } from "hono";
+import { getRequestLogger } from "./logging";
 
 // Taken from https://github.com/honojs/hono/blob/main/src/middleware/cache/index.ts
 // but modified to support SWR.
@@ -12,9 +13,11 @@ export function cache(options: {
   cacheControlHeader?: string;
 }): MiddlewareHandler {
   if (!("caches" in globalThis)) {
-    // eslint-disable-next-line no-console
-    console.log("Cache Middleware is not enabled because caches is not defined.");
-    return async (_c, next) => await next();
+    return async (c, next) => {
+      const log = getRequestLogger(c.req.raw);
+      log?.set({ cache: { available: false, enabled: false } });
+      await next();
+    };
   }
 
   if (options.wait === undefined) {
@@ -127,12 +130,14 @@ export function cache(options: {
       typeof options.cacheName === "function" ? await options.cacheName(c) : options.cacheName;
     const cache = await caches.open(cacheName);
     const response = await cache.match(key);
+    const log = getRequestLogger(c.req.raw);
 
     if (response) {
+      log?.set({ cache: { hit: true, key, name: cacheName } });
+
       // check if we should revalidate (stale-while-revalidate)
       if (shouldRevalidate(response)) {
-        // eslint-disable-next-line no-console
-        console.log("Cache: REVALIDATE (stale-while-revalidate)");
+        log?.set({ cache: { key, mode: "stale-while-revalidate", name: cacheName } });
 
         // clone the cached response for immediate return
         const responseToReturn = response.clone();
@@ -161,6 +166,8 @@ export function cache(options: {
       // if not revalidating, return cached response directly
       return new Response(response.body, response);
     }
+
+    log?.set({ cache: { hit: false, key, name: cacheName } });
 
     // cache miss - proceed with request
     await next();
