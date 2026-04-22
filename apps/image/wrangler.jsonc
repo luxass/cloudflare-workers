@@ -6,9 +6,9 @@
   "compatibility_flags": ["nodejs_compat"],
   "observability": {
     "logs": {
-      "enabled": true,
+      "enabled": false,
     },
-    "enabled": true,
+    "enabled": false,
   },
   "vars": {
     "GITHUB_TOKEN": "",

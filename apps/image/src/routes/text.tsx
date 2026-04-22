@@ -1,3 +1,4 @@
+import { getRequestLogger } from "@cf-workers/helpers";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
@@ -27,6 +28,8 @@ textImageRouter.get(
   }),
   async (c) => {
     const { bgColor: _bgColor, height, text, textColor: _textColor, width } = c.req.valid("query");
+    const log = getRequestLogger(c.req.raw);
+    log?.set({ image: { kind: "text", width, height, text, bgColor: _bgColor, textColor: _textColor } });
 
     const inter400 = await font({
       family: "Inter",
