@@ -5,9 +5,10 @@
   "compatibility_date": "2025-03-13",
   "observability": {
     "logs": {
-      "enabled": false,
+      "enabled": true,
+      "invocation_logs": false
     },
-    "enabled": false,
+    "enabled": true
   },
   "placement": { "mode": "smart" },
   "env": {
