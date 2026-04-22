@@ -87,7 +87,11 @@ app.get("/api/fonts/:family/:weight/:text?", async (c) => {
 
   const family = _family[0].toUpperCase() + _family.slice(1);
   const fontsUrl = createFontsCssUrl(family, weight, text);
-  log?.set({ font: { family, weight, text: text ?? null }, route: url.pathname });
+  log?.set({
+    message: "Fetching font asset",
+    font: { family, weight, text: text ?? null },
+    route: url.pathname,
+  });
 
   let res: Response | null = null;
   try {
@@ -127,7 +131,7 @@ app.get("*", async (c) => {
 
   const branch = url.searchParams.get("branch") || "main";
   const log = getRequestLogger(c.req.raw);
-  log?.set({ asset: { branch, path: url.pathname } });
+  log?.set({ message: "Fetching GitHub asset", asset: { branch, path: url.pathname } });
   const res = await fetch(
     `https://raw.githubusercontent.com/luxass/assets/${branch}/${url.pathname}`,
   );
@@ -144,7 +148,7 @@ app.get("*", async (c) => {
 
 app.onError(async (err, c) => {
   const log = getRequestLogger(c.req.raw);
-  log?.error(toLogError(err));
+  log?.error(toLogError(err), { message: "Assets request failed" });
   const url = new URL(c.req.url);
   if (err instanceof HTTPException) {
     return c.json(
@@ -172,7 +176,7 @@ app.onError(async (err, c) => {
 app.notFound(async (c) => {
   const url = new URL(c.req.url);
   const log = getRequestLogger(c.req.raw);
-  log?.set({ response: { status: 404 }, route: url.pathname });
+  log?.set({ message: "Assets route not found", response: { status: 404 }, route: url.pathname });
   return c.json(
     {
       path: url.pathname,
@@ -191,7 +195,7 @@ export default {
     executionCtx: ExecutionContext,
   ): Promise<Response> {
     const log = setRequestLogger(request, createWorkersLogger(request));
-    log.set({ environment: env.ENVIRONMENT ?? "local" });
+    log.set({ message: "Handling assets request", environment: env.ENVIRONMENT ?? "local" });
 
     try {
       const response = await app.fetch(request, env, executionCtx);

@@ -43,7 +43,10 @@ postImageRouter.get(
   async (c) => {
     const { title, description, date } = c.req.valid("query");
     const log = getRequestLogger(c.req.raw);
-    log?.set({ image: { kind: "post", title, descriptionLength: description.length, date } });
+    log?.set({
+      message: "Rendering post image",
+      image: { kind: "post", title, descriptionLength: description.length, date },
+    });
 
     const [inter900, inter700, inter400] = await Promise.all([
       font({

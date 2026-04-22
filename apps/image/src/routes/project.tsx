@@ -32,7 +32,10 @@ projectImageRouter.get(
   async (c) => {
     const { repo, description } = c.req.valid("query");
     const log = getRequestLogger(c.req.raw);
-    log?.set({ image: { kind: "project", repo, hasDescription: Boolean(description) } });
+    log?.set({
+      message: "Rendering project image",
+      image: { kind: "project", repo, hasDescription: Boolean(description) },
+    });
 
     const data = await fetch(`https://api.github.com/repos/${repo}`, {
       headers: {
@@ -51,7 +54,7 @@ projectImageRouter.get(
     }
 
     const stars = new Intl.NumberFormat().format(data.stargazers_count);
-    log?.set({ repository: { stars } });
+    log?.set({ message: "Fetched repository metadata", repository: { stars } });
 
     const [inter900, inter700, inter400] = await Promise.all([
       font({

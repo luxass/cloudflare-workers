@@ -47,7 +47,7 @@ emojiRouter.get(
   async (c) => {
     const { bgColor, width, height } = c.req.valid("query");
     const log = getRequestLogger(c.req.raw);
-    log?.set({ image: { kind: "emoji", width, height, bgColor } });
+    log?.set({ message: "Rendering emoji image", image: { kind: "emoji", width, height, bgColor } });
 
     const inter400 = await font({
       family: "Inter",
@@ -56,7 +56,7 @@ emojiRouter.get(
 
     const text = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
     const bg = `bg-${bgColor}`;
-    log?.set({ emoji: { value: text } });
+    log?.set({ message: "Selected emoji variant", emoji: { value: text } });
 
     return new ImageResponse(
       <div tw={`${bg} flex h-screen w-screen items-center justify-center p-5 text-center`}>

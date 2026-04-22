@@ -41,7 +41,7 @@ app.route("/api/image/project", projectImageRouter);
 
 app.onError(async (err, c) => {
   const log = getRequestLogger(c.req.raw);
-  log?.error(toLogError(err));
+  log?.error(toLogError(err), { message: "Image request failed" });
   const url = new URL(c.req.url);
   if (err instanceof HTTPException) {
     return c.json(
@@ -69,7 +69,7 @@ app.onError(async (err, c) => {
 app.notFound(async (c) => {
   const url = new URL(c.req.url);
   const log = getRequestLogger(c.req.raw);
-  log?.set({ response: { status: 404 }, route: url.pathname });
+  log?.set({ message: "Image route not found", response: { status: 404 }, route: url.pathname });
   return c.json(
     {
       path: url.pathname,
@@ -88,7 +88,7 @@ export default {
     executionCtx: ExecutionContext,
   ): Promise<Response> {
     const log = setRequestLogger(request, createWorkersLogger(request));
-    log.set({ environment: env.ENVIRONMENT ?? "local" });
+    log.set({ message: "Handling image request", environment: env.ENVIRONMENT ?? "local" });
 
     try {
       const response = await app.fetch(request, env, executionCtx);
