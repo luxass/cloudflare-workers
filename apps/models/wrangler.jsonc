@@ -22,4 +22,14 @@
     "DEFAULT_MODEL": "@cf/qwen/qwen3-30b-a3b-fp8",
   },
   "placement": { "mode": "smart" },
+  "routes": [
+    {
+      "custom_domain": true,
+      "pattern": "models.luxass.dev",
+    },
+    {
+      "custom_domain": true,
+      "pattern": "models.luxass.com",
+    },
+  ],
 }
