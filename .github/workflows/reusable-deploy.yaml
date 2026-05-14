@@ -9,7 +9,8 @@ on:
         type: string
       wrangler_environment:
         description: The Wrangler environment to deploy
-        required: true
+        required: false
+        default: ""
         type: string
       dry_run:
         description: Run the workflow without creating a deployment
@@ -38,7 +39,7 @@ permissions: {}
 
 jobs:
   deploy:
-    name: deploy ${{ inputs.app }} worker to ${{ inputs.wrangler_environment }}
+    name: deploy ${{ inputs.app }} worker${{ inputs.wrangler_environment != '' && format(' to {0}', inputs.wrangler_environment) || '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     if: github.repository_owner == 'luxass'

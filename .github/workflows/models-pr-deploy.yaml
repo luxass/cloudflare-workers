@@ -1,4 +1,4 @@
-name: deploy models worker to preview
+name: deploy models worker
 
 on:
   workflow_dispatch:
@@ -8,19 +8,6 @@ on:
         required: false
         default: false
         type: boolean
-  pull_request:
-    branches:
-      - main
-    types: [opened, synchronize]
-    paths:
-      - "apps/models/**"
-      - ".github/workflows/models-pr-deploy.yaml"
-      - ".github/workflows/reusable-deploy.yaml"
-      - "packages/**"
-      - "pnpm-workspace.yaml"
-      - "package.json"
-      - "pnpm-lock.yaml"
-
 permissions: {}
 
 jobs:
@@ -38,7 +25,6 @@ jobs:
       CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
     with:
       app: models
-      wrangler_environment: preview
       dry_run: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['dry-run'] == 'true' }}
       build_arg: build:models
       typecheck_arg: turbo run typecheck --filter=models
