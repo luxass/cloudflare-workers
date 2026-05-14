@@ -41,4 +41,4 @@ jobs:
       wrangler_environment: preview
       dry_run: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['dry-run'] == 'true' }}
       build_arg: build:image
-      typecheck_arg: --filter image run typecheck
+      typecheck_arg: turbo run typecheck --filter=image
