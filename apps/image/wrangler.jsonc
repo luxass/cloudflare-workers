@@ -11,14 +11,17 @@
     },
     "enabled": true,
   },
-  "vars": {
-    "GITHUB_TOKEN": "",
+  "secrets": {
+    "required": ["GITHUB_TOKEN"],
   },
   "placement": { "mode": "smart" },
   "env": {
     "preview": {
       "name": "image-preview",
       "preview_urls": false,
+      "secrets": {
+        "required": ["GITHUB_TOKEN"],
+      },
       "vars": {
         "ENVIRONMENT": "preview",
       },
@@ -36,6 +39,9 @@
     "production": {
       "name": "image",
       "preview_urls": false,
+      "secrets": {
+        "required": ["GITHUB_TOKEN"],
+      },
       "vars": {
         "ENVIRONMENT": "production",
       },

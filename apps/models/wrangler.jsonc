@@ -15,6 +15,9 @@
     },
     "enabled": true,
   },
+  "secrets": {
+    "required": ["HMAC_SECRET"],
+  },
   "vars": {
     "DEFAULT_MODEL": "@cf/qwen/qwen3-30b-a3b-fp8",
   },
@@ -23,6 +26,9 @@
     "preview": {
       "name": "models-preview",
       "preview_urls": false,
+      "secrets": {
+        "required": ["HMAC_SECRET"],
+      },
       "vars": {
         "ENVIRONMENT": "preview",
       },
@@ -34,6 +40,9 @@
     "production": {
       "name": "models",
       "preview_urls": false,
+      "secrets": {
+        "required": ["HMAC_SECRET"],
+      },
       "vars": {
         "ENVIRONMENT": "production",
       },
