@@ -6,7 +6,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "ai": {
     "binding": "AI",
-    "remote": true
+    "remote": true,
   },
   "observability": {
     "logs": {
@@ -26,12 +26,20 @@
       "vars": {
         "ENVIRONMENT": "preview",
       },
+      "ai": {
+        "binding": "AI",
+        "remote": true,
+      },
     },
     "production": {
       "name": "models",
       "preview_urls": false,
       "vars": {
         "ENVIRONMENT": "production",
+      },
+      "ai": {
+        "binding": "AI",
+        "remote": true,
       },
     },
   },
