@@ -1,0 +1,15 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": ["dist/**"]
+    },
+    "typecheck": {
+      "outputs": ["worker-configuration.d.ts"]
+    },
+    "cf-typegen": {
+      "outputs": ["worker-configuration.d.ts"]
+    }
+  }
+}
