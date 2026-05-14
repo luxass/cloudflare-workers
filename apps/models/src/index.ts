@@ -203,7 +203,6 @@ export default {
 
     log.set({
       message: "Handling models request",
-      environment: env.ENVIRONMENT ?? "local",
     });
 
     try {
