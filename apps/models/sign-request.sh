@@ -9,7 +9,7 @@ Usage: ./sign-request.sh [options]
 Options:
   --repo <value>      Optional repository name. Defaults to luxass/github-schema
   --context <value>   Optional extra context for the model
-  --diff <value>      Optional diff content. Defaults to the github-schema repo diff
+  --diff <value>      Optional diff content. Defaults to a hardcoded github-schema sample diff
   --model <value>     Optional model override
   --url <value>       Endpoint URL. Defaults to http://127.0.0.1:8787/api/pr-metadata
   --secret <value>    HMAC secret. Defaults to $HMAC_SECRET
@@ -22,12 +22,18 @@ Environment:
 EOF
 }
 
-github_schema_dir="/Users/lucasnorgard/dev/github-schema"
-
 repo="luxass/github-schema"
 context="This repository contains GitHub's GraphQL schema and generated TypeScript types.
 Prefer a GraphQL type or input name as the scope when there is a clear single target."
-diff_content=""
+diff_content='diff --git a/github-schema.graphql b/github-schema.graphql
+index 0000000..1111111 100644
+--- a/github-schema.graphql
++++ b/github-schema.graphql
+@@ -1,3 +1,7 @@
+ type Query {
++  viewer: User!
+ }
+'
 model=""
 url="${PR_METADATA_URL:-http://127.0.0.1:8787/api/pr-metadata}"
 secret="${HMAC_SECRET:-}"
@@ -81,15 +87,7 @@ if [ -z "$secret" ]; then
 fi
 
 if [ -z "$diff_content" ]; then
-  if [ -f "$github_schema_dir/github-schema.diff" ]; then
-    diff_content="$(cat "$github_schema_dir/github-schema.diff")"
-  else
-    diff_content="$(git -C "$github_schema_dir" diff)"
-  fi
-fi
-
-if [ -z "$diff_content" ]; then
-  echo "No diff content found. Pass --diff or run from a git repo with changes." >&2
+  echo "No diff content found. Pass --diff." >&2
   exit 1
 fi
 

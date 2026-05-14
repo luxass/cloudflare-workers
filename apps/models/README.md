@@ -53,7 +53,7 @@ By default it is hardcoded for `luxass/github-schema` and will use:
 
 - repository: `luxass/github-schema`
 - GraphQL-specific context
-- diff from `/Users/lucasnorgard/dev/github-schema/github-schema.diff` if present, otherwise `git diff` in `/Users/lucasnorgard/dev/github-schema`
+- a hardcoded sample GitHub schema diff string
 
 Override any field when needed:
 
