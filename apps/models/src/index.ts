@@ -55,35 +55,10 @@ const app = new Hono<HonoContext>();
 app.get("/view-source", createViewSourceRedirect("models"));
 app.get("/ping", createPingPongRoute());
 
-function parseTimestamp(value: string): number | null {
-  if (!/^\d+$/.test(value)) {
-    return null;
-  }
-
-  const timestampMs = Number.parseInt(value, 10);
-
-  return Number.isSafeInteger(timestampMs) ? timestampMs : null;
-}
-
 function encodeText(value: string): ArrayBuffer {
   const bytes = textEncoder.encode(value);
   const buffer = new ArrayBuffer(bytes.byteLength);
   new Uint8Array(buffer).set(bytes);
-
-  return buffer;
-}
-
-function decodeHex(value: string): ArrayBuffer | null {
-  if (!/^[\da-f]+$/i.test(value) || value.length % 2 !== 0) {
-    return null;
-  }
-
-  const buffer = new ArrayBuffer(value.length / 2);
-  const bytes = new Uint8Array(buffer);
-
-  for (let index = 0; index < value.length; index += 2) {
-    bytes[index / 2] = Number.parseInt(value.slice(index, index + 2), 16);
-  }
 
   return buffer;
 }
@@ -93,10 +68,15 @@ async function verifySignature(
   payload: string,
   signatureHex: string,
 ): Promise<boolean> {
-  const signature = decodeHex(signatureHex);
-
-  if (!signature) {
+  if (!/^[\da-f]+$/i.test(signatureHex) || signatureHex.length % 2 !== 0) {
     return false;
+  }
+
+  const signature = new ArrayBuffer(signatureHex.length / 2);
+  const signatureBytes = new Uint8Array(signature);
+
+  for (let index = 0; index < signatureHex.length; index += 2) {
+    signatureBytes[index / 2] = Number.parseInt(signatureHex.slice(index, index + 2), 16);
   }
 
   const key = await crypto.subtle.importKey(
@@ -120,10 +100,10 @@ app.post("/api/pr-metadata", async (c) => {
     return createError(c, 401, "Missing HMAC headers");
   }
 
-  const timestampMs = parseTimestamp(timestampHeader);
+  const timestampMs = Number(timestampHeader);
 
   if (
-    timestampMs === null
+    !Number.isSafeInteger(timestampMs)
     || Math.abs(Date.now() - timestampMs) > maxRequestAgeMs
   ) {
     return createError(c, 401, "Expired or invalid timestamp");
@@ -188,10 +168,11 @@ app.post("/api/pr-metadata", async (c) => {
     model: workersAi(model as string),
     system: body.data.system ?? DEFAULT_PR_METADATA_SYSTEM_PROMPT,
     temperature: body.data.temperature,
+    maxTokens: body.data.maxTokens,
     output: Output.object({
       schema: PR_METADATA_RESPONSE_SCHEMA,
     }),
-    prompt: prompt,
+    prompt,
   });
 
   return c.json(result.output);
@@ -207,20 +188,26 @@ app.onError(async (err, c) => {
   const url = new URL(c.req.url);
 
   if (err instanceof HTTPException) {
-    return c.json({
-      path: url.pathname,
-      status: err.status,
-      message: err.message,
-      timestamp: new Date().toISOString(),
-    }, err.status);
+    return c.json(
+      {
+        path: url.pathname,
+        status: err.status,
+        message: err.message,
+        timestamp: new Date().toISOString(),
+      } satisfies ApiError,
+      err.status,
+    );
   }
 
-  return c.json({
-    path: url.pathname,
-    status: 500,
-    message: "Internal server error",
-    timestamp: new Date().toISOString(),
-  });
+  return c.json(
+    {
+      path: url.pathname,
+      status: 500,
+      message: "Internal server error",
+      timestamp: new Date().toISOString(),
+    } satisfies ApiError,
+    500,
+  );
 });
 
 app.notFound((c) => createError(c, 404, "Not found"));

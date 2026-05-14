@@ -3,19 +3,13 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "outputs": [
-        "dist/**"
-      ]
+      "outputs": ["dist/**"]
     },
     "typecheck": {
-      "outputs": [
-        "worker-configuration.d.ts"
-      ]
+      "outputs": ["worker-configuration.d.ts"]
     },
     "cf-typegen": {
-      "outputs": [
-        "worker-configuration.d.ts"
-      ]
+      "outputs": ["worker-configuration.d.ts"]
     }
   }
 }

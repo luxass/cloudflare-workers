@@ -1,4 +1,5 @@
 import type { Context, MiddlewareHandler } from "hono";
+
 import { getRequestLogger } from "./logging";
 
 // Taken from https://github.com/honojs/hono/blob/main/src/middleware/cache/index.ts
