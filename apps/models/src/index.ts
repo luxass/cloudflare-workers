@@ -23,28 +23,18 @@ interface HonoContext {
   Bindings: CloudflareBindings;
 }
 
-const textEncoder = new TextEncoder();
-const maxRequestAgeMs = 5 * 60 * 1000;
-
-const PR_METADATA_RESPONSE_SCHEMA = z.object({
-  type: z.enum(["docs", "feat", "fix", "chore"]),
-  scope: z.string(),
-  message: z.string(),
-  body: z.string(),
-});
-
+const TEXT_ENCODER = new TextEncoder();
+const MAX_REQUEST_AGE_MS = 5 * 60 * 1000;
 const PR_METADATA_REQUEST_BODY_SCHEMA = z.object({
   diff: z.string().min(1),
-  maxTokens: z.number().int().positive().max(4096).optional(),
-  temperature: z.number().min(0).max(2).optional(),
   system: z.string().min(1).optional(),
-  repository: z.string().min(1).optional(),
-  context: z.string().min(1).optional(),
+  repository: z.string().regex(/^luxass\/.+$/),
+  context: z.string().min(1),
 });
 
 const DEFAULT_PR_METADATA_SYSTEM_PROMPT = `You generate conventional commit metadata for automated pull requests.
 
-You will receive a git diff and optional repository context. Analyze it and return:
+You will receive a git diff plus repository context. Analyze it and return:
 - type: "docs" if only documentation, comments, or descriptions changed, "feat" if user-facing functionality was added, "fix" if behavior was corrected, "chore" for maintenance or anything else.
 - scope: the most relevant package, module, feature, or area being changed. Empty string if there is no clear single scope.
 - message: a concise imperative-mood description under 72 characters.
@@ -56,7 +46,7 @@ app.get("/view-source", createViewSourceRedirect("models"));
 app.get("/ping", createPingPongRoute());
 
 function encodeText(value: string): ArrayBuffer {
-  const bytes = textEncoder.encode(value);
+  const bytes = TEXT_ENCODER.encode(value);
   const buffer = new ArrayBuffer(bytes.byteLength);
   new Uint8Array(buffer).set(bytes);
 
@@ -103,8 +93,8 @@ app.post("/api/pr-metadata", async (c) => {
   const timestampMs = Number(timestampHeader);
 
   if (
-    !Number.isSafeInteger(timestampMs)
-    || Math.abs(Date.now() - timestampMs) > maxRequestAgeMs
+    !Number.isSafeInteger(timestampMs) ||
+    Math.abs(Date.now() - timestampMs) > MAX_REQUEST_AGE_MS
   ) {
     return createError(c, 401, "Expired or invalid timestamp");
   }
@@ -132,11 +122,7 @@ app.post("/api/pr-metadata", async (c) => {
   const body = PR_METADATA_REQUEST_BODY_SCHEMA.safeParse(parsedBody);
 
   if (!body.success) {
-    return createError(
-      c,
-      400,
-      body.error.issues[0]?.message ?? "Invalid request body",
-    );
+    return createError(c, 400, body.error.issues[0]?.message ?? "Invalid request body");
   }
 
   const model = c.env.DEFAULT_MODEL;
@@ -150,29 +136,24 @@ app.post("/api/pr-metadata", async (c) => {
     model,
   });
 
-  const parts = ["Please analyze this git diff and generate appropriate PR metadata."];
-
-  if (body.data.repository) {
-    parts.push(`Repository: ${body.data.repository}`);
-  }
-
-  if (body.data.context) {
-    parts.push(`Additional context:\n${body.data.context}`);
-  }
-
-  parts.push(`\`\`\`diff\n${body.data.diff}\n\`\`\``);
-
-  const prompt = parts.join("\n\n");
-
   const result = await generateText({
     model: workersAi(model as string),
     system: body.data.system ?? DEFAULT_PR_METADATA_SYSTEM_PROMPT,
-    temperature: body.data.temperature,
-    maxTokens: body.data.maxTokens,
+    temperature: 1,
     output: Output.object({
-      schema: PR_METADATA_RESPONSE_SCHEMA,
+      schema: z.object({
+        type: z.enum(["docs", "feat", "fix", "chore"]),
+        scope: z.string(),
+        message: z.string(),
+        body: z.string(),
+      }),
     }),
-    prompt,
+    prompt: [
+      "Please analyze this git diff and generate appropriate PR metadata.",
+      `Repository: ${body.data.repository}`,
+      `Additional context:\n${body.data.context}`,
+      `\`\`\`diff\n${body.data.diff}\n\`\`\``,
+    ].join("\n\n"),
   });
 
   return c.json(result.output);

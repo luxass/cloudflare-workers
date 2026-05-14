@@ -39,6 +39,8 @@ curl -X POST http://localhost:8787/api/pr-metadata \
   }'
 ```
 
+`repository` and `context` are required. `repository` must match `luxass/<repo>`.
+
 ## Local helper
 
 Use [sign-request.sh](/Users/lucasnorgard/dev/cloudflare-workers/apps/models/sign-request.sh) to build and sign requests locally:
