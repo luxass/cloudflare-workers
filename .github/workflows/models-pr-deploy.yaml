@@ -8,6 +8,29 @@ on:
         required: false
         default: false
         type: boolean
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize]
+    paths:
+      - "apps/models/**"
+      - ".github/workflows/models-pr-deploy.yaml"
+      - ".github/workflows/reusable-deploy.yaml"
+      - "packages/**"
+      - "pnpm-workspace.yaml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/models/**"
+      - ".github/workflows/models-pr-deploy.yaml"
+      - ".github/workflows/reusable-deploy.yaml"
+      - "packages/**"
+      - "pnpm-workspace.yaml"
+      - "package.json"
+      - "pnpm-lock.yaml"
 permissions: {}
 
 jobs:
