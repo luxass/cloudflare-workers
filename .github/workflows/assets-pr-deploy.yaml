@@ -41,5 +41,5 @@ jobs:
       wrangler_environment: preview
       dry_run: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['dry-run'] == 'true' }}
       build_arg: build:assets
-      typecheck_arg: --filter assets run typecheck
-      test_arg: --filter assets run test
+      typecheck_arg: turbo run typecheck --filter=assets
+      test_arg: turbo run test --filter=assets

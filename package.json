@@ -3,28 +3,29 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm -r build",
-    "build:assets": "pnpm --filter assets build",
-    "build:image": "pnpm --filter image build",
-    "test": "pnpm vitest --run",
-    "test:watch": "pnpm vitest",
-    "dev:all": "pnpm -r dev",
-    "dev:assets": "pnpm --filter assets dev",
-    "dev:image": "pnpm --filter image dev",
+    "build": "turbo run build",
+    "build:assets": "turbo run build --filter=assets",
+    "build:image": "turbo run build --filter=image",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch --parallel",
+    "dev:all": "turbo run dev --parallel",
+    "dev:assets": "turbo run dev --filter=assets",
+    "dev:image": "turbo run dev --filter=image",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
-    "typecheck": "pnpm -r typecheck",
-    "cf-typegen": "pnpm -r cf-typegen"
+    "typecheck": "turbo run typecheck",
+    "cf-typegen": "turbo run cf-typegen"
   },
   "devDependencies": {
     "oxfmt": "catalog:dev",
     "oxlint": "catalog:dev",
     "oxlint-tsgolint": "catalog:dev",
+    "turbo": "catalog:dev",
     "typescript": "catalog:dev",
     "vitest": "catalog:dev",
     "wrangler": "catalog:dev"
   },
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@11.0.8"
 }
