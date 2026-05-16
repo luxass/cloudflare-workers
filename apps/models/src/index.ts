@@ -1,4 +1,4 @@
-import type { ApiError } from "@cf-workers/helpers";
+import type { ApiError, RequestLogger } from "@cf-workers/helpers";
 import {
   createError,
   createPingPongRoute,
@@ -8,7 +8,13 @@ import {
   setRequestLogger,
   toLogError,
 } from "@cf-workers/helpers";
-import { generateText, Output } from "ai";
+import {
+  generateText,
+  Output,
+  AISDKError,
+  NoObjectGeneratedError,
+  NoOutputGeneratedError,
+} from "ai";
 import { createWorkersLogger, initWorkersLogger } from "evlog/workers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
@@ -131,6 +137,7 @@ async function generatePrMetadata(
   model: string,
   system: string,
   prompt: string,
+  log: RequestLogger | undefined,
 ) {
   try {
     const result = await generateText({
@@ -145,6 +152,42 @@ async function generatePrMetadata(
 
     return normalizePrMetadata(result.output);
   } catch (err) {
+    if (NoObjectGeneratedError.isInstance(err)) {
+      log?.error(err, {
+        message: "Structured PR metadata generation failed; retrying with plain JSON fallback",
+        model,
+        aiCause: err.cause ?? null,
+        aiText:
+          typeof err.text === "string"
+            ? err.text.length > 2000
+              ? `${err.text.slice(0, 2000)}…`
+              : err.text
+            : null,
+        aiResponse: err.response ?? null,
+        aiUsage: err.usage ?? null,
+        aiFinishReason: err.finishReason ?? null,
+      });
+    } else if (NoOutputGeneratedError.isInstance(err)) {
+      log?.error(err, {
+        message:
+          "Structured PR metadata generation produced no output; retrying with plain JSON fallback",
+        model,
+        aiCause: err.cause ?? null,
+      });
+    } else if (AISDKError.isInstance(err)) {
+      log?.error(err, {
+        message:
+          "Structured PR metadata generation failed with AI SDK error; retrying with plain JSON fallback",
+        model,
+        aiCause: err.cause ?? null,
+      });
+    } else {
+      log?.error(toLogError(err), {
+        message: "Structured PR metadata generation failed; retrying with plain JSON fallback",
+        model,
+      });
+    }
+
     const fallback = await generateText({
       model: workersAi(model),
       system: `${system}\n\n${STRICT_JSON_FALLBACK_INSTRUCTION}`,
@@ -152,13 +195,19 @@ async function generatePrMetadata(
       prompt: `${prompt}\n\nReturn only a JSON object.`,
     });
 
-    const parsed = PR_METADATA_RESPONSE_SCHEMA.safeParse(
-      JSON.parse(extractJsonObject(fallback.text)),
-    );
+    const fallbackText = extractJsonObject(fallback.text);
+    const parsed = PR_METADATA_RESPONSE_SCHEMA.safeParse(JSON.parse(fallbackText));
 
     if (parsed.success) {
       return normalizePrMetadata(parsed.data);
     }
+
+    log?.error(new Error("Fallback PR metadata response failed schema validation"), {
+      message: "Fallback PR metadata response failed schema validation",
+      model,
+      fallbackText: fallbackText.length > 2000 ? `${fallbackText.slice(0, 2000)}…` : fallbackText,
+      schemaIssues: parsed.error.issues,
+    });
 
     throw err;
   }
@@ -221,17 +270,18 @@ app.post("/api/pr-metadata", async (c) => {
   });
 
   const prompt = [
-      "Please analyze this git diff and generate appropriate PR metadata.",
-      `Repository: ${body.data.repository}`,
-      `Additional context:\n${body.data.context}`,
-      `\`\`\`diff\n${body.data.diff}\n\`\`\``,
-    ].join("\n\n");
+    "Please analyze this git diff and generate appropriate PR metadata.",
+    `Repository: ${body.data.repository}`,
+    `Additional context:\n${body.data.context}`,
+    `\`\`\`diff\n${body.data.diff}\n\`\`\``,
+  ].join("\n\n");
 
   const result = await generatePrMetadata(
     workersAi,
     model as string,
     body.data.system ?? DEFAULT_PR_METADATA_SYSTEM_PROMPT,
     prompt,
+    log,
   );
 
   return c.json(result);
@@ -240,7 +290,7 @@ app.post("/api/pr-metadata", async (c) => {
 app.onError(async (err, c) => {
   const log = getRequestLogger(c.req.raw);
 
-  log?.error(toLogError(err), {
+  log?.error(err, {
     message: "Models request failed",
   });
 
@@ -280,7 +330,7 @@ export default {
     const log = setRequestLogger(request, createWorkersLogger(request));
 
     log.set({
-      message: "Handling models request",
+      message: "received models request",
     });
 
     try {
@@ -295,11 +345,11 @@ export default {
       log.emit();
 
       return response;
-    } catch (error) {
-      log.error(toLogError(error));
+    } catch (err) {
+      log.error(toLogError(err));
       log.emit();
 
-      throw error;
+      throw err;
     } finally {
       deleteRequestLogger(request);
     }

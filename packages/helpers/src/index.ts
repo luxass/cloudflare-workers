@@ -4,13 +4,19 @@ import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type { ApiError } from "./schemas";
 
 export { cache } from "./cache";
-export { deleteRequestLogger, getRequestLogger, setRequestLogger, toLogError } from "./logging";
+export {
+  deleteRequestLogger,
+  getRequestLogger,
+  setRequestLogger,
+  toLogError,
+  type RequestLogger,
+} from "./logging";
 
 export type { ApiError };
 export { ApiErrorSchema } from "./schemas";
 
-export function createError<TCtx extends Context, TStatus extends ContentfulStatusCode>(
-  ctx: TCtx,
+export function createError<TStatus extends ContentfulStatusCode>(
+  ctx: Context,
   status: TStatus,
   message: string,
 ) {
