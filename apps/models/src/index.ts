@@ -31,7 +31,7 @@ interface HonoContext {
 
 const TEXT_ENCODER = new TextEncoder();
 const MAX_REQUEST_AGE_MS = 5 * 60 * 1000;
-const DISALLOWED_SCOPES = new Set(["pull request", "pr", "github", "automation", "schema"]);
+const DISALLOWED_SCOPES = new Set(["pr", "pullrequest", "github", "automation", "schema"]);
 const PR_METADATA_RESPONSE_SCHEMA = z.object({
   type: z.enum(["docs", "feat", "fix", "chore"]),
   scope: z.string(),
@@ -105,7 +105,9 @@ function normalizeScope(scope: string): string {
     return "";
   }
 
-  return DISALLOWED_SCOPES.has(normalized.toLowerCase()) ? "" : normalized;
+  const comparable = normalized.toLowerCase().replaceAll(/[\s_-]+/g, "");
+
+  return DISALLOWED_SCOPES.has(comparable) ? "" : normalized;
 }
 
 function normalizePrMetadata(output: z.infer<typeof PR_METADATA_RESPONSE_SCHEMA>) {
