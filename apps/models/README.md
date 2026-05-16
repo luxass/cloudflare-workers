@@ -33,7 +33,7 @@ curl -X POST http://localhost:8787/api/pr-metadata \
   -H "x-signature: $SIGNATURE" \
   -H "content-type: application/json" \
   -d '{
-    "repository": "acme/widgets",
+    "repository": "luxass/widgets",
     "context": "This repo is a TypeScript monorepo. Prefer package-level scopes when clear.",
     "diff": "diff --git a/src/api.ts b/src/api.ts\n+export async function createWidget() {}"
   }'
@@ -43,7 +43,7 @@ curl -X POST http://localhost:8787/api/pr-metadata \
 
 ## Local helper
 
-Use [sign-request.sh](/Users/lucasnorgard/dev/cloudflare-workers/apps/models/sign-request.sh) to build and sign requests locally:
+Use [sign-request.sh](./sign-request.sh) to build and sign requests locally:
 
 ```sh
 HMAC_SECRET=your-local-secret ./sign-request.sh
