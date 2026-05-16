@@ -47,7 +47,10 @@ emojiRouter.get(
   async (c) => {
     const { bgColor, width, height } = c.req.valid("query");
     const log = getRequestLogger(c.req.raw);
-    log?.set({ message: "Rendering emoji image", image: { kind: "emoji", width, height, bgColor } });
+    log?.set({
+      message: "Rendering emoji image",
+      image: { kind: "emoji", width, height, bgColor },
+    });
 
     const inter400 = await font({
       family: "Inter",

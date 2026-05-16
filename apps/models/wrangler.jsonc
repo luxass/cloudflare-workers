@@ -1,0 +1,35 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "models",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-04-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "ai": {
+    "binding": "AI",
+    "remote": true,
+  },
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": false,
+    },
+    "enabled": true,
+  },
+  "secrets": {
+    "required": ["HMAC_SECRET"],
+  },
+  "vars": {
+    "DEFAULT_MODEL": "@cf/qwen/qwen3-30b-a3b-fp8",
+  },
+  "placement": { "mode": "smart" },
+  "routes": [
+    {
+      "custom_domain": true,
+      "pattern": "models.luxass.dev",
+    },
+    {
+      "custom_domain": true,
+      "pattern": "models.luxass.com",
+    },
+  ],
+}

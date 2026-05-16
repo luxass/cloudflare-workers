@@ -30,8 +30,10 @@ catalogs:
     "@octokit/core": 7.0.6
     "@octokit/plugin-paginate-rest": 14.0.0
     "@scalar/hono-api-reference": 0.10.9
+    ai: 6.0.177
     evlog: 2.13.0
     hono: 4.12.14
+    workers-ai-provider: 3.1.14
     zod: 4.3.6
 
   image:

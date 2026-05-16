@@ -9,13 +9,14 @@ export {
   getRequestLogger,
   setRequestLogger,
   toLogError,
+  type RequestLogger,
 } from "./logging";
 
 export type { ApiError };
 export { ApiErrorSchema } from "./schemas";
 
-export function createError<TCtx extends Context, TStatus extends ContentfulStatusCode>(
-  ctx: TCtx,
+export function createError<TStatus extends ContentfulStatusCode>(
+  ctx: Context,
   status: TStatus,
   message: string,
 ) {
