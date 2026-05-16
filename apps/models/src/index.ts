@@ -286,6 +286,11 @@ app.post("/api/pr-metadata", async (c) => {
     log,
   );
 
+  log?.set({
+    message: "Generated PR metadata successfully",
+    metadata: result,
+  });
+
   return c.json(result);
 });
 
