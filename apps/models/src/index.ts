@@ -39,10 +39,10 @@ const PR_METADATA_RESPONSE_SCHEMA = z.object({
   body: z.string(),
 });
 const PR_METADATA_REQUEST_BODY_SCHEMA = z.object({
-  diff: z.string().min(1),
-  system: z.string().min(1).optional(),
+  diff: z.string().min(1).max(100_000),
+  system: z.string().min(1).max(2_000).optional(),
   repository: z.string().regex(/^luxass\/.+$/),
-  context: z.string().min(1),
+  context: z.string().min(1).max(2_000),
 });
 
 const DEFAULT_PR_METADATA_SYSTEM_PROMPT = `You generate conventional commit metadata for automated pull requests.
