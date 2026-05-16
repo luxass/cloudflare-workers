@@ -25,6 +25,13 @@ interface HonoContext {
 
 const TEXT_ENCODER = new TextEncoder();
 const MAX_REQUEST_AGE_MS = 5 * 60 * 1000;
+const DISALLOWED_SCOPES = new Set(["pull request", "pr", "github", "automation", "schema"]);
+const PR_METADATA_RESPONSE_SCHEMA = z.object({
+  type: z.enum(["docs", "feat", "fix", "chore"]),
+  scope: z.string(),
+  message: z.string(),
+  body: z.string(),
+});
 const PR_METADATA_REQUEST_BODY_SCHEMA = z.object({
   diff: z.string().min(1),
   system: z.string().min(1).optional(),
@@ -36,7 +43,7 @@ const DEFAULT_PR_METADATA_SYSTEM_PROMPT = `You generate conventional commit meta
 
 You will receive a git diff plus repository context. Analyze it and return:
 - type: "docs" if only documentation, comments, or descriptions changed, "feat" if user-facing functionality was added, "fix" if behavior was corrected, "chore" for maintenance or anything else.
-- scope: the most relevant package, module, feature, or area being changed. Empty string if there is no clear single scope.
+- scope: the most relevant package, module, feature, or area being changed. For github-schema, prefer the most specific changed GraphQL type or input name when exactly one clear target exists. Do not use generic scopes such as "pull request", "pr", "github", "automation", or "schema". Return an empty string if multiple types are changed or no single scope is clearly dominant.
 - message: a concise imperative-mood description under 72 characters.
 - body: a short markdown bullet list summarizing what changed.`;
 
@@ -78,6 +85,16 @@ async function verifySignature(
   );
 
   return crypto.subtle.verify("HMAC", key, signature, encodeText(payload));
+}
+
+function normalizeScope(scope: string): string {
+  const normalized = scope.trim();
+
+  if (!normalized) {
+    return "";
+  }
+
+  return DISALLOWED_SCOPES.has(normalized.toLowerCase()) ? "" : normalized;
 }
 
 app.post("/api/pr-metadata", async (c) => {
@@ -141,12 +158,7 @@ app.post("/api/pr-metadata", async (c) => {
     system: body.data.system ?? DEFAULT_PR_METADATA_SYSTEM_PROMPT,
     temperature: 1,
     output: Output.object({
-      schema: z.object({
-        type: z.enum(["docs", "feat", "fix", "chore"]),
-        scope: z.string(),
-        message: z.string(),
-        body: z.string(),
-      }),
+      schema: PR_METADATA_RESPONSE_SCHEMA,
     }),
     prompt: [
       "Please analyze this git diff and generate appropriate PR metadata.",
@@ -156,7 +168,10 @@ app.post("/api/pr-metadata", async (c) => {
     ].join("\n\n"),
   });
 
-  return c.json(result.output);
+  return c.json({
+    ...result.output,
+    scope: normalizeScope(result.output.scope),
+  });
 });
 
 app.onError(async (err, c) => {
