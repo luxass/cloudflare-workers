@@ -12,7 +12,7 @@ import { generateText, Output } from "ai";
 import { createWorkersLogger, initWorkersLogger } from "evlog/workers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { createWorkersAI } from "workers-ai-provider";
+import { createWorkersAI, type WorkersAI } from "workers-ai-provider";
 import { z } from "zod";
 
 initWorkersLogger({
@@ -46,6 +46,11 @@ You will receive a git diff plus repository context. Analyze it and return:
 - scope: the most relevant package, module, feature, or area being changed. For github-schema, prefer the most specific changed GraphQL type or input name when exactly one clear target exists. Do not use generic scopes such as "pull request", "pr", "github", "automation", or "schema". Return an empty string if multiple types are changed or no single scope is clearly dominant.
 - message: a concise imperative-mood description under 72 characters.
 - body: a short markdown bullet list summarizing what changed.`;
+const STRICT_JSON_FALLBACK_INSTRUCTION = `Return exactly one JSON object matching the requested schema.
+Do not return markdown.
+Do not use code fences.
+Do not use bullet points.
+Do not include any explanatory text before or after the JSON object.`;
 
 const app = new Hono<HonoContext>();
 
@@ -95,6 +100,68 @@ function normalizeScope(scope: string): string {
   }
 
   return DISALLOWED_SCOPES.has(normalized.toLowerCase()) ? "" : normalized;
+}
+
+function normalizePrMetadata(output: z.infer<typeof PR_METADATA_RESPONSE_SCHEMA>) {
+  return {
+    ...output,
+    scope: normalizeScope(output.scope),
+  };
+}
+
+function extractJsonObject(text: string): string {
+  const trimmed = text.trim();
+  const fencedMatch = trimmed.match(/^```(?:json)?\s*([\s\S]+?)\s*```$/i);
+  if (fencedMatch?.[1]) {
+    return fencedMatch[1].trim();
+  }
+
+  const start = trimmed.indexOf("{");
+  const end = trimmed.lastIndexOf("}");
+
+  if (start >= 0 && end > start) {
+    return trimmed.slice(start, end + 1);
+  }
+
+  return trimmed;
+}
+
+async function generatePrMetadata(
+  workersAi: WorkersAI,
+  model: string,
+  system: string,
+  prompt: string,
+) {
+  try {
+    const result = await generateText({
+      model: workersAi(model),
+      system,
+      temperature: 1,
+      output: Output.object({
+        schema: PR_METADATA_RESPONSE_SCHEMA,
+      }),
+      prompt,
+    });
+
+    return normalizePrMetadata(result.output);
+  } catch (err) {
+    const fallback = await generateText({
+      model: workersAi(model),
+      system: `${system}\n\n${STRICT_JSON_FALLBACK_INSTRUCTION}`,
+      temperature: 1,
+      prompt: `${prompt}\n\nReturn only a JSON object.`,
+    });
+
+    const parsed = PR_METADATA_RESPONSE_SCHEMA.safeParse(
+      JSON.parse(extractJsonObject(fallback.text)),
+    );
+
+    if (parsed.success) {
+      return normalizePrMetadata(parsed.data);
+    }
+
+    throw err;
+  }
 }
 
 app.post("/api/pr-metadata", async (c) => {
@@ -153,25 +220,21 @@ app.post("/api/pr-metadata", async (c) => {
     model,
   });
 
-  const result = await generateText({
-    model: workersAi(model as string),
-    system: body.data.system ?? DEFAULT_PR_METADATA_SYSTEM_PROMPT,
-    temperature: 1,
-    output: Output.object({
-      schema: PR_METADATA_RESPONSE_SCHEMA,
-    }),
-    prompt: [
+  const prompt = [
       "Please analyze this git diff and generate appropriate PR metadata.",
       `Repository: ${body.data.repository}`,
       `Additional context:\n${body.data.context}`,
       `\`\`\`diff\n${body.data.diff}\n\`\`\``,
-    ].join("\n\n"),
-  });
+    ].join("\n\n");
 
-  return c.json({
-    ...result.output,
-    scope: normalizeScope(result.output.scope),
-  });
+  const result = await generatePrMetadata(
+    workersAi,
+    model as string,
+    body.data.system ?? DEFAULT_PR_METADATA_SYSTEM_PROMPT,
+    prompt,
+  );
+
+  return c.json(result);
 });
 
 app.onError(async (err, c) => {
