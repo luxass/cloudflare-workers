@@ -32,7 +32,7 @@ catalogs:
     "@scalar/hono-api-reference": 0.10.14
     ai: 6.0.177
     evlog: 2.17.0
-    hono: 4.12.18
+    hono: 4.12.21
     workers-ai-provider: 3.1.14
     zod: 4.4.3
 
@@ -45,3 +45,6 @@ onlyBuiltDependencies:
   - esbuild
   - sharp
   - workerd
+minimumReleaseAgeExclude:
+  # Renovate security update: hono@4.12.21
+  - hono@4.12.21

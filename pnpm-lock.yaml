@@ -63,8 +63,8 @@ catalogs:
       specifier: 2.17.0
       version: 2.17.0
     hono:
-      specifier: 4.12.18
-      version: 4.12.18
+      specifier: 4.12.21
+      version: 4.12.21
     workers-ai-provider:
       specifier: 3.1.14
       version: 3.1.14
@@ -105,10 +105,10 @@ importers:
         version: link:../../packages/helpers
       evlog:
         specifier: catalog:prod
-        version: 2.17.0(ai@6.0.177(zod@4.4.3))(hono@4.12.18)(vite@6.3.5(yaml@2.8.2))
+        version: 2.17.0(ai@6.0.177(zod@4.4.3))(hono@4.12.21)(vite@6.3.5(yaml@2.8.2))
       hono:
         specifier: catalog:prod
-        version: 4.12.18
+        version: 4.12.21
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: catalog:dev
@@ -133,13 +133,13 @@ importers:
         version: 2.4.1
       evlog:
         specifier: catalog:prod
-        version: 2.17.0(ai@6.0.177(zod@4.4.3))(hono@4.12.18)(vite@6.3.5(yaml@2.8.2))
+        version: 2.17.0(ai@6.0.177(zod@4.4.3))(hono@4.12.21)(vite@6.3.5(yaml@2.8.2))
       hono:
         specifier: catalog:prod
-        version: 4.12.18
+        version: 4.12.21
       hono-jsx-to-react:
         specifier: catalog:image
-        version: 0.2.1(hono@4.12.18)
+        version: 0.2.1(hono@4.12.21)
       satori:
         specifier: catalog:image
         version: 0.21.0
@@ -164,10 +164,10 @@ importers:
         version: 6.0.177(zod@4.4.3)
       evlog:
         specifier: catalog:prod
-        version: 2.17.0(ai@6.0.177(zod@4.4.3))(hono@4.12.18)(vite@6.3.5(yaml@2.8.2))
+        version: 2.17.0(ai@6.0.177(zod@4.4.3))(hono@4.12.21)(vite@6.3.5(yaml@2.8.2))
       hono:
         specifier: catalog:prod
-        version: 4.12.18
+        version: 4.12.21
       workers-ai-provider:
         specifier: catalog:prod
         version: 3.1.14(@ai-sdk/provider@3.0.10)(ai@6.0.177(zod@4.4.3))
@@ -186,7 +186,7 @@ importers:
     dependencies:
       '@hono/zod-openapi':
         specifier: catalog:prod
-        version: 1.4.0(hono@4.12.18)(zod@4.4.3)
+        version: 1.4.0(hono@4.12.21)(zod@4.4.3)
       '@octokit/core':
         specifier: catalog:prod
         version: 7.0.6
@@ -195,10 +195,10 @@ importers:
         version: 14.0.0(@octokit/core@7.0.6)
       '@scalar/hono-api-reference':
         specifier: catalog:prod
-        version: 0.10.14(hono@4.12.18)
+        version: 0.10.14(hono@4.12.21)
       hono:
         specifier: catalog:prod
-        version: 4.12.18
+        version: 4.12.21
       zod:
         specifier: catalog:prod
         version: 4.4.3
@@ -1501,8 +1501,8 @@ packages:
     peerDependencies:
       hono: '>=4'
 
-  hono@4.12.18:
-    resolution: {integrity: sha512-RWzP96k/yv0PQfyXnWjs6zot20TqfpfsNXhOnev8d1InAxubW93L11/oNUc3tQqn2G0bSdAOBpX+2uDFHV7kdQ==}
+  hono@4.12.21:
+    resolution: {integrity: sha512-uV63apnb0kyPtAUwoWgaGh9HyIFcv8lgmzPZSiTBQAFOFGIzka5EZ1dZocmGnn0XdX0+XTqJ6Tqv7selMuGLRQ==}
     engines: {node: '>=16.9.0'}
 
   json-schema@0.4.0:
@@ -2046,17 +2046,17 @@ snapshots:
   '@esbuild/win32-x64@0.27.3':
     optional: true
 
-  '@hono/zod-openapi@1.4.0(hono@4.12.18)(zod@4.4.3)':
+  '@hono/zod-openapi@1.4.0(hono@4.12.21)(zod@4.4.3)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.5.0(zod@4.4.3)
-      '@hono/zod-validator': 0.8.0(hono@4.12.18)(zod@4.4.3)
-      hono: 4.12.18
+      '@hono/zod-validator': 0.8.0(hono@4.12.21)(zod@4.4.3)
+      hono: 4.12.21
       openapi3-ts: 4.5.0
       zod: 4.4.3
 
-  '@hono/zod-validator@0.8.0(hono@4.12.18)(zod@4.4.3)':
+  '@hono/zod-validator@0.8.0(hono@4.12.21)(zod@4.4.3)':
     dependencies:
-      hono: 4.12.18
+      hono: 4.12.21
       zod: 4.4.3
 
   '@img/colour@1.0.0': {}
@@ -2424,10 +2424,10 @@ snapshots:
 
   '@scalar/helpers@0.6.0': {}
 
-  '@scalar/hono-api-reference@0.10.14(hono@4.12.18)':
+  '@scalar/hono-api-reference@0.10.14(hono@4.12.21)':
     dependencies:
       '@scalar/client-side-rendering': 0.1.7
-      hono: 4.12.18
+      hono: 4.12.21
 
   '@scalar/types@0.9.6':
     dependencies:
@@ -2632,10 +2632,10 @@ snapshots:
 
   eventsource-parser@3.0.8: {}
 
-  evlog@2.17.0(ai@6.0.177(zod@4.4.3))(hono@4.12.18)(vite@6.3.5(yaml@2.8.2)):
+  evlog@2.17.0(ai@6.0.177(zod@4.4.3))(hono@4.12.21)(vite@6.3.5(yaml@2.8.2)):
     optionalDependencies:
       ai: 6.0.177(zod@4.4.3)
-      hono: 4.12.18
+      hono: 4.12.21
       vite: 6.3.5(yaml@2.8.2)
 
   expect-type@1.3.0: {}
@@ -2653,11 +2653,11 @@ snapshots:
 
   hex-rgb@4.3.0: {}
 
-  hono-jsx-to-react@0.2.1(hono@4.12.18):
+  hono-jsx-to-react@0.2.1(hono@4.12.21):
     dependencies:
-      hono: 4.12.18
+      hono: 4.12.21
 
-  hono@4.12.18: {}
+  hono@4.12.21: {}
 
   json-schema@0.4.0: {}
 
