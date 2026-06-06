@@ -2,7 +2,7 @@ import type { GitHubNotification, GitHubSubject } from "./types";
 
 const SAFE_SUBJECT_TYPES = new Set(["PullRequest", "Issue"]);
 const ALWAYS_AUTO_DONE_AUTHORS = new Set(["renovate[bot]", "dependabot[bot]"]);
-const SUBSCRIBED_AUTO_DONE_AUTHORS = new Set(["coderabbit[bot]"]);
+const SUBSCRIBED_AUTO_DONE_AUTHORS = new Set(["coderabbitai[bot]", "vercel[bot]"]);
 const NEVER_AUTO_DONE_REASONS = new Set([
   "assign",
   "author",
