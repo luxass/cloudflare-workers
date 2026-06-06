@@ -1,8 +1,8 @@
-import { shouldFetchSubject } from "./github";
 import type { GitHubNotification, GitHubSubject } from "./types";
 
-const BOT_AUTHORS = new Set(["renovate[bot]", "dependabot[bot]", "coderabbit[bot]"]);
-const SAFE_AUTO_DONE_REASONS = new Set(["subscribed"]);
+const SAFE_SUBJECT_TYPES = new Set(["PullRequest", "Issue"]);
+const ALWAYS_AUTO_DONE_AUTHORS = new Set(["renovate[bot]", "dependabot[bot]"]);
+const SUBSCRIBED_AUTO_DONE_AUTHORS = new Set(["coderabbit[bot]"]);
 const NEVER_AUTO_DONE_REASONS = new Set([
   "assign",
   "author",
@@ -17,21 +17,7 @@ const NEVER_AUTO_DONE_REASONS = new Set([
 ]);
 
 export function classify(notification: GitHubNotification, subject?: GitHubSubject) {
-  if (NEVER_AUTO_DONE_REASONS.has(notification.reason)) {
-    return {
-      action: "keep" as const,
-      reason: `notification reason ${notification.reason} is protected`,
-    };
-  }
-
-  if (!SAFE_AUTO_DONE_REASONS.has(notification.reason)) {
-    return {
-      action: "keep" as const,
-      reason: `notification reason ${notification.reason} is not auto-done`,
-    };
-  }
-
-  if (!shouldFetchSubject(notification)) {
+  if (!notification.subject.url || !SAFE_SUBJECT_TYPES.has(notification.subject.type)) {
     return {
       action: "keep" as const,
       reason: `subject type ${notification.subject.type} is not supported`,
@@ -40,15 +26,29 @@ export function classify(notification: GitHubNotification, subject?: GitHubSubje
 
   const author = subject?.user?.login;
 
-  if (!author || !BOT_AUTHORS.has(author)) {
+  if (author && ALWAYS_AUTO_DONE_AUTHORS.has(author)) {
+    return {
+      action: "mark-done" as const,
+      reason: `subject author ${author} is always auto-done`,
+    };
+  }
+
+  if (NEVER_AUTO_DONE_REASONS.has(notification.reason)) {
     return {
       action: "keep" as const,
-      reason: author ? `subject author ${author} is not a dependency bot` : "subject has no author",
+      reason: `notification reason ${notification.reason} is protected`,
+    };
+  }
+
+  if (notification.reason === "subscribed" && author && SUBSCRIBED_AUTO_DONE_AUTHORS.has(author)) {
+    return {
+      action: "mark-done" as const,
+      reason: `subject author ${author} is a subscribed bot notification`,
     };
   }
 
   return {
-    action: "mark-done" as const,
-    reason: `subject author ${author} is a dependency bot`,
+    action: "keep" as const,
+    reason: author ? `subject author ${author} is kept` : "subject has no author",
   };
 }

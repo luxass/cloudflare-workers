@@ -95,14 +95,6 @@ export async function listNotifications(env: Env, state: PollState) {
   return { status: "ok" as const, response, notifications };
 }
 
-export function shouldFetchSubject(notification: GitHubNotification) {
-  if (!notification.subject.url) {
-    return false;
-  }
-
-  return notification.subject.type === "PullRequest" || notification.subject.type === "Issue";
-}
-
 export async function fetchSubject(env: Env, notification: GitHubNotification) {
   if (!notification.subject.url) {
     return undefined;
