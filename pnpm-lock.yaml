@@ -182,6 +182,19 @@ importers:
         specifier: catalog:dev
         version: 4.90.0(@cloudflare/workers-types@4.20260511.1)
 
+  apps/notifications:
+    dependencies:
+      evlog:
+        specifier: catalog:prod
+        version: 2.17.0(ai@6.0.177(zod@4.4.3))(hono@4.12.18)(vite@6.3.5(yaml@2.8.2))
+    devDependencies:
+      typescript:
+        specifier: catalog:dev
+        version: 6.0.3
+      wrangler:
+        specifier: catalog:dev
+        version: 4.90.0(@cloudflare/workers-types@4.20260511.1)
+
   packages/helpers:
     dependencies:
       '@hono/zod-openapi':

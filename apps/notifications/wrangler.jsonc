@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "notifications",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-05-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": false,
+    },
+    "enabled": true,
+  },
+  "secrets": {
+    "required": ["GITHUB_TOKEN"],
+  },
+  "vars": {
+    "MARK_DONE": true,
+    "MAX_PAGES": 2,
+  },
+  "kv_namespaces": [
+    {
+      "binding": "NOTIFICATIONS_KV",
+      "id": "4a30c06e45f04174942becfaad4ea18c",
+    },
+  ],
+  "triggers": {
+    "crons": ["* * * * *"],
+  },
+  "placement": { "mode": "smart" },
+}
