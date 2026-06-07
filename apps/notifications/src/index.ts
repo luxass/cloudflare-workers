@@ -1,17 +1,18 @@
 import { createLogger, log as eventLog } from "evlog";
 import { initWorkersLogger } from "evlog/workers";
 
-import { applyDecision, isApprovalRequestWithoutSubject, shouldFetchSubject } from "./decisions";
 import {
   type GitHubPendingDeploymentWithRun,
   type GitHubSubject,
   type PollState,
   listNotificationThreads,
   listPendingDeploymentsForWaitingRuns,
+  markNotificationThreadDone,
   readNotificationSubject,
   updatePollStateFromResponse,
 } from "./github";
-import { classify, classifyNotification } from "./policy";
+import { type NotificationDecision, classify, shouldFetchSubject } from "./policy";
+import type { NotificationAction } from "./utils";
 import { mapConcurrent, writeAudit } from "./utils";
 
 initWorkersLogger({
@@ -123,11 +124,13 @@ export default {
         try {
           let subject: GitHubSubject | undefined;
           let deployments: GitHubPendingDeploymentWithRun[] | undefined;
-          // Start with rules that only need the notification payload. Subject
-          // URLs cost an extra GitHub request and often add no useful signal.
-          let decision = classifyNotification(notification);
+          let decision: NotificationDecision | undefined;
 
-          if (!decision && isApprovalRequestWithoutSubject(notification)) {
+          if (
+            notification.reason === "approval_requested" &&
+            notification.subject.type === "WorkflowRun" &&
+            !notification.subject.url
+          ) {
             const updatedAt = Date.parse(notification.updated_at);
             const stale =
               Number.isFinite(updatedAt) && Date.now() - updatedAt > STALE_APPROVAL_REQUEST_MS;
@@ -196,7 +199,16 @@ export default {
           stats.decisionReasons[decision.reason] =
             (stats.decisionReasons[decision.reason] ?? 0) + 1;
 
-          const action = await applyDecision(env, notification, decision, markDoneNotifications);
+          let action: Exclude<NotificationAction, "failed">;
+          if (decision.action === "keep") {
+            action = "kept";
+          } else if (markDoneNotifications) {
+            await markNotificationThreadDone(env, notification);
+            action = "marked-done";
+          } else {
+            action = "would-mark-done";
+          }
+
           if (action === "kept") {
             stats.counts.kept += 1;
           } else {

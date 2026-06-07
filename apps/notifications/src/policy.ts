@@ -5,7 +5,7 @@ export type NotificationDecision = {
   reason: string;
 };
 
-const SAFE_SUBJECT_TYPES = new Set(["PullRequest", "Issue"]);
+const SUPPORTED_SUBJECT_TYPES = new Set(["PullRequest", "Issue"]);
 const NEVER_AUTO_DONE_IDENTITIES = new Set([
   "huginn-watch",
   "luxass-shared-workflows",
@@ -19,7 +19,7 @@ const ALWAYS_AUTO_DONE_IDENTITIES = new Set([
   "cloudflare-workers-and-pages",
   "github-actions",
 ]);
-const NEVER_AUTO_DONE_REASONS = new Set([
+const PROTECTED_REASONS = new Set([
   "assign",
   "author",
   "comment",
@@ -32,9 +32,38 @@ const NEVER_AUTO_DONE_REASONS = new Set([
   "team_mention",
 ]);
 
-export function classifyNotification(
+export function shouldFetchSubject(notification: GitHubNotification) {
+  return Boolean(
+    notification.subject.url && SUPPORTED_SUBJECT_TYPES.has(notification.subject.type),
+  );
+}
+
+export function classify(
   notification: GitHubNotification,
-): NotificationDecision | undefined {
+  subject?: GitHubSubject,
+): NotificationDecision {
+  const author =
+    subject?.user?.login ??
+    subject?.author?.login ??
+    subject?.actor?.login ??
+    subject?.triggering_actor?.login;
+  const app = subject?.app?.slug ?? subject?.app?.name;
+  const identity = author?.endsWith("[bot]") ? author.slice(0, -5) : (author ?? app);
+
+  if (identity && NEVER_AUTO_DONE_IDENTITIES.has(identity)) {
+    return {
+      action: "keep" as const,
+      reason: `subject identity ${identity} is never auto-done`,
+    };
+  }
+
+  if (identity && ALWAYS_AUTO_DONE_IDENTITIES.has(identity)) {
+    return {
+      action: "mark-done" as const,
+      reason: `subject identity ${identity} is always auto-done`,
+    };
+  }
+
   if (
     notification.reason === "ci_activity" &&
     (notification.subject.type === "CheckSuite" || notification.subject.type === "WorkflowRun") &&
@@ -53,21 +82,6 @@ export function classifyNotification(
     };
   }
 
-  return undefined;
-}
-
-export function classify(
-  notification: GitHubNotification,
-  subject?: GitHubSubject,
-): NotificationDecision {
-  const author =
-    subject?.user?.login ??
-    subject?.author?.login ??
-    subject?.actor?.login ??
-    subject?.triggering_actor?.login;
-  const app = subject?.app?.slug ?? subject?.app?.name;
-  const identity = author?.endsWith("[bot]") ? author.slice(0, -5) : (author ?? app);
-
   if (
     (notification.reason === "author" || notification.reason === "review_requested") &&
     notification.subject.type === "PullRequest" &&
@@ -79,19 +93,7 @@ export function classify(
     };
   }
 
-  if (identity && NEVER_AUTO_DONE_IDENTITIES.has(identity)) {
-    return {
-      action: "keep" as const,
-      reason: `subject identity ${identity} is never auto-done`,
-    };
-  }
-
-  const notificationDecision = classifyNotification(notification);
-  if (notificationDecision) {
-    return notificationDecision;
-  }
-
-  if (!notification.subject.url || !SAFE_SUBJECT_TYPES.has(notification.subject.type)) {
+  if (!notification.subject.url || !SUPPORTED_SUBJECT_TYPES.has(notification.subject.type)) {
     return {
       action: "keep" as const,
       reason: `subject type ${notification.subject.type} is not supported`,
@@ -122,17 +124,10 @@ export function classify(
     };
   }
 
-  if (NEVER_AUTO_DONE_REASONS.has(notification.reason)) {
+  if (PROTECTED_REASONS.has(notification.reason)) {
     return {
       action: "keep" as const,
       reason: `notification reason ${notification.reason} is protected`,
-    };
-  }
-
-  if (identity && ALWAYS_AUTO_DONE_IDENTITIES.has(identity)) {
-    return {
-      action: "mark-done" as const,
-      reason: `subject identity ${identity} is always auto-done`,
     };
   }
 
