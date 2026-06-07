@@ -80,6 +80,7 @@ const GITHUB_API = "https://api.github.com";
 const DEFAULT_POLL_INTERVAL_SECONDS = 60;
 const POLL_INTERVAL_BUFFER_MS = 5_000;
 const DEFAULT_MAX_PAGES = 5;
+const GITHUB_FETCH_TIMEOUT_MS = 15_000;
 const PER_PAGE = 50;
 
 class GitHubRequestError extends Error {
@@ -120,18 +121,35 @@ async function githubFetch({
   method?: string;
   url: string | URL;
 }) {
-  const response = await fetch(url, {
-    body,
-    method,
-    headers: {
-      accept: "application/vnd.github+json",
-      authorization: `Bearer ${env.GITHUB_TOKEN}`,
-      ...headers,
-      "user-agent":
-        "notification cleaner (https://github.com/luxass/cloudflare-workers/tree/main/apps/notifications)",
-      "x-github-api-version": "2022-11-28",
-    },
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), GITHUB_FETCH_TIMEOUT_MS);
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      body,
+      method,
+      signal: controller.signal,
+      headers: {
+        accept: "application/vnd.github+json",
+        authorization: `Bearer ${env.GITHUB_TOKEN}`,
+        ...headers,
+        "user-agent":
+          "notification cleaner (https://github.com/luxass/cloudflare-workers/tree/main/apps/notifications)",
+        "x-github-api-version": "2022-11-28",
+      },
+    });
+  } catch (err) {
+    if (controller.signal.aborted) {
+      throw new Error(`GitHub ${method} ${url} timed out after ${GITHUB_FETCH_TIMEOUT_MS}ms`, {
+        cause: err,
+      });
+    }
+
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok && response.status !== 304) {
     throw new GitHubRequestError({

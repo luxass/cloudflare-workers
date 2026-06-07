@@ -263,6 +263,13 @@ export default {
           await writeAudit(env, notification, {
             action: "failed",
             reason,
+          }).catch((auditErr) => {
+            eventLog.error({
+              operation: "github_notification_audit_failed",
+              message: "GitHub notification failure audit write failed",
+              error: auditErr instanceof Error ? auditErr.message : "Unknown audit write error",
+              github,
+            });
           });
         }
       });

@@ -16,7 +16,7 @@
   },
   "vars": {
     "MARK_DONE": true,
-    "MAX_PAGES": 2
+    "MAX_PAGES": 2,
   },
   "kv_namespaces": [
     {

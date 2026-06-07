@@ -27,8 +27,8 @@ pnpm --filter notifications wrangler secret put GITHUB_TOKEN
 
 Auto-done currently requires all of this:
 
-- notification `reason` is `subscribed`
-- subject is a pull request or issue
-- fetched subject author is `renovate[bot]` or `dependabot[bot]`
+- notification and subject match a supported cleanup rule
+- protected reasons are kept
+- known automation identities such as `renovate`, `dependabot`, `coderabbitai`, `vercel`, `cloudflare-workers-and-pages`, and `github-actions` may be marked done
 
 These reasons are always kept: `mention`, `team_mention`, `review_requested`, `assign`, `author`, `comment`, `manual`, `security_alert`, `invitation`, `state_change`.

@@ -38,6 +38,6 @@ jobs:
       CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
     with:
       app: notifications
-      dry_run: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs['dry-run'] == 'true' }}
+      dry_run: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs['dry-run'] == 'true') }}
       build_arg: build:notifications
       typecheck_arg: turbo run typecheck --filter=notifications

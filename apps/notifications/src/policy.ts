@@ -86,13 +86,6 @@ export function classify(
     };
   }
 
-  if (identity && ALWAYS_AUTO_DONE_IDENTITIES.has(identity)) {
-    return {
-      action: "mark-done" as const,
-      reason: `subject identity ${identity} is always auto-done`,
-    };
-  }
-
   const notificationDecision = classifyNotification(notification);
   if (notificationDecision) {
     return notificationDecision;
@@ -133,6 +126,13 @@ export function classify(
     return {
       action: "keep" as const,
       reason: `notification reason ${notification.reason} is protected`,
+    };
+  }
+
+  if (identity && ALWAYS_AUTO_DONE_IDENTITIES.has(identity)) {
+    return {
+      action: "mark-done" as const,
+      reason: `subject identity ${identity} is always auto-done`,
     };
   }
 
