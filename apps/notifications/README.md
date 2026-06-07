@@ -30,5 +30,6 @@ Auto-done currently requires all of this:
 - notification and subject match a supported cleanup rule
 - protected reasons are kept
 - known automation identities such as `renovate`, `dependabot`, `coderabbitai`, `vercel`, `cloudflare-workers-and-pages`, and `github-actions` may be marked done
+- `state_change` is kept unless the subject belongs to a known automation identity
 
-These reasons are always kept: `mention`, `team_mention`, `review_requested`, `assign`, `author`, `comment`, `manual`, `security_alert`, `invitation`, `state_change`.
+These reasons are always kept: `mention`, `team_mention`, `review_requested`, `assign`, `author`, `comment`, `manual`, `security_alert`, `invitation`.

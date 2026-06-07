@@ -1,5 +1,6 @@
-import type { NotificationAction } from "./decisions";
 import type { GitHubNotification } from "./github";
+
+export type NotificationAction = "would-mark-done" | "marked-done" | "kept" | "failed";
 
 interface AuditEntry {
   action: NotificationAction;
