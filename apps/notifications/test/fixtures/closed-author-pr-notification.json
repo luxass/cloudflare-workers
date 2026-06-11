@@ -1,0 +1,13 @@
+{
+  "id": "closed-author-pr-notification",
+  "reason": "author",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/cloudflare-workers"
+  },
+  "subject": {
+    "title": "feat: shipped thing",
+    "type": "PullRequest",
+    "url": "https://api.github.com/repos/luxass/cloudflare-workers/pulls/12"
+  }
+}

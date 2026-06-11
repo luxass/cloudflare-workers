@@ -1,0 +1,13 @@
+{
+  "id": "team-review-pr-notification",
+  "reason": "review_requested",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/lesetid"
+  },
+  "subject": {
+    "title": "feat: team-owned thing",
+    "type": "PullRequest",
+    "url": "https://api.github.com/repos/luxass/lesetid/pulls/42"
+  }
+}

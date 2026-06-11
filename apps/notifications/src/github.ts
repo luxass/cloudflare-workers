@@ -1,5 +1,6 @@
 export interface PollState {
   lastModified?: string;
+  lastCheckedAt?: string;
   nextPollAt?: number;
 }
 
@@ -165,7 +166,11 @@ async function githubFetch({
   return response;
 }
 
-export function updatePollStateFromResponse(previous: PollState, response: Response): PollState {
+export function updatePollStateFromResponse(
+  previous: PollState,
+  response: Response,
+  checkedAt = new Date(),
+): PollState {
   const pollIntervalSeconds = Number(
     response.headers.get("x-poll-interval") ?? DEFAULT_POLL_INTERVAL_SECONDS,
   );
@@ -176,6 +181,7 @@ export function updatePollStateFromResponse(previous: PollState, response: Respo
 
   return {
     lastModified: response.headers.get("last-modified") ?? previous.lastModified,
+    lastCheckedAt: checkedAt.toISOString(),
     nextPollAt: Date.now() + safePollIntervalSeconds * 1000 + POLL_INTERVAL_BUFFER_MS,
   };
 }
@@ -193,10 +199,15 @@ export async function listNotificationThreads(env: CloudflareBindings, state: Po
 
   for (let page = 1; page <= maxPages; page += 1) {
     const url = new URL("/notifications", GITHUB_API);
-    url.searchParams.set("all", "true");
+    // GitHub REST `all=true` includes the full read backlog. Only use it after
+    // we have a checkpoint so read-but-not-done inbox items are bounded by time.
+    url.searchParams.set("all", state.lastCheckedAt ? "true" : "false");
     url.searchParams.set("participating", "false");
     url.searchParams.set("per_page", String(PER_PAGE));
     url.searchParams.set("page", String(page));
+    if (state.lastCheckedAt) {
+      url.searchParams.set("since", state.lastCheckedAt);
+    }
 
     response = await githubFetch({
       env,

@@ -1,0 +1,13 @@
+{
+  "id": "coderabbit-pr-notification",
+  "reason": "subscribed",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/actioneer"
+  },
+  "subject": {
+    "title": "CodeRabbit summary",
+    "type": "PullRequest",
+    "url": "https://api.github.com/repos/luxass/actioneer/pulls/14"
+  }
+}

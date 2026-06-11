@@ -1,0 +1,17 @@
+{
+  "environment": {
+    "id": 123,
+    "name": "production"
+  },
+  "current_user_can_approve": true,
+  "wait_timer": 0,
+  "wait_timer_started_at": null,
+  "run": {
+    "id": 456,
+    "html_url": "https://github.com/luxass/github-schema/actions/runs/456",
+    "name": "Deploy",
+    "status": "waiting",
+    "conclusion": null,
+    "updated_at": "2026-06-11T00:50:00Z"
+  }
+}

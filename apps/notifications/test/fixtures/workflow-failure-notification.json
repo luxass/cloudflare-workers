@@ -1,0 +1,13 @@
+{
+  "id": "workflow-failure-notification",
+  "reason": "ci_activity",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/unicode-utils"
+  },
+  "subject": {
+    "title": "Check Unicode Releases workflow run failed for main branch",
+    "type": "CheckSuite",
+    "url": null
+  }
+}

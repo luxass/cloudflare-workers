@@ -1,0 +1,13 @@
+{
+  "id": "huginn-pr-notification",
+  "reason": "review_requested",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/github-schema"
+  },
+  "subject": {
+    "title": "feat: generated update",
+    "type": "PullRequest",
+    "url": "https://api.github.com/repos/luxass/github-schema/pulls/285"
+  }
+}

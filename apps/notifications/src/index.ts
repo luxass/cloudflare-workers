@@ -11,7 +11,7 @@ import {
   readNotificationSubject,
   updatePollStateFromResponse,
 } from "./github";
-import { type NotificationDecision, classify, shouldFetchSubject } from "./policy";
+import { type NotificationDecision, classifyNotification } from "./policy";
 import type { NotificationAction } from "./utils";
 import { mapConcurrent, writeAudit } from "./utils";
 
@@ -21,7 +21,6 @@ initWorkersLogger({
 
 const STATE_KEY = "github:notifications:state";
 const NOTIFICATION_CONCURRENCY = 3;
-const STALE_APPROVAL_REQUEST_MS = 24 * 60 * 60 * 1000;
 
 export default {
   async scheduled(_event, env) {
@@ -52,7 +51,7 @@ export default {
 
     try {
       const result = await listNotificationThreads(env, state);
-      const nextState = updatePollStateFromResponse(state, result.response);
+      const nextState = updatePollStateFromResponse(state, result.response, new Date(startedAt));
       await env.NOTIFICATIONS_KV.put(
         STATE_KEY,
         JSON.stringify({
@@ -126,68 +125,44 @@ export default {
           let deployments: GitHubPendingDeploymentWithRun[] | undefined;
           let decision: NotificationDecision | undefined;
 
-          if (
-            notification.reason === "approval_requested" &&
-            notification.subject.type === "WorkflowRun" &&
-            !notification.subject.url
-          ) {
-            const updatedAt = Date.parse(notification.updated_at);
-            const stale =
-              Number.isFinite(updatedAt) && Date.now() - updatedAt > STALE_APPROVAL_REQUEST_MS;
+          let subjectAuthor = "unknown";
+          if (!decision) {
+            const classification = await classifyNotification(notification, {
+              listPendingDeployments: async (notification) => {
+                // WorkflowRun approval notifications do not include a subject URL,
+                // so pending deployments are the only reliable freshness signal.
+                let request = pendingDeployments.get(notification.repository.full_name);
+                if (!request) {
+                  request = listPendingDeploymentsForWaitingRuns(env, notification);
+                  pendingDeployments.set(notification.repository.full_name, request);
+                }
 
-            if (stale) {
-              decision = {
-                action: "mark-done",
-                reason: "approval request is stale",
-              };
-            } else {
-              // WorkflowRun approval notifications do not include a subject URL,
-              // so pending deployments are the only reliable freshness signal.
-              let request = pendingDeployments.get(notification.repository.full_name);
-              if (!request) {
-                request = listPendingDeploymentsForWaitingRuns(env, notification);
-                pendingDeployments.set(notification.repository.full_name, request);
-              }
+                return await request;
+              },
+              now: new Date(startedAt),
+              readSubject: async (notification) => {
+                const url = notification.subject.url;
+                if (!url) {
+                  return undefined;
+                }
 
-              deployments = await request;
-              decision =
-                deployments.length === 0
-                  ? {
-                      action: "mark-done",
-                      reason: "approval request has no pending deployments",
-                    }
-                  : {
-                      action: "keep",
-                      reason: "approval request still has pending deployments",
-                    };
-            }
+                // Notifications can point at the same subject; keep one in-flight
+                // request per URL for the whole poll.
+                let request = subjects.get(url);
+                if (!request) {
+                  request = readNotificationSubject(env, notification);
+                  subjects.set(url, request);
+                }
+
+                return await request;
+              },
+            });
+
+            subject = classification.subject;
+            decision = classification.decision;
+            deployments = classification.pendingDeployments;
+            subjectAuthor = classification.subjectAuthor;
           }
-
-          if (!decision && shouldFetchSubject(notification)) {
-            const url = notification.subject.url;
-            if (url) {
-              // Notifications can point at the same subject; keep one in-flight
-              // request per URL for the whole poll.
-              let request = subjects.get(url);
-              if (!request) {
-                request = readNotificationSubject(env, notification);
-                subjects.set(url, request);
-              }
-
-              subject = await request;
-            }
-          }
-
-          decision ??= classify(notification, subject);
-
-          const subjectAuthor =
-            subject?.user?.login ??
-            subject?.author?.login ??
-            subject?.actor?.login ??
-            subject?.triggering_actor?.login ??
-            subject?.app?.slug ??
-            subject?.app?.name ??
-            "unknown";
 
           stats.subjectAuthors[subjectAuthor] = (stats.subjectAuthors[subjectAuthor] ?? 0) + 1;
           if (subjectAuthor === "unknown") {

@@ -1,0 +1,13 @@
+{
+  "id": "stale-review-pr-notification",
+  "reason": "review_requested",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/eslint-config"
+  },
+  "subject": {
+    "title": "feat: already reviewed thing",
+    "type": "PullRequest",
+    "url": "https://api.github.com/repos/luxass/eslint-config/pulls/200"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "renovate-pr-notification",
+  "reason": "assign",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/vscode-quick-terminals"
+  },
+  "subject": {
+    "title": "chore(deps): update all non-major dependencies",
+    "type": "PullRequest",
+    "url": "https://api.github.com/repos/luxass/vscode-quick-terminals/pulls/50"
+  }
+}

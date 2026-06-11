@@ -1,0 +1,13 @@
+{
+  "id": "unsupported-workflow-notification",
+  "reason": "manual",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/github-schema"
+  },
+  "subject": {
+    "title": "Workflow completed",
+    "type": "WorkflowRun",
+    "url": "https://api.github.com/repos/luxass/github-schema/actions/runs/1"
+  }
+}

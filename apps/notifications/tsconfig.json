@@ -12,5 +12,6 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "skipLibCheck": true
-  }
+  },
+  "exclude": ["**/*.test.ts", "vitest.config.ts"]
 }

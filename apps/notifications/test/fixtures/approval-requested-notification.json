@@ -1,0 +1,13 @@
+{
+  "id": "approval-requested-notification",
+  "reason": "approval_requested",
+  "updated_at": "2026-06-11T00:50:00Z",
+  "repository": {
+    "full_name": "luxass/github-schema"
+  },
+  "subject": {
+    "title": "huginn-watch[bot] requested your review to deploy to an environment",
+    "type": "WorkflowRun",
+    "url": null
+  }
+}

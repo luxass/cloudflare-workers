@@ -1,0 +1,13 @@
+{
+  "id": "mention-pr-notification",
+  "reason": "mention",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/luxass.dev"
+  },
+  "subject": {
+    "title": "feat: mention human reviewer",
+    "type": "PullRequest",
+    "url": "https://api.github.com/repos/luxass/luxass.dev/pulls/284"
+  }
+}

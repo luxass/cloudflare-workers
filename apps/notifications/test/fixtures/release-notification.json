@@ -1,0 +1,13 @@
+{
+  "id": "release-notification",
+  "reason": "subscribed",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/github-schema"
+  },
+  "subject": {
+    "title": "v1.0.0",
+    "type": "Release",
+    "url": "https://api.github.com/repos/luxass/github-schema/releases/1"
+  }
+}
