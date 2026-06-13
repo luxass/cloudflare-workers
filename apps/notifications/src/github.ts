@@ -1,5 +1,6 @@
 export interface PollState {
   lastModified?: string;
+  lastPolledAt?: string;
   nextPollAt?: number;
 }
 
@@ -207,6 +208,9 @@ export async function listNotificationThreads(env: CloudflareBindings, state: Po
     url.searchParams.set("participating", "false");
     url.searchParams.set("per_page", String(PER_PAGE));
     url.searchParams.set("page", String(page));
+    if (page === 1 && state.lastPolledAt) {
+      url.searchParams.set("since", state.lastPolledAt);
+    }
 
     response = await githubNotificationsFetch({
       env,

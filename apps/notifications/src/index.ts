@@ -48,6 +48,7 @@ export default {
           // When the page limit is hit, keep the old validator so the next poll
           // continues from a full notifications response instead of accepting 304.
           lastModified: result.hitPageLimit ? state.lastModified : nextState.lastModified,
+          lastPolledAt: new Date(startedAt).toISOString(),
         }),
       );
 
