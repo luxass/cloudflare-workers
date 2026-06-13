@@ -1,0 +1,13 @@
+{
+  "id": "comment-merged-pr-notification",
+  "reason": "comment",
+  "updated_at": "2026-06-13T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/cloudflare-workers"
+  },
+  "subject": {
+    "title": "Add CHANGELOG.md",
+    "type": "PullRequest",
+    "url": "https://api.github.com/repos/luxass/cloudflare-workers/pulls/42"
+  }
+}

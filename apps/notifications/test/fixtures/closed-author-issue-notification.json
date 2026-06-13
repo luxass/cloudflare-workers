@@ -1,0 +1,13 @@
+{
+  "id": "closed-author-issue-notification",
+  "reason": "author",
+  "updated_at": "2026-06-11T00:00:00Z",
+  "repository": {
+    "full_name": "luxass/cloudflare-workers"
+  },
+  "subject": {
+    "title": "bug: something broken",
+    "type": "Issue",
+    "url": "https://api.github.com/repos/luxass/cloudflare-workers/issues/42"
+  }
+}
