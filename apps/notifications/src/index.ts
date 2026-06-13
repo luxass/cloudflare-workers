@@ -5,6 +5,7 @@ import {
   type GitHubPendingDeploymentWithRun,
   type GitHubSubject,
   type PollState,
+  GitHubRequestError,
   listNotificationThreads,
   listPendingDeploymentsForWaitingRuns,
   markNotificationThreadDone,
@@ -129,7 +130,20 @@ export default {
               // request per URL for the whole poll.
               let request = subjects.get(url);
               if (!request) {
-                request = readNotificationSubject(env, notification);
+                request = readNotificationSubject(env, notification).catch((err) => {
+                  if (err instanceof GitHubRequestError && (err.request.status === 404 || err.request.status === 403)) {
+                    eventLog.warn({
+                      operation: "github_notification_subject_fetch",
+                      message: "GitHub notification subject not accessible",
+                      status: err.request.status,
+                      private: notification.repository.private,
+                      url,
+                      repository: notification.repository.full_name,
+                    });
+                    return undefined;
+                  }
+                  throw err;
+                });
                 subjects.set(url, request);
               }
 
