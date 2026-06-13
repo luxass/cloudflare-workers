@@ -10,6 +10,7 @@ export interface GitHubNotification {
   updated_at: string;
   repository: {
     full_name: string;
+    private: boolean;
   };
   subject: {
     title: string;
@@ -83,7 +84,7 @@ const DEFAULT_MAX_PAGES = 5;
 const GITHUB_FETCH_TIMEOUT_MS = 15_000;
 const PER_PAGE = 50;
 
-class GitHubRequestError extends Error {
+export class GitHubRequestError extends Error {
   constructor(
     readonly request: {
       method: string;
