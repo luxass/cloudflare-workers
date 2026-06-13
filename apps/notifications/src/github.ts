@@ -108,19 +108,15 @@ class GitHubRequestError extends Error {
   }
 }
 
-async function githubFetch({
-  body,
-  env,
-  headers,
-  method = "GET",
-  url,
-}: {
+interface GitHubFetchOptions {
   body?: BodyInit;
-  env: CloudflareBindings;
   headers?: Record<string, string>;
   method?: string;
+  token: string;
   url: string | URL;
-}) {
+}
+
+async function githubFetch({ body, headers, method = "GET", token, url }: GitHubFetchOptions) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), GITHUB_FETCH_TIMEOUT_MS);
 
@@ -132,7 +128,7 @@ async function githubFetch({
       signal: controller.signal,
       headers: {
         accept: "application/vnd.github+json",
-        authorization: `Bearer ${env.GITHUB_TOKEN}`,
+        authorization: `Bearer ${token}`,
         ...headers,
         "user-agent":
           "notification cleaner (https://github.com/luxass/cloudflare-workers/tree/main/apps/notifications)",
@@ -163,6 +159,16 @@ async function githubFetch({
   }
 
   return response;
+}
+
+type GitHubFetchEnvOptions = Omit<GitHubFetchOptions, "token"> & { env: CloudflareBindings };
+
+function githubNotificationsFetch({ env, ...opts }: GitHubFetchEnvOptions) {
+  return githubFetch({ ...opts, token: env.GITHUB_NOTIFICATIONS_TOKEN });
+}
+
+function githubRepoFetch({ env, ...opts }: GitHubFetchEnvOptions) {
+  return githubFetch({ ...opts, token: env.GITHUB_REPO_TOKEN });
 }
 
 export function updatePollStateFromResponse(
@@ -201,7 +207,7 @@ export async function listNotificationThreads(env: CloudflareBindings, state: Po
     url.searchParams.set("per_page", String(PER_PAGE));
     url.searchParams.set("page", String(page));
 
-    response = await githubFetch({
+    response = await githubNotificationsFetch({
       env,
       headers:
         page === 1 && state.lastModified ? { "if-modified-since": state.lastModified } : undefined,
@@ -237,7 +243,7 @@ export async function readNotificationSubject(
     return undefined;
   }
 
-  const response = await githubFetch({
+  const response = await githubRepoFetch({
     env,
     url: notification.subject.url,
   });
@@ -249,7 +255,7 @@ export async function markNotificationThreadDone(
   env: CloudflareBindings,
   notification: GitHubNotification,
 ) {
-  await githubFetch({
+  await githubNotificationsFetch({
     env,
     method: "DELETE",
     url: `${GITHUB_API}/notifications/threads/${notification.id}`,
@@ -292,7 +298,7 @@ async function listRecentWorkflowRuns(
   const url = new URL(`${GITHUB_API}/repos/${repository.owner}/${repository.repo}/actions/runs`);
   url.searchParams.set("per_page", "10");
 
-  const response = await githubFetch({ env, url });
+  const response = await githubRepoFetch({ env, url });
   const runs: { workflow_runs?: GitHubWorkflowRun[] } = await response.json();
 
   return runs.workflow_runs ?? [];
@@ -303,7 +309,7 @@ async function listRunPendingDeployments(
   repository: { owner: string; repo: string },
   run: GitHubWorkflowRun,
 ): Promise<GitHubPendingDeployment[]> {
-  const response = await githubFetch({
+  const response = await githubRepoFetch({
     env,
     url: `${GITHUB_API}/repos/${repository.owner}/${repository.repo}/actions/runs/${run.id}/pending_deployments`,
   });

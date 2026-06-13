@@ -12,7 +12,7 @@
     "enabled": true,
   },
   "secrets": {
-    "required": ["GITHUB_TOKEN"],
+    "required": ["GITHUB_NOTIFICATIONS_TOKEN", "GITHUB_REPO_TOKEN"],
   },
   "vars": {
     "MARK_DONE": true,
