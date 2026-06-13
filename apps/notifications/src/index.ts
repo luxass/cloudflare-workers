@@ -11,9 +11,8 @@ import {
   readNotificationSubject,
   updatePollStateFromResponse,
 } from "./github";
-import { type NotificationDecision, classifyNotification } from "./policy";
-import type { NotificationAction } from "./utils";
-import { mapConcurrent, writeAudit } from "./utils";
+import { classifyNotification } from "./policy";
+import { mapConcurrent } from "./utils";
 
 initWorkersLogger({
   env: { service: "notifications" },
@@ -35,23 +34,12 @@ export default {
     // GitHub tells notification clients how often to poll. Respect that even
     // though the Worker cron runs every minute.
     if (state.nextPollAt && Date.now() < state.nextPollAt) {
-      log.info("GitHub notifications poll skipped", {
-        message: "GitHub notifications poll skipped",
-        poll: {
-          nextPollAt: new Date(state.nextPollAt).toISOString(),
-        },
-      });
-      log.emit({
-        message: "GitHub notifications poll skipped",
-        outcome: "skipped",
-        durationMs: Date.now() - startedAt,
-      });
       return;
     }
 
     try {
       const result = await listNotificationThreads(env, state);
-      const nextState = updatePollStateFromResponse(state, result.response, new Date(startedAt));
+      const nextState = updatePollStateFromResponse(state, result.response);
       await env.NOTIFICATIONS_KV.put(
         STATE_KEY,
         JSON.stringify({
@@ -76,9 +64,6 @@ export default {
       });
 
       if (result.status === "not-modified") {
-        log.info("GitHub notifications not modified", {
-          message: "GitHub notifications not modified",
-        });
         log.emit({
           message: "GitHub notifications not modified",
           outcome: "not_modified",
@@ -121,48 +106,38 @@ export default {
         };
 
         try {
-          let subject: GitHubSubject | undefined;
-          let deployments: GitHubPendingDeploymentWithRun[] | undefined;
-          let decision: NotificationDecision | undefined;
+          const classification = await classifyNotification(notification, {
+            listPendingDeployments: async (notification) => {
+              // WorkflowRun approval notifications do not include a subject URL,
+              // so pending deployments are the only reliable freshness signal.
+              let request = pendingDeployments.get(notification.repository.full_name);
+              if (!request) {
+                request = listPendingDeploymentsForWaitingRuns(env, notification);
+                pendingDeployments.set(notification.repository.full_name, request);
+              }
 
-          let subjectAuthor = "unknown";
-          if (!decision) {
-            const classification = await classifyNotification(notification, {
-              listPendingDeployments: async (notification) => {
-                // WorkflowRun approval notifications do not include a subject URL,
-                // so pending deployments are the only reliable freshness signal.
-                let request = pendingDeployments.get(notification.repository.full_name);
-                if (!request) {
-                  request = listPendingDeploymentsForWaitingRuns(env, notification);
-                  pendingDeployments.set(notification.repository.full_name, request);
-                }
+              return await request;
+            },
+            now: new Date(startedAt),
+            readSubject: async (notification) => {
+              const url = notification.subject.url;
+              if (!url) {
+                return undefined;
+              }
 
-                return await request;
-              },
-              now: new Date(startedAt),
-              readSubject: async (notification) => {
-                const url = notification.subject.url;
-                if (!url) {
-                  return undefined;
-                }
+              // Notifications can point at the same subject; keep one in-flight
+              // request per URL for the whole poll.
+              let request = subjects.get(url);
+              if (!request) {
+                request = readNotificationSubject(env, notification);
+                subjects.set(url, request);
+              }
 
-                // Notifications can point at the same subject; keep one in-flight
-                // request per URL for the whole poll.
-                let request = subjects.get(url);
-                if (!request) {
-                  request = readNotificationSubject(env, notification);
-                  subjects.set(url, request);
-                }
+              return await request;
+            },
+          });
 
-                return await request;
-              },
-            });
-
-            subject = classification.subject;
-            decision = classification.decision;
-            deployments = classification.pendingDeployments;
-            subjectAuthor = classification.subjectAuthor;
-          }
+          const { subject, decision, pendingDeployments: deployments, subjectAuthor } = classification;
 
           stats.subjectAuthors[subjectAuthor] = (stats.subjectAuthors[subjectAuthor] ?? 0) + 1;
           if (subjectAuthor === "unknown") {
@@ -174,7 +149,7 @@ export default {
           stats.decisionReasons[decision.reason] =
             (stats.decisionReasons[decision.reason] ?? 0) + 1;
 
-          let action: Exclude<NotificationAction, "failed">;
+          let action: "kept" | "marked-done" | "would-mark-done";
           if (decision.action === "keep") {
             action = "kept";
           } else if (markDoneNotifications) {
@@ -223,15 +198,9 @@ export default {
               ...github,
               subjectAuthor,
             },
+            htmlUrl: subject?.html_url,
             pendingDeployments: pendingDeploymentsLog,
             durationMs: Date.now() - notificationStartedAt,
-          });
-
-          await writeAudit(env, notification, {
-            action,
-            reason: decision.reason,
-            subjectAuthor,
-            htmlUrl: subject?.html_url,
           });
         } catch (err) {
           stats.counts.failed += 1;
@@ -245,18 +214,6 @@ export default {
             error: reason,
             github,
             durationMs: Date.now() - notificationStartedAt,
-          });
-
-          await writeAudit(env, notification, {
-            action: "failed",
-            reason,
-          }).catch((auditErr) => {
-            eventLog.error({
-              operation: "github_notification_audit_failed",
-              message: "GitHub notification failure audit write failed",
-              error: auditErr instanceof Error ? auditErr.message : "Unknown audit write error",
-              github,
-            });
           });
         }
       });
