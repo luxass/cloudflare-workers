@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import approvalNotification from "./fixtures/approval-requested-notification.json";
 import pendingDeployment from "./fixtures/approval-requested-pending-deployment.json";
+import commentMergedPrNotification from "./fixtures/comment-merged-pr-notification.json";
+import commentMergedPrSubject from "./fixtures/comment-merged-pr-subject.json";
+import closedAuthorIssueNotification from "./fixtures/closed-author-issue-notification.json";
+import closedAuthorIssueSubject from "./fixtures/closed-author-issue-subject.json";
 import closedAuthorNotification from "./fixtures/closed-author-pr-notification.json";
 import closedAuthorSubject from "./fixtures/closed-author-pr-subject.json";
 import coderabbitNotification from "./fixtures/coderabbit-pr-notification.json";
@@ -17,6 +21,8 @@ import renovateSubject from "./fixtures/renovate-pr-subject.json";
 import releaseNotification from "./fixtures/release-notification.json";
 import staleReviewNotification from "./fixtures/stale-review-pr-notification.json";
 import staleReviewSubject from "./fixtures/stale-review-pr-subject.json";
+import stateChangePrNotification from "./fixtures/state-change-pr-notification.json";
+import stateChangePrSubject from "./fixtures/state-change-pr-subject.json";
 import teamReviewNotification from "./fixtures/team-review-pr-notification.json";
 import teamReviewSubject from "./fixtures/team-review-pr-subject.json";
 import unsupportedWorkflowNotification from "./fixtures/unsupported-workflow-notification.json";
@@ -285,6 +291,63 @@ describe("notification policy", () => {
     expect(result.decision).toEqual({
       action: "mark-done",
       reason: "release subscribed notification is auto-done",
+    });
+  });
+
+  it("marks a comment notification done after the pull request merges", async () => {
+    const notification = commentMergedPrNotification as GitHubNotification;
+    const subject = commentMergedPrSubject as GitHubSubject;
+    const subjectReads: GitHubNotification[] = [];
+
+    const result = await classifyNotification(notification, async (notification) => {
+      subjectReads.push(notification);
+      return subject;
+    });
+
+    expect(subjectReads).toEqual([notification]);
+    expect(result.subject).toBe(subject);
+    expect(result.subjectAuthor).toBe("somedev");
+    expect(result.decision).toEqual({
+      action: "mark-done",
+      reason: "pull request comment notification is closed",
+    });
+  });
+
+  it("marks a state_change notification done after the pull request closes", async () => {
+    const notification = stateChangePrNotification as GitHubNotification;
+    const subject = stateChangePrSubject as GitHubSubject;
+    const subjectReads: GitHubNotification[] = [];
+
+    const result = await classifyNotification(notification, async (notification) => {
+      subjectReads.push(notification);
+      return subject;
+    });
+
+    expect(subjectReads).toEqual([notification]);
+    expect(result.subject).toBe(subject);
+    expect(result.subjectAuthor).toBe("luxass");
+    expect(result.decision).toEqual({
+      action: "mark-done",
+      reason: "pull request state_change notification is closed",
+    });
+  });
+
+  it("marks an author notification done after the issue closes", async () => {
+    const notification = closedAuthorIssueNotification as GitHubNotification;
+    const subject = closedAuthorIssueSubject as GitHubSubject;
+    const subjectReads: GitHubNotification[] = [];
+
+    const result = await classifyNotification(notification, async (notification) => {
+      subjectReads.push(notification);
+      return subject;
+    });
+
+    expect(subjectReads).toEqual([notification]);
+    expect(result.subject).toBe(subject);
+    expect(result.subjectAuthor).toBe("luxass");
+    expect(result.decision).toEqual({
+      action: "mark-done",
+      reason: "issue author notification is closed",
     });
   });
 

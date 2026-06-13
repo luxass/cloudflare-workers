@@ -50,7 +50,31 @@ const PROTECTED_REASONS = new Set([
   "state_change",
   "team_mention",
 ]);
+const CLOSEABLE_SUBJECT_TYPES = new Set(["PullRequest", "Issue"]);
+const SUBJECT_TYPE_LABEL: Record<string, string> = {
+  PullRequest: "pull request",
+  Issue: "issue",
+};
 const STALE_APPROVAL_REQUEST_MS = 24 * 60 * 60 * 1000;
+
+function keep(reason: string): NotificationDecision {
+  return { action: "keep", reason };
+}
+
+function markDone(reason: string): NotificationDecision {
+  return { action: "mark-done", reason };
+}
+
+function extractIdentity(subject: GitHubSubject | undefined): string | undefined {
+  const author =
+    subject?.user?.login ??
+    subject?.author?.login ??
+    subject?.actor?.login ??
+    subject?.triggering_actor?.login;
+  const app = subject?.app?.slug ?? subject?.app?.name;
+  const raw = author?.endsWith("[bot]") ? author.slice(0, -5) : (author ?? app);
+  return raw || undefined;
+}
 
 export function shouldFetchSubject(notification: GitHubNotification) {
   return Boolean(
@@ -100,10 +124,7 @@ async function classifyApprovalRequest(
 
   if (stale) {
     return {
-      decision: {
-        action: "mark-done",
-        reason: "approval request is stale",
-      },
+      decision: markDone("approval request is stale"),
     };
   }
 
@@ -114,14 +135,8 @@ async function classifyApprovalRequest(
   return {
     decision:
       pendingDeployments.length === 0
-        ? {
-            action: "mark-done",
-            reason: "approval request has no pending deployments",
-          }
-        : {
-            action: "keep",
-            reason: "approval request still has pending deployments",
-          },
+        ? markDone("approval request has no pending deployments")
+        : keep("approval request still has pending deployments"),
     pendingDeployments,
   };
 }
@@ -142,97 +157,67 @@ export function classify(
   notification: GitHubNotification,
   subject?: GitHubSubject,
 ): NotificationDecision {
-  const author =
-    subject?.user?.login ??
-    subject?.author?.login ??
-    subject?.actor?.login ??
-    subject?.triggering_actor?.login;
-  const app = subject?.app?.slug ?? subject?.app?.name;
-  const identity = author?.endsWith("[bot]") ? author.slice(0, -5) : (author ?? app);
-
+  // 1. Workflow failure notifications — no subject needed
   if (
     notification.reason === "ci_activity" &&
     (notification.subject.type === "CheckSuite" || notification.subject.type === "WorkflowRun") &&
     /run failed (at startup )?for .+ branch/i.test(notification.subject.title)
   ) {
-    return {
-      action: "mark-done" as const,
-      reason: "workflow failure ci_activity is auto-done",
-    };
+    return markDone("workflow failure ci_activity is auto-done");
   }
 
+  // 2. Subscribed release notifications — no subject needed
   if (notification.subject.type === "Release" && notification.reason === "subscribed") {
-    return {
-      action: "mark-done" as const,
-      reason: "release subscribed notification is auto-done",
-    };
+    return markDone("release subscribed notification is auto-done");
   }
 
+  // 3. Closed/merged subjects — any notification about a finished PR or Issue is stale.
+  //    Runs before NEVER_AUTO_DONE so a closed subject is always removed from the inbox.
   if (
-    (notification.reason === "author" || notification.reason === "review_requested") &&
-    notification.subject.type === "PullRequest" &&
+    CLOSEABLE_SUBJECT_TYPES.has(notification.subject.type) &&
     (subject?.merged || subject?.state === "closed")
   ) {
-    return {
-      action: "mark-done" as const,
-      reason: `pull request ${notification.reason} notification is closed`,
-    };
+    const label = SUBJECT_TYPE_LABEL[notification.subject.type] ?? notification.subject.type.toLowerCase();
+    return markDone(`${label} ${notification.reason} notification is closed`);
   }
 
+  const identity = extractIdentity(subject);
+
+  // 4. Identities that should never be auto-done
   if (identity && NEVER_AUTO_DONE_IDENTITIES.has(identity)) {
-    return {
-      action: "keep" as const,
-      reason: `subject identity ${identity} is never auto-done`,
-    };
+    return keep(`subject identity ${identity} is never auto-done`);
   }
 
+  // 5. Identities that are always auto-done (bots/apps that generate noise)
   if (identity && ALWAYS_AUTO_DONE_IDENTITIES.has(identity)) {
-    return {
-      action: "mark-done" as const,
-      reason: `subject identity ${identity} is always auto-done`,
-    };
+    return markDone(`subject identity ${identity} is always auto-done`);
   }
 
+  // 6. Subject type not supported or URL missing — cannot inspect further
   if (!notification.subject.url || !SUPPORTED_SUBJECT_TYPES.has(notification.subject.type)) {
-    return {
-      action: "keep" as const,
-      reason: `subject type ${notification.subject.type} is not supported`,
-    };
+    return keep(`subject type ${notification.subject.type} is not supported`);
   }
 
+  // 7. Review requests — check whether the reviewer list is still active
   if (notification.reason === "review_requested" && notification.subject.type === "PullRequest") {
     if (!subject) {
-      return {
-        action: "keep" as const,
-        reason: "pull request review request could not be checked",
-      };
+      return keep("pull request review request could not be checked");
     }
 
     if (
       (subject?.requested_reviewers?.length ?? 0) === 0 &&
       (subject?.requested_teams?.length ?? 0) === 0
     ) {
-      return {
-        action: "mark-done" as const,
-        reason: "pull request review request is no longer pending",
-      };
+      return markDone("pull request review request is no longer pending");
     }
 
-    return {
-      action: "keep" as const,
-      reason: "pull request review request is still pending",
-    };
+    return keep("pull request review request is still pending");
   }
 
+  // 8. Protected reasons represent human-relevant interactions
   if (PROTECTED_REASONS.has(notification.reason)) {
-    return {
-      action: "keep" as const,
-      reason: `notification reason ${notification.reason} is protected`,
-    };
+    return keep(`notification reason ${notification.reason} is protected`);
   }
 
-  return {
-    action: "keep" as const,
-    reason: identity ? `subject identity ${identity} is kept` : "subject has no identity",
-  };
+  return keep(identity ? `subject identity ${identity} is kept` : "subject has no identity");
 }
