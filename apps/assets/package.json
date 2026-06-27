@@ -22,5 +22,5 @@
     "vitest": "catalog:dev",
     "wrangler": "catalog:dev"
   },
-  "packageManager": "pnpm@11.1.0"
+  "packageManager": "pnpm@11.8.0"
 }
