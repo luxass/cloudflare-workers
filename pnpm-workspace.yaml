@@ -15,31 +15,31 @@ packages:
 
 catalogs:
   dev:
-    "@cloudflare/vitest-pool-workers": 0.16.3
+    "@cloudflare/vitest-pool-workers": 0.16.19
     typescript: 6.0.3
     turbo: 2.9.12
-    oxfmt: 0.45.0
+    oxfmt: 0.56.0
     oxlint: 1.60.0
-    oxlint-tsgolint: 0.21.1
+    oxlint-tsgolint: 0.23.0
     vitest: 4.1.6
-    wrangler: 4.90.0
-    "@cloudflare/workers-types": 4.20260511.1
+    wrangler: 4.104.0
+    "@cloudflare/workers-types": 4.20260625.1
 
   prod:
     "@hono/zod-openapi": 1.4.0
     "@octokit/core": 7.0.6
     "@octokit/plugin-paginate-rest": 14.0.0
-    "@scalar/hono-api-reference": 0.10.14
-    ai: 6.0.177
-    evlog: 2.17.0
+    "@scalar/hono-api-reference": 0.11.5
+    ai: 6.0.209
+    evlog: 2.19.2
     hono: 4.12.18
-    workers-ai-provider: 3.1.14
+    workers-ai-provider: 3.2.1
     zod: 4.4.3
 
   image:
     "@resvg/resvg-wasm": 2.4.1
     hono-jsx-to-react: 0.2.1
-    satori: 0.21.0
+    satori: 0.26.0
 
 onlyBuiltDependencies:
   - esbuild
