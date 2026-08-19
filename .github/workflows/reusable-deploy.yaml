@@ -29,6 +29,19 @@ on:
         required: false
         default: ""
         type: string
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: true
+      IMAGE_GITHUB_TOKEN:
+        required: false
+      MODELS_HMAC_SECRET:
+        required: false
+      NOTIFICATIONS_GITHUB_TOKEN:
+        required: false
+      NOTIFICATIONS_REPO_TOKEN:
+        required: false
 permissions:
   contents: read
 
