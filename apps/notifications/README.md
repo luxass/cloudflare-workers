@@ -17,10 +17,15 @@ Create the KV namespace and replace the placeholder IDs in `wrangler.jsonc`:
 pnpm --filter notifications wrangler kv namespace create NOTIFICATIONS_KV
 ```
 
-Create a classic GitHub token with the `notifications` scope, then store it:
+For Alchemy deployments, expose the tokens as
+`NOTIFICATIONS_GITHUB_TOKEN` and `NOTIFICATIONS_REPO_TOKEN`. They are deployed
+to the Worker as `GITHUB_NOTIFICATIONS_TOKEN` and `GITHUB_REPO_TOKEN`.
+
+For direct Wrangler deployments, store the Worker bindings explicitly:
 
 ```sh
-pnpm --filter notifications wrangler secret put GITHUB_TOKEN
+pnpm --filter notifications wrangler secret put GITHUB_NOTIFICATIONS_TOKEN
+pnpm --filter notifications wrangler secret put GITHUB_REPO_TOKEN
 ```
 
 ## Policy

@@ -7,16 +7,15 @@ on:
         description: The app to deploy
         required: true
         type: string
-      wrangler_environment:
-        description: The Wrangler environment to deploy
-        required: false
-        default: ""
+      stage:
+        description: The Alchemy stage to operate on
+        required: true
         type: string
-      dry_run:
-        description: Run the workflow without creating a deployment
+      operation:
+        description: The Alchemy operation to run (plan, deploy, or destroy)
         required: false
-        default: false
-        type: boolean
+        default: deploy
+        type: string
       build_arg:
         description: The pnpm args used to build the app
         required: true
@@ -30,28 +29,71 @@ on:
         required: false
         default: ""
         type: string
-    secrets:
-      CF_API_TOKEN:
-        required: true
-      CF_ACCOUNT_ID:
-        required: true
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   deploy:
-    name: deploy ${{ inputs.app }} worker${{ inputs.wrangler_environment != '' && format(' to {0}', inputs.wrangler_environment) || '' }}
+    name: ${{ inputs.operation }} ${{ inputs.app }} (${{ inputs.stage }})
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     if: github.repository_owner == 'luxass'
+    concurrency:
+      group: alchemy-${{ inputs.app }}-${{ inputs.stage }}
+      cancel-in-progress: false
     environment:
       name: deploy
       deployment: false
     env:
+      ALCHEMY_OPERATION: ${{ inputs.operation }}
+      ALCHEMY_STAGE: ${{ inputs.stage }}
+      ALCHEMY_APP: ${{ inputs.app }}
       APP_DIRECTORY: ${{ format('./apps/{0}', inputs.app) }}
       BUILD_ARG: ${{ inputs.build_arg }}
       TYPECHECK_ARG: ${{ inputs.typecheck_arg }}
       TEST_ARG: ${{ inputs.test_arg }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      IMAGE_GITHUB_TOKEN: ${{ secrets.IMAGE_GITHUB_TOKEN }}
+      MODELS_HMAC_SECRET: ${{ secrets.MODELS_HMAC_SECRET }}
+      NOTIFICATIONS_GITHUB_TOKEN: ${{ secrets.NOTIFICATIONS_GITHUB_TOKEN }}
+      NOTIFICATIONS_REPO_TOKEN: ${{ secrets.NOTIFICATIONS_REPO_TOKEN }}
     steps:
+      - name: validate operation
+        run: |
+          case "$ALCHEMY_OPERATION" in
+            plan|deploy|destroy) ;;
+            *)
+              echo "Unsupported Alchemy operation: $ALCHEMY_OPERATION"
+              exit 1
+              ;;
+          esac
+
+          if [ "$ALCHEMY_OPERATION" = "destroy" ] && [ "$ALCHEMY_STAGE" = "production" ]; then
+            echo "Refusing to destroy the production stage"
+            exit 1
+          fi
+
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "Missing Cloudflare API token or account ID"
+            exit 1
+          fi
+
+          if [ "$ALCHEMY_APP" = "image" ] && [ -z "$IMAGE_GITHUB_TOKEN" ]; then
+            echo "Missing IMAGE_GITHUB_TOKEN"
+            exit 1
+          fi
+
+          if [ "$ALCHEMY_APP" = "models" ] && [ -z "$MODELS_HMAC_SECRET" ]; then
+            echo "Missing MODELS_HMAC_SECRET"
+            exit 1
+          fi
+
+          if [ "$ALCHEMY_APP" = "notifications" ] && { [ -z "$NOTIFICATIONS_GITHUB_TOKEN" ] || [ -z "$NOTIFICATIONS_REPO_TOKEN" ]; }; then
+            echo "Missing notifications GitHub token"
+            exit 1
+          fi
+
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
@@ -66,25 +108,29 @@ jobs:
           package-manager-cache: false
 
       - name: install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: build
+        if: inputs.operation != 'destroy'
         run: pnpm $BUILD_ARG
 
       - name: typecheck
+        if: inputs.operation != 'destroy'
         run: pnpm $TYPECHECK_ARG
 
       - name: test
-        if: ${{ inputs.test_arg != '' }}
+        if: inputs.operation != 'destroy' && inputs.test_arg != ''
         run: pnpm $TEST_ARG
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: deploy
-        if: ${{ !inputs.dry_run }}
-        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65 # v3.14.1
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: ${{ env.APP_DIRECTORY }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          environment: ${{ inputs.wrangler_environment }}
+      - name: run Alchemy
+        working-directory: ${{ env.APP_DIRECTORY }}
+        run: |
+          if [ "$ALCHEMY_OPERATION" = "deploy" ]; then
+            pnpm exec alchemy deploy --stage "$ALCHEMY_STAGE" --yes
+          elif [ "$ALCHEMY_OPERATION" = "destroy" ]; then
+            pnpm exec alchemy destroy --stage "$ALCHEMY_STAGE" --yes
+          else
+            pnpm exec alchemy plan --stage "$ALCHEMY_STAGE"
+          fi

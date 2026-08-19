@@ -12,3 +12,6 @@ To use this worker, simply make a request to `https://assets.luxass.dev/` follow
 ```bash
 curl https://assets.luxass.dev/ping
 ```
+
+Alchemy reads the GitHub credential from `IMAGE_GITHUB_TOKEN` and deploys it to
+the Worker as the `GITHUB_TOKEN` secret binding.

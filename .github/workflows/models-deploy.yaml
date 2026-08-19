@@ -1,0 +1,57 @@
+name: deploy models worker
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: The Alchemy stage to operate on
+        required: true
+        default: preview
+        type: choice
+        options:
+          - preview
+          - production
+      dry_run:
+        description: Plan without creating a deployment
+        required: false
+        default: false
+        type: boolean
+  pull_request:
+    branches:
+      - main
+    types: [opened, reopened, synchronize, closed]
+    paths:
+      - "apps/models/**"
+      - ".github/workflows/models-deploy.yaml"
+      - ".github/workflows/reusable-deploy.yaml"
+      - "packages/**"
+      - "pnpm-workspace.yaml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "turbo.json"
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/models/**"
+      - ".github/workflows/models-deploy.yaml"
+      - ".github/workflows/reusable-deploy.yaml"
+      - "packages/**"
+      - "pnpm-workspace.yaml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "turbo.json"
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    uses: ./.github/workflows/reusable-deploy.yaml
+    with:
+      app: models
+      stage: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || (github.event_name == 'push' && 'production' || inputs.stage) }}
+      operation: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && 'destroy' || (github.event_name == 'workflow_dispatch' && inputs.dry_run && 'plan' || 'deploy') }}
+      build_arg: build:models
+      typecheck_arg: turbo run typecheck --filter=models
