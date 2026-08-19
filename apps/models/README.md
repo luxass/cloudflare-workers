@@ -16,6 +16,9 @@ Set the Worker secret used to protect the endpoint:
 wrangler secret put HMAC_SECRET
 ```
 
+Alchemy reads this credential from `MODELS_HMAC_SECRET` and deploys it to the
+Worker as the `HMAC_SECRET` secret binding.
+
 Every request to `POST /api/pr-metadata` must send:
 
 ```txt

@@ -7,7 +7,59 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "passThroughEnv": [
+        "ALCHEMY_*",
+        "CI",
+        "CLOUDFLARE_*",
+        "IMAGE_GITHUB_TOKEN",
+        "GITHUB_TOKEN",
+        "HMAC_SECRET",
+        "NOTIFICATIONS_GITHUB_TOKEN",
+        "NOTIFICATIONS_REPO_TOKEN"
+      ]
+    },
+    "plan": {
+      "cache": false,
+      "outputs": [],
+      "passThroughEnv": [
+        "ALCHEMY_*",
+        "CI",
+        "CLOUDFLARE_*",
+        "IMAGE_GITHUB_TOKEN",
+        "GITHUB_TOKEN",
+        "HMAC_SECRET",
+        "NOTIFICATIONS_GITHUB_TOKEN",
+        "NOTIFICATIONS_REPO_TOKEN"
+      ]
+    },
+    "deploy": {
+      "cache": false,
+      "outputs": [],
+      "passThroughEnv": [
+        "ALCHEMY_*",
+        "CI",
+        "CLOUDFLARE_*",
+        "IMAGE_GITHUB_TOKEN",
+        "GITHUB_TOKEN",
+        "HMAC_SECRET",
+        "NOTIFICATIONS_GITHUB_TOKEN",
+        "NOTIFICATIONS_REPO_TOKEN"
+      ]
+    },
+    "destroy": {
+      "cache": false,
+      "outputs": [],
+      "passThroughEnv": [
+        "ALCHEMY_*",
+        "CI",
+        "CLOUDFLARE_*",
+        "IMAGE_GITHUB_TOKEN",
+        "GITHUB_TOKEN",
+        "HMAC_SECRET",
+        "NOTIFICATIONS_GITHUB_TOKEN",
+        "NOTIFICATIONS_REPO_TOKEN"
+      ]
     },
     "test": {
       "dependsOn": ["^build"],
