@@ -2,10 +2,6 @@ ignoreScripts: true
 catalogMode: prefer
 minimumReleaseAge: 5760
 trustPolicy: no-downgrade
-# pnpm appears to false-positive on evlog's trusted publishing metadata:
-# https://github.com/HugoRCD/evlog/issues/168
-trustPolicyExclude:
-  - evlog@2.13.0
 strictDepBuilds: true
 blockExoticSubdeps: true
 
@@ -14,36 +10,32 @@ packages:
   - packages/*
   - stacks
 
-overrides:
-  "@smithy/core": 3.33.2
-  "@smithy/node-http-handler": 4.11.2
-
 catalogs:
   alchemy:
-    "@effect/platform-node": 4.0.0-rc.108
-    alchemy: 2.0.0-beta.72
-    effect: 4.0.0-rc.108
+    "@effect/platform-node": 4.0.0-rc.111
+    alchemy: 2.0.0-beta.74
+    effect: 4.0.0-rc.111
 
   dev:
-    "@cloudflare/vitest-pool-workers": 0.16.20
-    typescript: 6.0.3
-    turbo: 2.10.1
-    oxfmt: 0.57.0
-    oxlint: 1.72.0
-    oxlint-tsgolint: 0.24.0
-    vitest: 4.1.9
-    wrangler: 4.105.0
-    "@cloudflare/workers-types": 4.20260630.1
+    "@cloudflare/vitest-pool-workers": 0.22.0
+    typescript: 7.0.2
+    turbo: 2.10.11
+    oxfmt: 0.64.0
+    oxlint: 1.79.0
+    oxlint-tsgolint: 7.0.2001
+    vitest: 4.1.11
+    wrangler: 4.125.0
+    "@cloudflare/workers-types": 5.20260821.1
 
   prod:
-    "@hono/zod-openapi": 1.4.0
-    "@octokit/core": 7.0.6
-    "@octokit/plugin-paginate-rest": 14.0.0
-    "@scalar/hono-api-reference": 0.11.7
-    ai: 6.0.177
-    evlog: 2.19.2
-    hono: 4.12.27
-    workers-ai-provider: 3.3.0
+    "@hono/zod-openapi": 1.6.1
+    "@octokit/core": 7.0.7
+    "@octokit/plugin-paginate-rest": 15.0.0
+    "@scalar/hono-api-reference": 0.11.16
+    ai: 7.0.71
+    evlog: 2.26.0
+    hono: 4.13.3
+    workers-ai-provider: 4.0.0
     zod: 4.4.3
 
   image:
@@ -55,8 +47,3 @@ onlyBuiltDependencies:
   - esbuild
   - sharp
   - workerd
-
-minimumReleaseAgeExclude:
-  - "@smithy/core@3.33.2"
-  - "@smithy/node-http-handler@4.11.2"
-  - "@smithy/types@4.17.2"
