@@ -27,5 +27,5 @@
     "typescript": "catalog:dev",
     "wrangler": "catalog:dev"
   },
-  "packageManager": "pnpm@11.21.0"
+  "packageManager": "pnpm@11.22.0"
 }
