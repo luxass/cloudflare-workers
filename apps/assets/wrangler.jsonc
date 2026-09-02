@@ -11,40 +11,34 @@
     "enabled": true,
   },
   "placement": { "mode": "smart" },
-  "env": {
-    "preview": {
-      "name": "assets-preview",
-      "preview_urls": false,
-      "vars": {
-        "ENVIRONMENT": "preview",
-      },
-      "routes": [
-        {
-          "custom_domain": true,
-          "pattern": "preview.assets.luxass.dev",
-        },
-        {
-          "custom_domain": true,
-          "pattern": "preview.assets.luxass.com",
-        },
-      ],
+  "routes": [
+    {
+      "custom_domain": true,
+      "pattern": "assets.luxass.dev",
+      "previews_enabled": false,
     },
-    "production": {
-      "name": "assets",
-      "preview_urls": false,
-      "vars": {
-        "ENVIRONMENT": "production",
-      },
-      "routes": [
-        {
-          "custom_domain": true,
-          "pattern": "assets.luxass.dev",
-        },
-        {
-          "custom_domain": true,
-          "pattern": "assets.luxass.com",
-        },
-      ],
+    {
+      "custom_domain": true,
+      "pattern": "assets.luxass.com",
+      "previews_enabled": false,
+    },
+    {
+      "custom_domain": true,
+      "pattern": "preview.assets.luxass.dev",
+      "previews_enabled": true,
+    },
+    {
+      "custom_domain": true,
+      "pattern": "preview.assets.luxass.com",
+      "previews_enabled": true,
+    },
+  ],
+  "vars": {
+    "ENVIRONMENT": "production",
+  },
+  "previews": {
+    "vars": {
+      "ENVIRONMENT": "preview",
     },
   },
 }

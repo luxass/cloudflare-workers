@@ -1,24 +1,30 @@
 import { describe, expect, it } from "vitest";
 
+import type {
+  GitHubNotification,
+  GitHubPendingDeploymentWithRun,
+  GitHubSubject,
+} from "../src/github";
+import { classifyNotification } from "../src/policy";
 import approvalNotification from "./fixtures/approval-requested-notification.json";
 import pendingDeployment from "./fixtures/approval-requested-pending-deployment.json";
-import commentMergedPrNotification from "./fixtures/comment-merged-pr-notification.json";
-import commentMergedPrSubject from "./fixtures/comment-merged-pr-subject.json";
 import closedAuthorIssueNotification from "./fixtures/closed-author-issue-notification.json";
 import closedAuthorIssueSubject from "./fixtures/closed-author-issue-subject.json";
 import closedAuthorNotification from "./fixtures/closed-author-pr-notification.json";
 import closedAuthorSubject from "./fixtures/closed-author-pr-subject.json";
 import coderabbitNotification from "./fixtures/coderabbit-pr-notification.json";
 import coderabbitSubject from "./fixtures/coderabbit-pr-subject.json";
+import commentMergedPrNotification from "./fixtures/comment-merged-pr-notification.json";
+import commentMergedPrSubject from "./fixtures/comment-merged-pr-subject.json";
 import huginnNotification from "./fixtures/huginn-pr-notification.json";
 import huginnSubject from "./fixtures/huginn-pr-subject.json";
 import mentionNotification from "./fixtures/mention-pr-notification.json";
 import mentionSubject from "./fixtures/mention-pr-subject.json";
 import pendingReviewNotification from "./fixtures/pending-review-pr-notification.json";
 import pendingReviewSubject from "./fixtures/pending-review-pr-subject.json";
+import releaseNotification from "./fixtures/release-notification.json";
 import renovateNotification from "./fixtures/renovate-pr-notification.json";
 import renovateSubject from "./fixtures/renovate-pr-subject.json";
-import releaseNotification from "./fixtures/release-notification.json";
 import staleReviewNotification from "./fixtures/stale-review-pr-notification.json";
 import staleReviewSubject from "./fixtures/stale-review-pr-subject.json";
 import stateChangePrNotification from "./fixtures/state-change-pr-notification.json";
@@ -27,8 +33,6 @@ import teamReviewNotification from "./fixtures/team-review-pr-notification.json"
 import teamReviewSubject from "./fixtures/team-review-pr-subject.json";
 import unsupportedWorkflowNotification from "./fixtures/unsupported-workflow-notification.json";
 import workflowFailureNotification from "./fixtures/workflow-failure-notification.json";
-import type { GitHubNotification, GitHubPendingDeploymentWithRun, GitHubSubject } from "../src/github";
-import { classifyNotification } from "../src/policy";
 
 describe("notification policy", () => {
   it("fetches a pull request subject before classifying the notification", async () => {

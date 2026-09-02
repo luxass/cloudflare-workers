@@ -26,10 +26,28 @@
     {
       "custom_domain": true,
       "pattern": "models.luxass.dev",
+      "previews_enabled": false,
     },
     {
       "custom_domain": true,
       "pattern": "models.luxass.com",
+      "previews_enabled": false,
+    },
+    {
+      "custom_domain": true,
+      "pattern": "preview.models.luxass.dev",
+      "previews_enabled": true,
+    },
+    {
+      "custom_domain": true,
+      "pattern": "preview.models.luxass.com",
+      "previews_enabled": true,
     },
   ],
+  "previews": {
+    "ai": {
+      "binding": "AI",
+      "remote": true,
+    },
+  },
 }

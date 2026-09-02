@@ -34,7 +34,7 @@ function convertToHexCodePoints(j: string) {
   const t = [];
   let A = 0;
   let k = 0;
-  for (let E = 0; E < j.length; ) {
+  for (let E = 0; E < j.length;) {
     A = j.charCodeAt(E++);
 
     if (k) {

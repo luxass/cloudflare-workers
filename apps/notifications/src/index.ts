@@ -132,7 +132,10 @@ export default {
               let request = subjects.get(url);
               if (!request) {
                 request = readNotificationSubject(env, notification).catch((err) => {
-                  if (err instanceof GitHubRequestError && (err.request.status === 404 || err.request.status === 403)) {
+                  if (
+                    err instanceof GitHubRequestError &&
+                    (err.request.status === 404 || err.request.status === 403)
+                  ) {
                     eventLog.warn({
                       operation: "github_notification_subject_fetch",
                       message: "GitHub notification subject not accessible",
@@ -152,7 +155,12 @@ export default {
             },
           });
 
-          const { subject, decision, pendingDeployments: deployments, subjectAuthor } = classification;
+          const {
+            subject,
+            decision,
+            pendingDeployments: deployments,
+            subjectAuthor,
+          } = classification;
 
           stats.subjectAuthors[subjectAuthor] = (stats.subjectAuthors[subjectAuthor] ?? 0) + 1;
           if (subjectAuthor === "unknown") {

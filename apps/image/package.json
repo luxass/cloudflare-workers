@@ -3,11 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "alchemy dev",
+    "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run --outdir=dist",
-    "plan": "alchemy plan --stage production",
-    "deploy": "alchemy deploy --stage production",
-    "destroy": "alchemy destroy --stage production",
+    "deploy": "wrangler deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "typecheck": "pnpm run cf-typegen && tsc --noEmit"
   },
@@ -21,9 +19,6 @@
     "zod": "catalog:prod"
   },
   "devDependencies": {
-    "@effect/platform-node": "catalog:alchemy",
-    "alchemy": "catalog:alchemy",
-    "effect": "catalog:alchemy",
     "typescript": "catalog:dev",
     "wrangler": "catalog:dev"
   },

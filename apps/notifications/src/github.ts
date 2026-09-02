@@ -173,10 +173,7 @@ function githubRepoFetch({ env, ...opts }: GitHubFetchEnvOptions) {
   return githubFetch({ ...opts, token: env.GITHUB_REPO_TOKEN });
 }
 
-export function updatePollStateFromResponse(
-  previous: PollState,
-  response: Response,
-): PollState {
+export function updatePollStateFromResponse(previous: PollState, response: Response): PollState {
   const pollIntervalSeconds = Number(
     response.headers.get("x-poll-interval") ?? DEFAULT_POLL_INTERVAL_SECONDS,
   );

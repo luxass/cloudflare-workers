@@ -86,8 +86,7 @@ export async function classifyNotification(
   notification: GitHubNotification,
   options: ClassifyNotificationOptions | ReadNotificationSubject,
 ): Promise<NotificationClassification> {
-  const normalizedOptions =
-    typeof options === "function" ? { readSubject: options } : options;
+  const normalizedOptions = typeof options === "function" ? { readSubject: options } : options;
   const approvalDecision = await classifyApprovalRequest(notification, normalizedOptions);
   if (approvalDecision) {
     return {
@@ -177,7 +176,8 @@ export function classify(
     CLOSEABLE_SUBJECT_TYPES.has(notification.subject.type) &&
     (subject?.merged || subject?.state === "closed")
   ) {
-    const label = SUBJECT_TYPE_LABEL[notification.subject.type] ?? notification.subject.type.toLowerCase();
+    const label =
+      SUBJECT_TYPE_LABEL[notification.subject.type] ?? notification.subject.type.toLowerCase();
     return markDone(`${label} ${notification.reason} notification is closed`);
   }
 
