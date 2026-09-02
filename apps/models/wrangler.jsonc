@@ -35,12 +35,12 @@
     },
     {
       "custom_domain": true,
-      "pattern": "preview.models.luxass.dev",
+      "pattern": "previews.models.luxass.dev",
       "previews_enabled": true,
     },
     {
       "custom_domain": true,
-      "pattern": "preview.models.luxass.com",
+      "pattern": "previews.models.luxass.com",
       "previews_enabled": true,
     },
   ],

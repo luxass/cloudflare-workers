@@ -28,12 +28,12 @@
     },
     {
       "custom_domain": true,
-      "pattern": "preview.image.luxass.dev",
+      "pattern": "previews.image.luxass.dev",
       "previews_enabled": true,
     },
     {
       "custom_domain": true,
-      "pattern": "preview.image.luxass.com",
+      "pattern": "previews.image.luxass.com",
       "previews_enabled": true,
     },
   ],
