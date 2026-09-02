@@ -24,12 +24,12 @@
     },
     {
       "custom_domain": true,
-      "pattern": "preview.assets.luxass.dev",
-      "previews_enabled": true,
+      "pattern": "*.preview.assets.luxass.dev",
+      "previews_enabled": true
     },
     {
       "custom_domain": true,
-      "pattern": "preview.assets.luxass.com",
+      "pattern": "*.preview.assets.luxass.com",
       "previews_enabled": true,
     },
   ],
