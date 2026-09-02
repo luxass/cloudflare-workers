@@ -37,11 +37,13 @@
       "custom_domain": true,
       "pattern": "previews.models.luxass.dev",
       "previews_enabled": true,
+      "enabled": false,
     },
     {
       "custom_domain": true,
       "pattern": "previews.models.luxass.com",
       "previews_enabled": true,
+      "enabled": false,
     },
   ],
   "previews": {

@@ -26,11 +26,13 @@
       "custom_domain": true,
       "pattern": "previews.assets.luxass.dev",
       "previews_enabled": true,
+      "enabled": false,
     },
     {
       "custom_domain": true,
       "pattern": "previews.assets.luxass.com",
       "previews_enabled": true,
+      "enabled": false,
     },
   ],
   "vars": {

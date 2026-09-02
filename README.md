@@ -16,7 +16,8 @@ Each worker is deployed with Wrangler. Production deploys run
 connection), and preview branches run `wrangler preview`, which deploys an
 isolated Preview using the `previews` block in each worker's
 [`wrangler.jsonc`](apps/image/wrangler.jsonc). Preview URLs are served from
-`*.previews.<worker>.luxass.dev`.
+`<preview-name>.previews.<worker>.luxass.dev`, which are preview-only domains
+(`enabled: false`, `previews_enabled: true` in the wrangler config).
 
 The `notifications` worker is production-only: it runs on a cron trigger,
 which Previews do not support.
