@@ -7,6 +7,7 @@ import {
   getRequestLogger,
   setRequestLogger,
   toLogError,
+  verifyHmacSignature,
 } from "@cf-workers/helpers";
 import { generateText, Output, AISDKError, NoObjectGeneratedError } from "ai";
 import { createWorkersLogger, initWorkersLogger } from "evlog/workers";
@@ -23,8 +24,13 @@ interface HonoContext {
   Bindings: CloudflareBindings;
 }
 
-const TEXT_ENCODER = new TextEncoder();
 const MAX_REQUEST_AGE_MS = 5 * 60 * 1000;
+const timestampSchema = z
+  .string()
+  .regex(/^\d+$/)
+  .transform(Number)
+  .refine(Number.isSafeInteger)
+  .refine((timestamp) => Math.abs(Date.now() - timestamp) <= MAX_REQUEST_AGE_MS);
 const DISALLOWED_SCOPES = new Set(["pr", "pullrequest", "github", "automation", "schema"]);
 const PR_METADATA_RESPONSE_SCHEMA = z.object({
   type: z.enum(["docs", "feat", "fix", "chore"]),
@@ -56,41 +62,6 @@ const app = new Hono<HonoContext>();
 
 app.get("/view-source", createViewSourceRedirect("models"));
 app.get("/ping", createPingPongRoute());
-
-function encodeText(value: string): ArrayBuffer {
-  const bytes = TEXT_ENCODER.encode(value);
-  const buffer = new ArrayBuffer(bytes.byteLength);
-  new Uint8Array(buffer).set(bytes);
-
-  return buffer;
-}
-
-async function verifySignature(
-  secret: string,
-  payload: string,
-  signatureHex: string,
-): Promise<boolean> {
-  if (!/^[\da-f]+$/i.test(signatureHex) || signatureHex.length % 2 !== 0) {
-    return false;
-  }
-
-  const signature = new ArrayBuffer(signatureHex.length / 2);
-  const signatureBytes = new Uint8Array(signature);
-
-  for (let index = 0; index < signatureHex.length; index += 2) {
-    signatureBytes[index / 2] = Number.parseInt(signatureHex.slice(index, index + 2), 16);
-  }
-
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encodeText(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["verify"],
-  );
-
-  return crypto.subtle.verify("HMAC", key, signature, encodeText(payload));
-}
 
 function normalizeScope(scope: string): string {
   const normalized = scope.trim();
@@ -227,22 +198,18 @@ app.post("/api/pr-metadata", async (c) => {
     return createError(c, 401, "Missing HMAC headers");
   }
 
-  const timestampMs = Number(timestampHeader);
-
-  if (
-    !Number.isSafeInteger(timestampMs) ||
-    Math.abs(Date.now() - timestampMs) > MAX_REQUEST_AGE_MS
-  ) {
+  const timestamp = timestampSchema.safeParse(timestampHeader);
+  if (!timestamp.success) {
     return createError(c, 401, "Expired or invalid timestamp");
   }
 
   const rawBody = await c.req.raw.text();
-
-  const isValidSignature = await verifySignature(
-    c.env.HMAC_SECRET,
-    `${timestampHeader}.${rawBody}`,
-    signatureHeader,
-  );
+  const isValidSignature = await verifyHmacSignature({
+    secret: c.env.HMAC_SECRET,
+    payload: `${timestampHeader}.${rawBody}`,
+    signature: signatureHeader,
+    format: "hex",
+  });
 
   if (!isValidSignature) {
     return createError(c, 401, "Invalid signature");
