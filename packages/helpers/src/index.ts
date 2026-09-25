@@ -4,6 +4,7 @@ import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type { ApiError } from "./schemas";
 
 export { cache } from "./cache";
+export { verifyHmacSignature, type VerifyHmacSignatureOptions } from "./crypto";
 export {
   deleteRequestLogger,
   getRequestLogger,
