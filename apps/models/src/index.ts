@@ -128,13 +128,18 @@ function extractJsonObject(text: string): string {
   return trimmed;
 }
 
+type PrMetadataGeneration = {
+  metadata: ReturnType<typeof normalizePrMetadata>;
+  generationMode: "structured" | "plain-json-fallback";
+};
+
 async function generatePrMetadata(
   workersAi: WorkersAI,
   model: string,
   system: string,
   prompt: string,
   log: RequestLogger | undefined,
-) {
+): Promise<PrMetadataGeneration> {
   try {
     const result = await generateText({
       model: workersAi(model),
@@ -146,7 +151,10 @@ async function generatePrMetadata(
       prompt,
     });
 
-    return normalizePrMetadata(result.output);
+    return {
+      metadata: normalizePrMetadata(result.output),
+      generationMode: "structured",
+    };
   } catch (err) {
     const retryContext = {
       message: "Structured PR metadata generation failed; retrying with plain JSON fallback",
@@ -191,7 +199,10 @@ async function generatePrMetadata(
     const parsed = PR_METADATA_RESPONSE_SCHEMA.safeParse(fallbackJson);
 
     if (parsed.success) {
-      return normalizePrMetadata(parsed.data);
+      return {
+        metadata: normalizePrMetadata(parsed.data),
+        generationMode: "plain-json-fallback",
+      };
     }
 
     log?.set({
@@ -269,7 +280,7 @@ app.post("/api/pr-metadata", async (c) => {
     `\`\`\`diff\n${body.data.diff}\n\`\`\``,
   ].join("\n\n");
 
-  const result = await generatePrMetadata(
+  const generated = await generatePrMetadata(
     workersAi,
     model,
     body.data.system ?? DEFAULT_PR_METADATA_SYSTEM_PROMPT,
@@ -279,10 +290,11 @@ app.post("/api/pr-metadata", async (c) => {
 
   log?.set({
     message: "Generated PR metadata successfully",
-    metadata: result,
+    metadata: generated.metadata,
+    generationMode: generated.generationMode,
   });
 
-  return c.json(result);
+  return c.json(generated.metadata);
 });
 
 app.onError(async (err, c) => {

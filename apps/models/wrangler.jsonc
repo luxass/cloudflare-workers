@@ -19,7 +19,7 @@
     "required": ["HMAC_SECRET"],
   },
   "vars": {
-    "DEFAULT_MODEL": "@cf/qwen/qwen3-30b-a3b-fp8",
+    "DEFAULT_MODEL": "@cf/ibm-granite/granite-4.0-h-micro",
   },
   "placement": { "mode": "smart" },
   "routes": [
