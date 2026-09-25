@@ -8,13 +8,7 @@ import {
   setRequestLogger,
   toLogError,
 } from "@cf-workers/helpers";
-import {
-  generateText,
-  Output,
-  AISDKError,
-  NoObjectGeneratedError,
-  NoOutputGeneratedError,
-} from "ai";
+import { generateText, Output, AISDKError, NoObjectGeneratedError } from "ai";
 import { createWorkersLogger, initWorkersLogger } from "evlog/workers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
@@ -145,7 +139,7 @@ async function generatePrMetadata(
     const result = await generateText({
       model: workersAi(model),
       system,
-      temperature: 1,
+      temperature: 0.2,
       output: Output.object({
         schema: PR_METADATA_RESPONSE_SCHEMA,
       }),
@@ -154,64 +148,61 @@ async function generatePrMetadata(
 
     return normalizePrMetadata(result.output);
   } catch (err) {
-    if (NoObjectGeneratedError.isInstance(err)) {
-      log?.error(err, {
-        message: "Structured PR metadata generation failed; retrying with plain JSON fallback",
-        model,
-        aiCause: err.cause ?? null,
-        aiText:
-          typeof err.text === "string"
-            ? err.text.length > 2000
-              ? `${err.text.slice(0, 2000)}…`
-              : err.text
-            : null,
-        aiResponse: err.response ?? null,
-        aiUsage: err.usage ?? null,
-        aiFinishReason: err.finishReason ?? null,
-      });
-    } else if (NoOutputGeneratedError.isInstance(err)) {
-      log?.error(err, {
-        message:
-          "Structured PR metadata generation produced no output; retrying with plain JSON fallback",
-        model,
-        aiCause: err.cause ?? null,
-      });
-    } else if (AISDKError.isInstance(err)) {
-      log?.error(err, {
-        message:
-          "Structured PR metadata generation failed with AI SDK error; retrying with plain JSON fallback",
-        model,
-        aiCause: err.cause ?? null,
-      });
-    } else {
-      log?.error(toLogError(err), {
-        message: "Structured PR metadata generation failed; retrying with plain JSON fallback",
-        model,
-      });
-    }
+    const retryContext = {
+      message: "Structured PR metadata generation failed; retrying with plain JSON fallback",
+      model,
+      retryReason: toLogError(err).message,
+      aiCause: AISDKError.isInstance(err) ? (err.cause ?? null) : null,
+      aiText: NoObjectGeneratedError.isInstance(err)
+        ? typeof err.text === "string"
+          ? err.text.length > 2000
+            ? `${err.text.slice(0, 2000)}…`
+            : err.text
+          : null
+        : null,
+      aiResponse: NoObjectGeneratedError.isInstance(err) ? (err.response ?? null) : null,
+      aiUsage: NoObjectGeneratedError.isInstance(err) ? (err.usage ?? null) : null,
+      aiFinishReason: NoObjectGeneratedError.isInstance(err) ? (err.finishReason ?? null) : null,
+    };
+    log?.set(retryContext);
 
     const fallback = await generateText({
       model: workersAi(model),
       system: `${system}\n\n${STRICT_JSON_FALLBACK_INSTRUCTION}`,
-      temperature: 1,
+      temperature: 0.2,
       prompt: `${prompt}\n\nReturn only a JSON object.`,
     });
 
     const fallbackText = extractJsonObject(fallback.text);
-    const parsed = PR_METADATA_RESPONSE_SCHEMA.safeParse(JSON.parse(fallbackText));
+    let fallbackJson: unknown;
+
+    try {
+      fallbackJson = JSON.parse(fallbackText);
+    } catch (parseError) {
+      log?.set({
+        message: "Plain JSON fallback returned invalid JSON",
+        model,
+        retryReason: retryContext.retryReason,
+        fallbackText: fallbackText.length > 2000 ? `${fallbackText.slice(0, 2000)}…` : fallbackText,
+      });
+      throw new Error("Plain JSON fallback returned invalid JSON", { cause: parseError });
+    }
+
+    const parsed = PR_METADATA_RESPONSE_SCHEMA.safeParse(fallbackJson);
 
     if (parsed.success) {
       return normalizePrMetadata(parsed.data);
     }
 
-    log?.error(new Error("Fallback PR metadata response failed schema validation"), {
-      message: "Fallback PR metadata response failed schema validation",
+    log?.set({
+      message: "Plain JSON fallback response failed schema validation",
       model,
+      retryReason: retryContext.retryReason,
       fallbackText: fallbackText.length > 2000 ? `${fallbackText.slice(0, 2000)}…` : fallbackText,
       schemaIssues: parsed.error.issues,
     });
 
-    throw err;
+    throw new Error("Plain JSON fallback response failed schema validation", { cause: err });
   }
 }
 
@@ -280,7 +271,7 @@ app.post("/api/pr-metadata", async (c) => {
 
   const result = await generatePrMetadata(
     workersAi,
-    model as string,
+    model,
     body.data.system ?? DEFAULT_PR_METADATA_SYSTEM_PROMPT,
     prompt,
     log,
