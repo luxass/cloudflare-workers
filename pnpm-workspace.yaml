@@ -13,20 +13,20 @@ catalogs:
   dev:
     "@cloudflare/vitest-pool-workers": 0.22.0
     typescript: 7.0.2
-    turbo: 2.11.3
+    turbo: 2.11.5
     oxfmt: 0.70.0
     oxlint: 1.83.0
-    oxlint-tsgolint: 7.0.2002
+    oxlint-tsgolint: 7.0.2003
     vitest: 5.0.1
-    wrangler: 4.138.0
-    "@cloudflare/workers-types": 5.20260924.1
+    wrangler: 4.142.0
+    "@cloudflare/workers-types": 5.20260928.1
 
   prod:
     "@hono/zod-openapi": 1.6.3
     "@octokit/core": 7.0.8
     "@octokit/plugin-paginate-rest": 15.0.0
-    "@scalar/hono-api-reference": 0.12.5
-    ai: 7.0.113
+    "@scalar/hono-api-reference": 0.12.6
+    ai: 7.0.118
     evlog: 2.29.0
     hono: 4.13.9
     workers-ai-provider: 4.0.0
