@@ -24,7 +24,7 @@ catalogs:
   prod:
     "@hono/zod-openapi": 1.6.3
     "@octokit/core": 7.0.8
-    "@octokit/plugin-paginate-rest": 15.0.0
+    "@octokit/plugin-paginate-rest": 16.0.0
     "@scalar/hono-api-reference": 0.12.6
     ai: 7.0.118
     evlog: 2.29.0
