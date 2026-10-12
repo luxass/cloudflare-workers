@@ -22,7 +22,7 @@
     "cf": "catalog:dev",
     "typescript": "catalog:dev",
     "vite": "catalog:dev",
-    "vitest": "catalog:dev"
+    "vitest": "catalog:assets-test"
   },
   "packageManager": "pnpm@12.7.0"
 }

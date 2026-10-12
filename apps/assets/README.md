@@ -35,6 +35,7 @@ This Worker uses Vite with the Cloudflare plugin beta.
 `vite.config.ts` defines the build.
 Build files go in `.cloudflare/output/`.
 `cf workers types` generates `.cloudflare/types/index.d.ts`.
+This package uses Vitest 4 because the Workers test pool does not support Vitest 5.
 
 ## Deployment review
 
