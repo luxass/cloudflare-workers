@@ -3,12 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
-    "build": "wrangler deploy --dry-run --outdir=dist",
-    "deploy": "wrangler deploy",
+    "dev": "cf dev",
+    "build": "cf build",
+    "deploy": "cf deploy",
     "test": "vitest --run",
     "test:watch": "vitest",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "cf-typegen": "cf workers types",
     "typecheck": "pnpm run cf-typegen && tsc --noEmit"
   },
   "dependencies": {
@@ -17,10 +17,12 @@
     "hono": "catalog:prod"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "catalog:dev",
     "@cloudflare/vitest-pool-workers": "catalog:dev",
+    "cf": "catalog:dev",
     "typescript": "catalog:dev",
-    "vitest": "catalog:dev",
-    "wrangler": "catalog:dev"
+    "vite": "catalog:dev",
+    "vitest": "catalog:dev"
   },
   "packageManager": "pnpm@12.7.0"
 }

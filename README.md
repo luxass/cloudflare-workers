@@ -10,11 +10,14 @@ The following workers are available:
 
 ## Deployment
 
-Each worker is deployed with Wrangler. Production deploys run
+`assets` uses Vite and `cloudflare.config.ts` for local development and builds.
+Its deployment needs a custom-domain review before use.
+Refer to [the assets instructions](apps/assets/README.md#deployment-review).
+
+`image` and `models` still use Wrangler. Production deploys run
 `wrangler deploy` (via `pnpm deploy:<worker>` or the Workers Builds GitHub
 connection), and preview branches run `wrangler preview`, which deploys an
-isolated Preview using the `previews` block in each worker's
+isolated Preview using the `previews` block in those workers'
 [`wrangler.jsonc`](apps/image/wrangler.jsonc). Preview URLs are served from
 `<preview-name>.previews.<worker>.luxass.dev`, which are preview-only domains
 (`enabled: false`, `previews_enabled: true` in the wrangler config).
-

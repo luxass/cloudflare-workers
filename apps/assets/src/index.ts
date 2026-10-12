@@ -13,7 +13,7 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 
 export interface HonoContext {
-  Bindings: CloudflareBindings;
+  Bindings: Env;
 }
 
 initWorkersLogger({
@@ -189,11 +189,7 @@ app.notFound(async (c) => {
 });
 
 export default {
-  async fetch(
-    request: Request,
-    env: CloudflareBindings,
-    executionCtx: ExecutionContext,
-  ): Promise<Response> {
+  async fetch(request: Request, env: Env, executionCtx: ExecutionContext): Promise<Response> {
     const log = setRequestLogger(request, createWorkersLogger(request));
     log.set({ message: "Handling assets request", environment: env.ENVIRONMENT ?? "local" });
 

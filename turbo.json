@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
+  "ui": "tui",
   "globalDependencies": [".dev.vars", ".dev.vars.*"],
   "tasks": {
     "build": {
@@ -8,24 +9,12 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "passThroughEnv": [
-        "CI",
-        "CLOUDFLARE_*",
-        "IMAGE_GITHUB_TOKEN",
-        "GITHUB_TOKEN",
-        "HMAC_SECRET",
-      ]
+      "passThroughEnv": ["CI", "CLOUDFLARE_*", "IMAGE_GITHUB_TOKEN", "GITHUB_TOKEN", "HMAC_SECRET"]
     },
     "deploy": {
       "cache": false,
       "outputs": [],
-      "passThroughEnv": [
-        "CI",
-        "CLOUDFLARE_*",
-        "IMAGE_GITHUB_TOKEN",
-        "GITHUB_TOKEN",
-        "HMAC_SECRET",
-      ]
+      "passThroughEnv": ["CI", "CLOUDFLARE_*", "IMAGE_GITHUB_TOKEN", "GITHUB_TOKEN", "HMAC_SECRET"]
     },
     "test": {
       "dependsOn": ["^build"],

@@ -11,7 +11,10 @@ packages:
 
 catalogs:
   dev:
+    "@cloudflare/vite-plugin": 2.0.0-beta.sha-52b0dc0e9
     "@cloudflare/vitest-pool-workers": 0.22.0
+    cf: 1.0.0-beta.13
+    vite: 8.3.4
     typescript: 7.0.2
     turbo: 2.11.5
     oxfmt: 0.70.0
