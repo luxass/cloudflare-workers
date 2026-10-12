@@ -18,11 +18,12 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "catalog:dev",
-    "@cloudflare/vitest-pool-workers": "catalog:dev",
+    "@cloudflare/vitest-plugin": "catalog:dev",
+    "@cloudflare/workers-types": "catalog:assets",
     "cf": "catalog:dev",
     "typescript": "catalog:dev",
     "vite": "catalog:dev",
-    "vitest": "catalog:assets-test"
+    "vitest": "catalog:dev"
   },
   "packageManager": "pnpm@12.7.0"
 }

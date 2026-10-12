@@ -9,7 +9,7 @@
     "types": [
       "./.cloudflare/types/index.d.ts",
       // for `cloudflare:test` types
-      "@cloudflare/vitest-pool-workers/types"
+      "@cloudflare/vitest-plugin/types"
     ],
     "strict": true,
     "noEmit": true,

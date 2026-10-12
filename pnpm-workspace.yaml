@@ -12,7 +12,7 @@ packages:
 catalogs:
   dev:
     "@cloudflare/vite-plugin": 2.0.0-beta.sha-52b0dc0e9
-    "@cloudflare/vitest-pool-workers": 0.22.0
+    "@cloudflare/vitest-plugin": 1.4.0
     cf: 1.0.0-beta.13
     vite: 8.3.4
     typescript: 7.0.2
@@ -35,9 +35,8 @@ catalogs:
     workers-ai-provider: 4.0.0
     zod: 4.6.5
 
-  assets-test:
-    # The Workers test pool requires Vitest 4, while the workspace uses Vitest 5.
-    vitest: 4.1.11
+  assets:
+    "@cloudflare/workers-types": 5.20261006.1
 
   image:
     "@resvg/resvg-wasm": 2.4.1
