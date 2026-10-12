@@ -24,12 +24,6 @@ pnpm --filter assets typecheck
 pnpm --filter assets test
 ```
 
-In the Turbo terminal UI, select `assets:dev` and press `i` to send input to Vite.
-Then press `b`, `e`, `t`, or `h`, followed by Enter.
-Press `Ctrl+z` to return control to Turbo.
-The `t` shortcut starts a tunnel. Do not use it unless you intend to expose the local server.
-Stream output does not forward keyboard input. Use `--ui=stream` when you only need logs.
-
 This Worker uses Vite with the Cloudflare plugin beta.
 `cloudflare.config.ts` defines the Worker and its bindings.
 `vite.config.ts` defines the build.
