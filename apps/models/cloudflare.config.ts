@@ -4,7 +4,7 @@ export default defineConfig(({ isPreview }) => ({
   worker: {
     name: "models",
     entrypoint: "src/index.ts",
-    compatibilityDate: "2026-04-22",
+    compatibilityDate: "2026-10-01",
     compatibilityFlags: ["nodejs_compat"],
     placement: { mode: "smart" },
     observability: {
