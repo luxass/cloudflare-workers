@@ -4,7 +4,7 @@ export default defineConfig(({ isPreview }) => ({
   worker: {
     name: "assets",
     entrypoint: "src/index.ts",
-    compatibilityDate: "2025-03-13",
+    compatibilityDate: "2026-10-01",
     placement: { mode: "smart" },
     observability: {
       enabled: true,
