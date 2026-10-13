@@ -1,9 +1,11 @@
 import { bindings, defineConfig } from "cf/config";
 
+import * as entrypoint from "./src/index.ts" with { type: "cf-worker" };
+
 export default defineConfig(({ isPreview }) => ({
   worker: {
     name: "assets",
-    entrypoint: "src/index.ts",
+    entrypoint,
     compatibilityDate: "2026-10-01",
     placement: { mode: "smart" },
     observability: {
