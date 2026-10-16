@@ -12,11 +12,20 @@ export default defineConfig(({ isPreview }) => ({
       enabled: true,
       logs: { enabled: true, invocationLogs: false },
     },
-    // TODO: Restore enabled/previews_enabled domain flags before deployment.
-    // The current cf API only accepts domain names.
-    domains: isPreview
-      ? ["previews.assets.luxass.dev", "previews.assets.luxass.com"]
-      : ["assets.luxass.dev", "assets.luxass.com"],
+    domains: [
+      { hostname: "assets.luxass.dev", production: true, previews: false },
+      { hostname: "assets.luxass.com", production: true, previews: false },
+      {
+        hostname: "previews.assets.luxass.dev",
+        production: false,
+        previews: true,
+      },
+      {
+        hostname: "previews.assets.luxass.com",
+        production: false,
+        previews: true,
+      },
+    ],
     env: {
       ENVIRONMENT: bindings.text(isPreview ? "preview" : "production"),
     },
