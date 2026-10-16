@@ -1,4 +1,4 @@
-import { cloudflareTest } from "@cloudflare/vitest-pool-workers";
+import { cloudflareTest } from "@cloudflare/vitest-plugin";
 import { defineProject } from "vitest/config";
 
 export default defineProject({
@@ -7,14 +7,11 @@ export default defineProject({
   },
   plugins: [
     cloudflareTest({
+      experimental: {
+        newConfig: true,
+      },
       miniflare: {
         compatibilityFlags: ["nodejs_compat"],
-        bindings: {
-          ENVIRONMENT: "production",
-        },
-      },
-      wrangler: {
-        configPath: "./wrangler.jsonc",
       },
     }),
   ],
