@@ -2,7 +2,7 @@ import { bindings, defineConfig } from "cf/config";
 
 import * as entrypoint from "./src/index.ts" with { type: "cf-worker" };
 
-export default defineConfig(({ isPreview }) => ({
+export default defineConfig({
   worker: {
     name: "models",
     entrypoint,
@@ -13,15 +13,24 @@ export default defineConfig(({ isPreview }) => ({
       enabled: true,
       logs: { enabled: true, invocationLogs: false },
     },
-    // TODO: Restore enabled/previews_enabled domain flags before deployment.
-    // The current cf API only accepts domain names.
-    domains: isPreview
-      ? ["previews.models.luxass.dev", "previews.models.luxass.com"]
-      : ["models.luxass.dev", "models.luxass.com"],
+    domains: [
+      { hostname: "models.luxass.dev", production: true, previews: false },
+      { hostname: "models.luxass.com", production: true, previews: false },
+      {
+        hostname: "previews.models.luxass.dev",
+        production: false,
+        previews: true,
+      },
+      {
+        hostname: "previews.models.luxass.com",
+        production: false,
+        previews: true,
+      },
+    ],
     env: {
       AI: bindings.ai({ dev: { remote: true } }),
       HMAC_SECRET: bindings.secret(),
       DEFAULT_MODEL: bindings.text("@cf/ibm-granite/granite-4.0-h-micro"),
     },
   },
-}));
+});
