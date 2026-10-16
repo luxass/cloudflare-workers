@@ -21,7 +21,7 @@ initWorkersLogger({
 });
 
 interface HonoContext {
-  Bindings: CloudflareBindings;
+  Bindings: Env;
 }
 
 const MAX_REQUEST_AGE_MS = 5 * 60 * 1000;
@@ -299,11 +299,7 @@ app.onError(async (err, c) => {
 app.notFound((c) => createError(c, 404, "Not found"));
 
 export default {
-  async fetch(
-    request: Request,
-    env: CloudflareBindings,
-    executionCtx: ExecutionContext,
-  ): Promise<Response> {
+  async fetch(request: Request, env: Env, executionCtx: ExecutionContext): Promise<Response> {
     const log = setRequestLogger(request, createWorkersLogger(request));
 
     log.set({
