@@ -43,6 +43,7 @@ app.onError(async (err, c) => {
   const log = getRequestLogger(c.req.raw);
   log?.error(toLogError(err), { message: "Image request failed" });
   const url = new URL(c.req.url);
+
   if (err instanceof HTTPException) {
     return c.json(
       {
@@ -70,6 +71,7 @@ app.notFound(async (c) => {
   const url = new URL(c.req.url);
   const log = getRequestLogger(c.req.raw);
   log?.set({ message: "Image route not found", response: { status: 404 }, route: url.pathname });
+
   return c.json(
     {
       path: url.pathname,
@@ -82,11 +84,7 @@ app.notFound(async (c) => {
 });
 
 export default {
-  async fetch(
-    request: Request,
-    env: CloudflareBindings,
-    executionCtx: ExecutionContext,
-  ): Promise<Response> {
+  async fetch(request: Request, env: Env, executionCtx: ExecutionContext): Promise<Response> {
     const log = setRequestLogger(request, createWorkersLogger(request));
     log.set({ message: "Handling image request", environment: env.ENVIRONMENT ?? "local" });
 

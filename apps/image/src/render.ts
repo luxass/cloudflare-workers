@@ -1,13 +1,17 @@
 import { initWasm, Resvg } from "@resvg/resvg-wasm";
 import type { HonoElement } from "hono-jsx-to-react";
 import { toReactNode } from "hono-jsx-to-react";
-import satori from "satori";
+import satori, { init as initSatori } from "satori/standalone";
+// @ts-expect-error .wasm files are not typed
+import yogaWasm from "satori/yoga.wasm?module";
 
 import { getIconCode, loadEmoji } from "./emoji";
 // @ts-expect-error .wasm files are not typed
 import resvgWasm from "./resvg.wasm";
 import type { ImageResponseOptions } from "./types";
 import { font } from "./utils";
+
+let satoriReady: Promise<void> | undefined;
 
 async function initResvgWasm() {
   try {
@@ -46,6 +50,8 @@ interface RenderOptions {
 }
 
 export async function render({ element, options }: RenderOptions) {
+  satoriReady ??= initSatori(yogaWasm as WebAssembly.Module);
+  await satoriReady;
   await initResvgWasm();
 
   const width = options.width;

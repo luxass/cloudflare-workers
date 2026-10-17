@@ -212,8 +212,8 @@ catalogs:
       specifier: 0.2.1
       version: 0.2.1
     satori:
-      specifier: 0.33.5
-      version: 0.33.5
+      specifier: 0.32.0
+      version: 0.32.0
   prod:
     '@hono/zod-openapi':
       specifier: 1.6.3
@@ -313,7 +313,7 @@ importers:
         version: 2.4.1
       evlog:
         specifier: catalog:prod
-        version: 2.29.0(ai@7.0.71(zod@4.6.5))(hono@4.13.9)(react@19.2.8)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0))
+        version: 2.29.0(ai@7.0.71(zod@4.6.5))(hono@4.13.9)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0))
       hono:
         specifier: catalog:prod
         version: 4.13.9
@@ -322,17 +322,23 @@ importers:
         version: 0.2.1(hono@4.13.9)
       satori:
         specifier: catalog:image
-        version: 0.33.5
+        version: 0.32.0
       zod:
         specifier: catalog:prod
         version: 4.6.5
     devDependencies:
+      '@cloudflare/vite-plugin':
+        specifier: catalog:dev
+        version: 2.0.0-beta.v.1(@types/node@26.2.0)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0))(workerd@1.20260926.1)
+      cf:
+        specifier: catalog:dev
+        version: 1.0.0-beta.18(@types/node@26.2.0)
       typescript:
         specifier: catalog:dev
         version: 7.0.2
-      wrangler:
+      vite:
         specifier: catalog:dev
-        version: 4.142.0(@cloudflare/workers-types@5.20260928.1)(@types/node@26.2.0)
+        version: 8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0)
 
   apps/models:
     dependencies:
@@ -2042,9 +2048,6 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  harfbuzzjs@0.10.0:
-    resolution: {integrity: sha512-SN8LVwCOzvTq3OPNd0+EAghgXugItz56wst567D1vs7LnnKGWprhi3EG58aVOBwhN8HEbQxL4I9NDWkcXUutRw==}
-
   hex-rgb@4.3.0:
     resolution: {integrity: sha512-Ox1pJVrDCyGHMG9CFg1tmrRUMRPRsAWYc/PinY0XzJU4K7y7vjNoLKIQ7BR5UJMCxNN8EM1MNDmHWA/B3aZUuw==}
     engines: {node: '>=6'}
@@ -2239,8 +2242,8 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
-  satori@0.33.5:
-    resolution: {integrity: sha512-PNW6ktrQ8SM6kk7u4aOuTkkUewkzyTOrj+QeEzXSsnNMAdff4ire9CAqIz8+4C3rCiBtK8QTELv52AZEd1PbRw==}
+  satori@0.32.0:
+    resolution: {integrity: sha512-WwYeCWKjxfXvk7SsLSLTJhcPOrB2HCxbptqGIiYor0yqaPu3xA5uMTQ/4Dan5mxClhhk2Wn9ZE1pLGIlGdUxFQ==}
     engines: {node: '>=16'}
 
   semver@7.8.5:
@@ -2344,49 +2347,6 @@ packages:
 
   universal-user-agent@7.0.3:
     resolution: {integrity: sha512-TmnEAEAsBJVZM/AADELsK76llnwcf9vMKuPz8JflO1frO8Lchitr0fNaN9d+Ap0BjKtqWqd/J17qeDnXh8CL2A==}
-
-  vite@8.2.1:
-    resolution: {integrity: sha512-EU/eS7BH3XROHh2YnBefjM6DBKA6ZeMZEYQbj7NLWg5wHYlhB8B/Mayd5XsgWq+NFYccDOTemRpdETWR6Ka/lw==}
-    engines: {node: ^20.19.0 || >=22.12.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^20.19.0 || >=22.12.0
-      '@vitejs/devtools': ^0.4.0
-      esbuild: ^0.27.0 || ^0.28.0
-      jiti: '>=1.21.0'
-      less: ^4.0.0
-      sass: ^1.70.0
-      sass-embedded: ^1.70.0
-      stylus: '>=0.54.8'
-      sugarss: ^5.0.0
-      terser: ^5.16.0
-      tsx: ^4.8.1
-      yaml: ^2.4.2
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      '@vitejs/devtools':
-        optional: true
-      esbuild:
-        optional: true
-      jiti:
-        optional: true
-      less:
-        optional: true
-      sass:
-        optional: true
-      sass-embedded:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-      tsx:
-        optional: true
-      yaml:
-        optional: true
 
   vite@8.3.4:
     resolution: {integrity: sha512-IftLE8phJhdNRIGNEV4JCCvfNScoZQVfcXaN8TQropWGJtOHcu+iAB9pHcuGvmEb/kddw0LBe/jS8ztdC6xdiQ==}
@@ -3654,13 +3614,6 @@ snapshots:
       react: 19.2.8
       vite: 8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0)
 
-  evlog@2.29.0(ai@7.0.71(zod@4.6.5))(hono@4.13.9)(react@19.2.8)(vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0)):
-    optionalDependencies:
-      ai: 7.0.71(zod@4.6.5)
-      hono: 4.13.9
-      react: 19.2.8
-      vite: 8.2.1(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0)
-
   evlog@2.29.0(ai@7.0.71(zod@4.6.5))(hono@4.13.9)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0)):
     optionalDependencies:
       ai: 7.0.71(zod@4.6.5)
@@ -3678,8 +3631,6 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
-
-  harfbuzzjs@0.10.0: {}
 
   hex-rgb@4.3.0: {}
 
@@ -3892,7 +3843,7 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.2.13
       '@rolldown/binding-win32-x64-msvc': 1.2.13
 
-  satori@0.33.5:
+  satori@0.32.0:
     dependencies:
       '@shuding/opentype.js': 1.4.0-beta.0
       css-background-parser: 0.1.0
@@ -3901,8 +3852,6 @@ snapshots:
       css-to-react-native: 3.2.0
       emoji-regex-xs: 2.0.1
       escape-html: 1.0.3
-      fflate: 0.7.3
-      harfbuzzjs: 0.10.0
       linebreak: 1.1.0
       parse-css-color: 0.2.1
       postcss-value-parser: 4.2.0
@@ -4059,20 +4008,6 @@ snapshots:
       tiny-inflate: 1.0.3
 
   universal-user-agent@7.0.3: {}
-
-  vite@8.2.1(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0):
-    dependencies:
-      lightningcss: 1.33.0
-      picomatch: 4.0.7
-      postcss: 8.5.29
-      rolldown: 1.2.13
-      tinyglobby: 0.2.17
-    optionalDependencies:
-      '@types/node': 26.2.0
-      esbuild: 0.28.1
-      fsevents: 2.3.3
-      yaml: 2.9.0
-    optional: true
 
   vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0):
     dependencies:

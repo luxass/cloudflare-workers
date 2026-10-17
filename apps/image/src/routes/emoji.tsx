@@ -69,7 +69,6 @@ emojiRouter.get(
         width,
         height,
         emoji: "twemoji",
-        debug: true,
         fonts: [
           {
             name: "Inter",
