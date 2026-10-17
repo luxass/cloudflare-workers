@@ -43,6 +43,7 @@ app.onError(async (err, c) => {
   const log = getRequestLogger(c.req.raw);
   log?.error(toLogError(err), { message: "Image request failed" });
   const url = new URL(c.req.url);
+
   if (err instanceof HTTPException) {
     return c.json(
       {
