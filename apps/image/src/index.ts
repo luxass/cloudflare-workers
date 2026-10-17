@@ -70,6 +70,7 @@ app.notFound(async (c) => {
   const url = new URL(c.req.url);
   const log = getRequestLogger(c.req.raw);
   log?.set({ message: "Image route not found", response: { status: 404 }, route: url.pathname });
+
   return c.json(
     {
       path: url.pathname,
