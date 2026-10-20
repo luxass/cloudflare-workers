@@ -234,8 +234,8 @@ catalogs:
       specifier: 2.29.0
       version: 2.29.0
     hono:
-      specifier: 4.13.9
-      version: 4.13.9
+      specifier: 4.13.11
+      version: 4.13.11
     workers-ai-provider:
       specifier: 4.0.0
       version: 4.0.0
@@ -276,10 +276,10 @@ importers:
         version: link:../../packages/helpers
       evlog:
         specifier: catalog:prod
-        version: 2.29.0(ai@7.0.71(zod@4.6.5))(hono@4.13.9)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0))
+        version: 2.29.0(ai@7.0.71(zod@4.6.5))(hono@4.13.11)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0))
       hono:
         specifier: catalog:prod
-        version: 4.13.9
+        version: 4.13.11
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: catalog:dev
@@ -313,13 +313,13 @@ importers:
         version: 2.4.1
       evlog:
         specifier: catalog:prod
-        version: 2.29.0(ai@7.0.71(zod@4.6.5))(hono@4.13.9)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0))
+        version: 2.29.0(ai@7.0.71(zod@4.6.5))(hono@4.13.11)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0))
       hono:
         specifier: catalog:prod
-        version: 4.13.9
+        version: 4.13.11
       hono-jsx-to-react:
         specifier: catalog:image
-        version: 0.2.1(hono@4.13.9)
+        version: 0.2.1(hono@4.13.11)
       satori:
         specifier: catalog:image
         version: 0.32.0
@@ -350,10 +350,10 @@ importers:
         version: 7.0.118(zod@4.6.5)
       evlog:
         specifier: catalog:prod
-        version: 2.29.0(ai@7.0.118(zod@4.6.5))(hono@4.13.9)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0))
+        version: 2.29.0(ai@7.0.118(zod@4.6.5))(hono@4.13.11)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0))
       hono:
         specifier: catalog:prod
-        version: 4.13.9
+        version: 4.13.11
       workers-ai-provider:
         specifier: catalog:prod
         version: 4.0.0(@ai-sdk/provider@4.0.18)(ai@7.0.118(zod@4.6.5))
@@ -378,7 +378,7 @@ importers:
     dependencies:
       '@hono/zod-openapi':
         specifier: catalog:prod
-        version: 1.6.3(hono@4.13.9)(zod@4.6.5)
+        version: 1.6.3(hono@4.13.11)(zod@4.6.5)
       '@octokit/core':
         specifier: catalog:prod
         version: 7.0.8
@@ -387,10 +387,10 @@ importers:
         version: 16.0.0(@octokit/core@7.0.8)
       '@scalar/hono-api-reference':
         specifier: catalog:prod
-        version: 0.12.6(hono@4.13.9)
+        version: 0.12.6(hono@4.13.11)
       hono:
         specifier: catalog:prod
-        version: 4.13.9
+        version: 4.13.11
       zod:
         specifier: catalog:prod
         version: 4.6.5
@@ -2052,8 +2052,8 @@ packages:
     peerDependencies:
       hono: '>=4'
 
-  hono@4.13.9:
-    resolution: {integrity: sha512-7dMkQmZoC4E6F7AtaQSPhlWAdnBti+j7rreMZl8QB4jFiEhP9TWbGWUMi8WYzBCgmgulxuvLQupKqo+Co6Omyg==}
+  hono@4.13.11:
+    resolution: {integrity: sha512-/SMX/RQNJn7oNmFwH6DtwDqcrzZU2otm1FD6OJe2cWF6cfy/F8hq0XVBv7xW3FTJshRQwuBnXHDq2kNsdZnshg==}
     engines: {node: '>=16.9.0'}
 
   json-schema@0.4.0:
@@ -2443,6 +2443,9 @@ packages:
 
   workers-ai-provider@4.0.0:
     resolution: {integrity: sha512-FkhwMP1EP/MKXR8Jv1o7wLVKfTqu0h/PUaEmhZ7gyDiioib5Wsh3oPAKhG+7+SWfU3roTDHaEWlJpkJjpXu+fQ==}
+    deprecated: |-
+      Deprecated. Use createAI from agents/models/ai-sdk, or
+       ai-search-provider for AI Search: https://developers.cloudflare.com/agents/models/ai-sdk/
     peerDependencies:
       '@ai-sdk/anthropic': ^4.0.0
       '@ai-sdk/google': ^4.0.0
@@ -2832,17 +2835,17 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
-  '@hono/zod-openapi@1.6.3(hono@4.13.9)(zod@4.6.5)':
+  '@hono/zod-openapi@1.6.3(hono@4.13.11)(zod@4.6.5)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 9.1.0(zod@4.6.5)
-      '@hono/zod-validator': 0.9.1(hono@4.13.9)(zod@4.6.5)
-      hono: 4.13.9
+      '@hono/zod-validator': 0.9.1(hono@4.13.11)(zod@4.6.5)
+      hono: 4.13.11
       openapi3-ts: 4.6.1
       zod: 4.6.5
 
-  '@hono/zod-validator@0.9.1(hono@4.13.9)(zod@4.6.5)':
+  '@hono/zod-validator@0.9.1(hono@4.13.11)(zod@4.6.5)':
     dependencies:
-      hono: 4.13.9
+      hono: 4.13.11
       zod: 4.6.5
 
   '@img/colour@1.1.0': {}
@@ -3323,10 +3326,10 @@ snapshots:
 
   '@scalar/helpers@0.15.0': {}
 
-  '@scalar/hono-api-reference@0.12.6(hono@4.13.9)':
+  '@scalar/hono-api-reference@0.12.6(hono@4.13.11)':
     dependencies:
       '@scalar/client-side-rendering': 0.4.5
-      hono: 4.13.9
+      hono: 4.13.11
 
   '@scalar/schemas@0.12.1':
     dependencies:
@@ -3595,17 +3598,17 @@ snapshots:
 
   eventsource-parser@3.1.1: {}
 
-  evlog@2.29.0(ai@7.0.118(zod@4.6.5))(hono@4.13.9)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0)):
+  evlog@2.29.0(ai@7.0.118(zod@4.6.5))(hono@4.13.11)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0)):
     optionalDependencies:
       ai: 7.0.118(zod@4.6.5)
-      hono: 4.13.9
+      hono: 4.13.11
       react: 19.2.8
       vite: 8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0)
 
-  evlog@2.29.0(ai@7.0.71(zod@4.6.5))(hono@4.13.9)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0)):
+  evlog@2.29.0(ai@7.0.71(zod@4.6.5))(hono@4.13.11)(react@19.2.8)(vite@8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0)):
     optionalDependencies:
       ai: 7.0.71(zod@4.6.5)
-      hono: 4.13.9
+      hono: 4.13.11
       react: 19.2.8
       vite: 8.3.4(@types/node@26.2.0)(esbuild@0.28.1)(yaml@2.9.0)
 
@@ -3622,11 +3625,11 @@ snapshots:
 
   hex-rgb@4.3.0: {}
 
-  hono-jsx-to-react@0.2.1(hono@4.13.9):
+  hono-jsx-to-react@0.2.1(hono@4.13.11):
     dependencies:
-      hono: 4.13.9
+      hono: 4.13.11
 
-  hono@4.13.9: {}
+  hono@4.13.11: {}
 
   json-schema@0.4.0: {}
 
