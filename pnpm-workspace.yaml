@@ -18,6 +18,8 @@ minimumReleaseAgeExclude:
   - "@cloudflare/runtime-types@0.1.12"
   - "miniflare@5.20261012.1-beta"
   - "wrangler@4.151.1"
+  # Renovate security update: zod@4.6.6
+  - zod@4.6.6
 
 catalogs:
   dev:
@@ -43,7 +45,7 @@ catalogs:
     evlog: 2.29.0
     hono: 4.13.9
     workers-ai-provider: 4.0.0
-    zod: 4.6.5
+    zod: 4.6.6
 
   assets:
     "@cloudflare/workers-types": 5.20261006.1
