@@ -25,5 +25,5 @@
     "vite": "catalog:dev",
     "vitest": "catalog:dev"
   },
-  "packageManager": "pnpm@12.7.0"
+  "packageManager": "pnpm@12.15.0"
 }
