@@ -1,0 +1,163 @@
+name: Verify Deployments
+
+# Runs scripts/verify/<app>.verify.ts against a Worker after Workers Builds
+# finishes deploying it, and reports the result as a "Verify: <app>" check run
+# on the deployed commit.
+#
+# check_run workflows always run from the default branch, so the verify tests
+# used are the ones on main, not the ones in the pull request.
+
+on:
+  check_run:
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  resolve:
+    name: resolve target
+    if: >-
+      github.event.check_run.app.slug == 'cloudflare-workers-and-pages'
+      && github.event.check_run.conclusion == 'success'
+      && startsWith(github.event.check_run.name, 'Workers Builds: ')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      app: ${{ steps.target.outputs.app }}
+      environment: ${{ steps.target.outputs.environment }}
+      preview_alias: ${{ steps.target.outputs.preview_alias }}
+      base_url: ${{ steps.target.outputs.base_url }}
+      has_verify_tests: ${{ steps.target.outputs.has_verify_tests }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: scripts/verify
+
+      # Workers Builds check runs do not include the preview URL, but the dashboard
+      # build link in the summary contains the preview alias:
+      #   preview:    .../services/view/<app>/production/previews/<alias>/builds/<id>
+      #   production: .../services/view/<app>/production/builds/<id>
+      - name: resolve deployed worker
+        id: target
+        shell: bash
+        env:
+          CHECK_RUN_NAME: ${{ github.event.check_run.name }}
+          CHECK_RUN_SUMMARY: ${{ github.event.check_run.output.summary }}
+        run: |
+          app="${CHECK_RUN_NAME#Workers Builds: }"
+          if [[ ! "$app" =~ ^[a-z0-9-]+$ ]]; then
+            echo "::error::Unexpected Worker name in check run: $app"
+            exit 1
+          fi
+
+          preview_alias=""
+          if [[ "$CHECK_RUN_SUMMARY" =~ /previews/([a-z0-9-]+)/builds/ ]]; then
+            preview_alias="${BASH_REMATCH[1]}"
+          fi
+
+          if [ -n "$preview_alias" ]; then
+            environment=preview
+            base_url="https://$preview_alias.previews.$app.luxass.dev"
+          else
+            environment=production
+            base_url="https://$app.luxass.dev"
+          fi
+
+          has_verify_tests=false
+          if [ -f "scripts/verify/$app.verify.ts" ]; then
+            has_verify_tests=true
+          fi
+
+          {
+            echo "app=$app"
+            echo "environment=$environment"
+            echo "preview_alias=$preview_alias"
+            echo "base_url=$base_url"
+            echo "has_verify_tests=$has_verify_tests"
+          } | tee -a "$GITHUB_OUTPUT"
+
+  verify:
+    name: verify ${{ needs.resolve.outputs.app }} (${{ needs.resolve.outputs.environment }})
+    needs: resolve
+    if: needs.resolve.outputs.has_verify_tests == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Holds CF_ACCESS_CLIENT_ID and CF_ACCESS_CLIENT_SECRET (1Password: Apps / Workers Preview Access).
+    # Only main may use it, which is where check_run workflows run.
+    environment: verify
+    permissions:
+      contents: read
+      checks: write
+    # A newer build for the same app and alias replaces the deployment under
+    # test, so cancel the older run instead of testing the wrong version.
+    concurrency:
+      group: verify-${{ needs.resolve.outputs.app }}-${{ needs.resolve.outputs.preview_alias || 'production' }}
+      cancel-in-progress: true
+    env:
+      APP: ${{ needs.resolve.outputs.app }}
+      ENVIRONMENT: ${{ needs.resolve.outputs.environment }}
+      VERIFY_BASE_URL: ${{ needs.resolve.outputs.base_url }}
+      HEAD_SHA: ${{ github.event.check_run.head_sha }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: create check run
+        id: check
+        run: |
+          check_run_id=$(gh api "repos/$GITHUB_REPOSITORY/check-runs" \
+            --method POST \
+            -f name="Verify: $APP" \
+            -f head_sha="$HEAD_SHA" \
+            -f status=in_progress \
+            -f details_url="$RUN_URL" \
+            -f "output[title]=Verifying $APP ($ENVIRONMENT)" \
+            -f "output[summary]=Running scripts/verify/$APP.verify.ts against $VERIFY_BASE_URL" \
+            --jq .id)
+          echo "id=$check_run_id" >> "$GITHUB_OUTPUT"
+
+      - uses: luxass/shared-workflows/actions/setup@9770f7268daf358179c45895de8becc2e8525984 # v0.14.0
+        with:
+          node-version: 24
+
+      - name: run verify tests
+        id: tests
+        # bash (not the default sh -e) so pipefail keeps the vitest exit code through tee.
+        shell: bash
+        env:
+          # Preview hostnames are behind Cloudflare Access.
+          CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+        run: pnpm verify "$APP.verify.ts" 2>&1 | tee verify-output.txt
+
+      - name: complete check run
+        if: always() && steps.check.outputs.id
+        env:
+          CHECK_RUN_ID: ${{ steps.check.outputs.id }}
+          TESTS_OUTCOME: ${{ steps.tests.outcome }}
+          JOB_CANCELLED: ${{ cancelled() }}
+        run: |
+          if [ "$JOB_CANCELLED" = "true" ]; then
+            conclusion=cancelled
+          elif [ "$TESTS_OUTCOME" = "success" ]; then
+            conclusion=success
+          else
+            # Includes "skipped", e.g. when dependency setup failed before the tests ran.
+            conclusion=failure
+          fi
+
+          fence='```'
+          test_output=""
+          if [ -f verify-output.txt ]; then
+            test_output=$(sed 's/\x1b\[[0-9;]*m//g' verify-output.txt | tail -c 60000)
+          fi
+          check_text=$(printf '%s\n%s\n%s' "$fence" "$test_output" "$fence")
+
+          gh api "repos/$GITHUB_REPOSITORY/check-runs/$CHECK_RUN_ID" \
+            --method PATCH \
+            -f status=completed \
+            -f conclusion="$conclusion" \
+            -f "output[title]=Verify $APP ($ENVIRONMENT): $conclusion" \
+            -f "output[summary]=Ran scripts/verify/$APP.verify.ts against $VERIFY_BASE_URL" \
+            -f "output[text]=$check_text"

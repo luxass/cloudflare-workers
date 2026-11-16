@@ -12,6 +12,7 @@
     "deploy:models": "turbo run deploy --filter=models",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch --parallel",
+    "verify": "vitest --run --root scripts/verify",
     "dev:all": "turbo run dev --parallel",
     "dev:assets": "turbo run dev --filter=assets",
     "dev:image": "turbo run dev --filter=image",
