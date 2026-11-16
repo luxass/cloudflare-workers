@@ -136,9 +136,10 @@ jobs:
         env:
           CHECK_RUN_ID: ${{ steps.check.outputs.id }}
           TESTS_OUTCOME: ${{ steps.tests.outcome }}
-          JOB_CANCELLED: ${{ cancelled() }}
+          # Status functions such as cancelled() only work in `if:`, so read job.status instead.
+          JOB_STATUS: ${{ job.status }}
         run: |
-          if [ "$JOB_CANCELLED" = "true" ]; then
+          if [ "$JOB_STATUS" = "cancelled" ]; then
             conclusion=cancelled
           elif [ "$TESTS_OUTCOME" = "success" ]; then
             conclusion=success
