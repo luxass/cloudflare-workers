@@ -162,3 +162,120 @@ jobs:
             -f "output[title]=Verify $APP ($ENVIRONMENT): $conclusion" \
             -f "output[summary]=Ran scripts/verify/$APP.verify.ts against $VERIFY_BASE_URL" \
             -f "output[text]=$check_text"
+
+  # One sticky comment per pull request for all Workers. Every verify run rebuilds
+  # the whole table from the commit's check runs, and runs take turns, so
+  # parallel apps cannot overwrite each other's results.
+  comment:
+    name: comment on pull request
+    needs: [resolve, verify]
+    if: >-
+      always()
+      && needs.resolve.outputs.has_verify_tests == 'true'
+      && github.event.check_run.pull_requests[0].number
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: read
+      pull-requests: write
+    concurrency:
+      group: verify-comment-${{ github.event.check_run.pull_requests[0].number }}
+      cancel-in-progress: false
+    env:
+      PR_NUMBER: ${{ github.event.check_run.pull_requests[0].number }}
+      HEAD_SHA: ${{ github.event.check_run.head_sha }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: scripts/verify
+
+      - name: update verify comment
+        shell: bash
+        run: |
+          marker='<!-- verify-deployments -->'
+
+          pr_head_sha=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" --jq .head.sha)
+          if [ "$pr_head_sha" != "$HEAD_SHA" ]; then
+            echo "PR #$PR_NUMBER has moved on to $pr_head_sha, so not commenting for $HEAD_SHA."
+            exit 0
+          fi
+
+          check_runs=$(gh api --paginate "repos/$GITHUB_REPOSITORY/commits/$HEAD_SHA/check-runs?per_page=100" --jq '.check_runs[]' | jq -s .)
+          verified_apps=$(find scripts/verify -maxdepth 1 -name '*.verify.ts' -exec basename {} .verify.ts \; | sort | jq -R . | jq -s .)
+
+          read -r -d '' render_comment <<'JQ' || true
+          def latest(name): map(select(.name == name)) | sort_by(.started_at) | last;
+          def state_label:
+            {
+              success: "✅ passed",
+              failure: "❌ failed",
+              build_failed: "❌ build failed",
+              cancelled: "⚪ cancelled",
+              running: "⏳ running",
+              pending: "⏳ waiting",
+              building: "🏗️ building"
+            }[.] // .;
+
+          . as $runs
+          | [
+              $apps[] as $app
+              | ($runs | latest("Workers Builds: " + $app)) as $build
+              | select($build != null)
+              | ($runs | latest("Verify: " + $app)) as $verify
+              | {
+                  app: $app,
+                  state: (
+                    if $build.status != "completed" then "building"
+                    elif $build.conclusion != "success" then "build_failed"
+                    elif $verify == null then "pending"
+                    elif $verify.status != "completed" then "running"
+                    else $verify.conclusion
+                    end
+                  ),
+                  url: ((($verify.output.summary // "") | capture("against (?<url>https://[^ )|]+)") | .url) // null),
+                  details: ($verify.details_url // null)
+                }
+            ] as $rows
+          | ($rows | map(.state)) as $states
+          | (
+              if ($rows | length) == 0 then "⏳ Waiting for Workers Builds"
+              elif all($states[]; . == "success") then "✅ All Workers verified"
+              elif any($states[]; . == "failure" or . == "build_failed") then "❌ Verification failed"
+              else "⏳ Verifying deployments"
+              end
+            ) as $headline
+          | [
+              $marker,
+              "### \($headline)",
+              "",
+              "| Worker | URL | Verify |",
+              "| --- | --- | --- |",
+              (
+                $rows[]
+                | "| `\(.app)` | \(if .url then .url else "–" end) | \(.state | state_label)\(if .details then " ([logs](\(.details)))" else "" end) |"
+              ),
+              "",
+              "<sub>Commit `\($sha[0:7])` · updated by [Verify Deployments](\($run_url))</sub>"
+            ]
+          | join("\n")
+          JQ
+
+          body=$(jq -r \
+            --argjson apps "$verified_apps" \
+            --arg marker "$marker" \
+            --arg sha "$HEAD_SHA" \
+            --arg run_url "$RUN_URL" \
+            "$render_comment" <<< "$check_runs")
+          echo "$body"
+
+          comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments?per_page=100" \
+            --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | startswith(\"$marker\"))) | .id" | head -n 1)
+
+          if [ -n "$comment_id" ]; then
+            gh api --method PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" -f body="$body" > /dev/null
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -f body="$body" > /dev/null
+          fi
