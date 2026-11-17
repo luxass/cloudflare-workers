@@ -9,6 +9,7 @@ const jsonStr = z.string().transform<unknown>((str, ctx) => {
     return JSON.parse(str) as JsonValue;
   } catch {
     ctx.addIssue({ code: "custom", message: "Needs to be JSON" });
+    return z.NEVER;
   }
 });
 
