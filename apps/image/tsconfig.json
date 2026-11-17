@@ -8,7 +8,7 @@
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
-    "types": ["./.cloudflare/types/index.d.ts"],
+    "types": ["./.cloudflare/types/index.d.ts", "@cloudflare/vitest-plugin/types"],
     "strict": true,
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
@@ -16,5 +16,5 @@
     "isolatedModules": true,
     "skipLibCheck": true
   },
-  "include": ["src", "*.config.ts", ".cloudflare/types"]
+  "include": ["src", "test", "*.config.ts", ".cloudflare/types"]
 }

@@ -1,0 +1,41 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`emoji images > renders an emoji PNG using the local SVG fixture 1`] = `
+{
+  "height": 315,
+  "sha256": "c7f7ba2c231b90d7f76b8ec3da6920a42560f1d24d2b6b71534ae382049dcf12",
+  "width": 600,
+}
+`;
+
+exports[`post images > renders a post PNG with local fonts and logo 1`] = `
+{
+  "height": 600,
+  "sha256": "0e8126d7d0d54ed9364f0aa7ac52ff82850598f3b70a37a573f8a9657988533c",
+  "width": 1200,
+}
+`;
+
+exports[`project images > renders a project PNG with authenticated repository metadata 1`] = `
+{
+  "height": 600,
+  "sha256": "65d16ccf28d696e88979fd95cf25fc41f751f73a224b9d5d28aae462a292efe5",
+  "width": 1200,
+}
+`;
+
+exports[`text images > renders a PNG with the default dimensions 1`] = `
+{
+  "height": 630,
+  "sha256": "5e98edcd6f8dc902ddafb5b9c97db9657fb6d2dba6cced5e36789d898ce43a91",
+  "width": 1200,
+}
+`;
+
+exports[`text images > renders text at the requested dimensions 1`] = `
+{
+  "height": 315,
+  "sha256": "4adc86b593c02549d08b1d0e1e40747007ede7543fa38c4bdd815ecf24d0ccb5",
+  "width": 600,
+}
+`;
