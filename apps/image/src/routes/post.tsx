@@ -64,7 +64,7 @@ postImageRouter.get(
     ]);
 
     return new ImageResponse(
-      <div tw="flex h-full w-full flex-col bg-neutral-900 bg-cover p-14 text-white">
+      <div tw="flex h-full w-full flex-col bg-neutral-900 p-14 text-white">
         <div tw="flex h-full w-full flex-col justify-between">
           <div tw="flex w-full flex-col">
             <div tw="flex w-full items-center justify-between">
@@ -79,8 +79,8 @@ postImageRouter.get(
             <img
               src="https://assets.luxass.dev/logos/dino.png"
               alt="author profile"
-              width="75px"
-              height="75px"
+              width={75}
+              height={75}
               tw="mr-6 rounded-xl"
             />
             <div tw="flex flex-col justify-center">
