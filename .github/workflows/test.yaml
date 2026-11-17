@@ -1,0 +1,22 @@
+name: Unit Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions: {}
+
+concurrency:
+  group: unit-tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    uses: luxass/shared-workflows/.github/workflows/reusable-test.yaml@9770f7268daf358179c45895de8becc2e8525984 # v0.14.0
+    permissions:
+      contents: read
+    with:
+      node-version: "24"
