@@ -173,7 +173,7 @@ export function cache(options: {
     // cache miss - proceed with request
     await next();
     if (!c.res.ok) {
-      return;
+      return c.res;
     }
     addHeader(c);
     const res = c.res.clone();
@@ -182,5 +182,6 @@ export function cache(options: {
     } else {
       c.executionCtx.waitUntil(cache.put(key, res));
     }
+    return c.res;
   };
 }

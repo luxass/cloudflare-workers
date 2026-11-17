@@ -17,4 +17,3 @@ isolated Preview using the `previews` block in each worker's
 [`wrangler.jsonc`](apps/image/wrangler.jsonc). Preview URLs are served from
 `<preview-name>.previews.<worker>.luxass.dev`, which are preview-only domains
 (`enabled: false`, `previews_enabled: true` in the wrangler config).
-

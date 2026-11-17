@@ -7,9 +7,7 @@ export default defineProject({
   },
   plugins: [
     cloudflareTest({
-      experimental: {
-        newConfig: true,
-      },
+      config: true,
       miniflare: {
         compatibilityFlags: ["nodejs_compat"],
       },

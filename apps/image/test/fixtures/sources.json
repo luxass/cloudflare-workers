@@ -1,0 +1,23 @@
+{
+  "inter-400.ttf": {
+    "family": "Inter",
+    "weight": 400,
+    "source": "https://fonts.gstatic.com/l/font?kit=UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZhrib2Au-3mJhGsO6RuCkAYmAAEU9kULw4wRdrzhP5Pvygbpj3LfOQ9Nx_s8RrANG6n6hYIaCfSDbx3FEZ832b7jo7oR0qo1h5JcUOBh9JWh1o3ATgGeV6ru96GrGhmZNkzjOm3N56g&skey=c491285d6722e4fa&v=v20",
+    "subset": "ASCII U+0020 through U+007E",
+    "license": "OFL.txt"
+  },
+  "inter-700.ttf": {
+    "family": "Inter",
+    "weight": 700,
+    "source": "https://fonts.gstatic.com/l/font?kit=UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYMZhrib2Au-3mJhGsO6RuCkAYmAAEU9kULw4wRdrzhP5Pvygbpj3LfOQ9Nx_s8RrANG6n6hYIaCfSDbx3FEZ832b7jo7oR0qo1h5JcUOBh9JWh1o3ATgGeV6ru96GrGhmZNkzjOm3N56g&skey=c491285d6722e4fa&v=v20",
+    "subset": "ASCII U+0020 through U+007E",
+    "license": "OFL.txt"
+  },
+  "inter-900.ttf": {
+    "family": "Inter",
+    "weight": 900,
+    "source": "https://fonts.gstatic.com/l/font?kit=UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuBWYMZhrib2Au-3mJhGsO6RuCkAYmAAEU9kULw4wRdrzhP5Pvygbpj3LfOQ9Nx_s8RrANG6n6hYIaCfSDbx3FEZ832b7jo7oR0qo1h5JcUOBh9JWh1o3ATgGeV6ru96GrGhmZNkzjOm3N56g&skey=c491285d6722e4fa&v=v20",
+    "subset": "ASCII U+0020 through U+007E",
+    "license": "OFL.txt"
+  }
+}
