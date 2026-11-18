@@ -18,7 +18,9 @@ import { z } from "zod";
 
 import {
   DEFAULT_PR_METADATA_MODEL,
+  PR_METADATA_MAX_OUTPUT_TOKENS,
   PR_METADATA_MODELS,
+  prMetadataProviderOptions,
   type PrMetadataModel,
 } from "./pr-metadata-models";
 import {
@@ -108,11 +110,15 @@ async function generatePrMetadata(
   prompt: string,
   log: RequestLogger | undefined,
 ): Promise<PrMetadataGeneration> {
+  const providerOptions = prMetadataProviderOptions(model);
+
   try {
     const result = await generateText({
       model: workersAi(model),
       system,
       temperature: 0.2,
+      maxOutputTokens: PR_METADATA_MAX_OUTPUT_TOKENS,
+      providerOptions,
       output: Output.object({
         schema: PR_METADATA_OUTPUT_SCHEMA,
       }),
@@ -141,15 +147,21 @@ async function generatePrMetadata(
   }
 
   let fallbackText: string;
+  let fallbackFinishReason: string | undefined;
+  let fallbackUsage: unknown;
 
   try {
     const fallback = await generateText({
       model: workersAi(model),
       system: `${system}\n\n${STRICT_JSON_FALLBACK_INSTRUCTION}`,
       temperature: 0.2,
+      maxOutputTokens: PR_METADATA_MAX_OUTPUT_TOKENS,
+      providerOptions,
       prompt: `${prompt}\n\nReturn only a JSON object.`,
     });
     fallbackText = extractJsonObject(fallback.text);
+    fallbackFinishReason = fallback.finishReason;
+    fallbackUsage = fallback.usage;
   } catch (err) {
     throw new PrMetadataGenerationError("Plain JSON fallback request failed", { cause: err });
   }
@@ -159,10 +171,13 @@ async function generatePrMetadata(
   try {
     fallbackJson = JSON.parse(fallbackText);
   } catch (parseError) {
+    // An empty text with finishReason "length" means the output token limit was reached.
     log?.set({
       message: "Plain JSON fallback returned invalid JSON",
       model,
       fallbackText: truncateForLog(fallbackText),
+      fallbackFinishReason,
+      fallbackUsage,
     });
     throw new PrMetadataGenerationError("Plain JSON fallback returned invalid JSON", {
       cause: parseError,

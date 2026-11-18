@@ -17,3 +17,24 @@ export type PrMetadataModel = (typeof PR_METADATA_MODELS)[number];
 
 /** Model used when a PR metadata request does not name one. */
 export const DEFAULT_PR_METADATA_MODEL: PrMetadataModel = "@cf/ibm-granite/granite-4.0-h-micro";
+
+/**
+ * Output token limit for every PR metadata generation call.
+ * Without it, Workers AI applies a small model default. Reasoning models then spend the whole
+ * budget on reasoning and return empty text. The body is capped at 6,000 characters, so this
+ * leaves room for reasoning plus the JSON answer.
+ */
+export const PR_METADATA_MAX_OUTPUT_TOKENS = 4_096;
+
+/**
+ * Workers AI provider options for a PR metadata model.
+ * gpt-oss reasons before answering. Low effort keeps reasoning within the output token limit.
+ * Other models get no reasoning options, because they may reject `reasoning_effort`.
+ */
+export function prMetadataProviderOptions(model: PrMetadataModel) {
+  if (model === "@cf/openai/gpt-oss-120b") {
+    return { "workers-ai": { reasoning_effort: "low" } };
+  }
+
+  return undefined;
+}
