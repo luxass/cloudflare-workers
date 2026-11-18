@@ -24,7 +24,7 @@ catalogs:
     "@cloudflare/vite-plugin": 2.0.0-beta.v.12
     "@cloudflare/vitest-plugin": 1.6.0
     cf: 1.0.0-beta.28
-    vite: 8.3.7
+    vite: 8.3.8
     typescript: 7.0.2
     turbo: 2.11.10
     oxfmt: 0.78.0
