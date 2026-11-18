@@ -16,6 +16,19 @@ import { HTTPException } from "hono/http-exception";
 import { createWorkersAI, type WorkersAI } from "workers-ai-provider";
 import { z } from "zod";
 
+import {
+  DEFAULT_PR_METADATA_MODEL,
+  PR_METADATA_MODELS,
+  type PrMetadataModel,
+} from "./pr-metadata-models";
+import {
+  PR_METADATA_OUTPUT_SCHEMA,
+  PrMetadataValidationError,
+  parsePrMetadata,
+  type PrMetadata,
+} from "./pr-metadata-output";
+import { buildPrMetadataSystemPrompt, buildPrMetadataUserPrompt } from "./pr-metadata-prompt";
+
 initWorkersLogger({
   env: { service: "models" },
 });
@@ -31,56 +44,32 @@ const timestampSchema = z
   .transform(Number)
   .refine(Number.isSafeInteger)
   .refine((timestamp) => Math.abs(Date.now() - timestamp) <= MAX_REQUEST_AGE_MS);
-const DISALLOWED_SCOPES = new Set(["pr", "pullrequest", "github", "automation", "schema"]);
-const PR_METADATA_RESPONSE_SCHEMA = z.object({
-  type: z.enum(["docs", "feat", "fix", "chore"]),
-  scope: z.string(),
-  message: z.string(),
-  body: z.string(),
-});
-const PR_METADATA_REQUEST_BODY_SCHEMA = z.object({
+// Strict: unknown fields, including the removed `system` override, are rejected instead of ignored.
+const PR_METADATA_REQUEST_BODY_SCHEMA = z.strictObject({
+  repository: z.string().regex(/^luxass\/[\w.-]+$/),
   diff: z.string().min(1).max(100_000),
-  system: z.string().min(1).max(2_000).optional(),
-  repository: z.string().regex(/^luxass\/.+$/),
-  context: z.string().min(1).max(2_000),
+  // Repository instructions appended to the built-in prompt. An empty string means none.
+  context: z.string().trim().max(4_000).optional(),
+  model: z.enum(PR_METADATA_MODELS).optional(),
 });
 
-const DEFAULT_PR_METADATA_SYSTEM_PROMPT = `You generate conventional commit metadata for automated pull requests.
-
-You will receive a git diff plus repository context. Analyze it and return:
-- type: "docs" if only documentation, comments, or descriptions changed, "feat" if user-facing functionality was added, "fix" if behavior was corrected, "chore" for maintenance or anything else.
-- scope: the most relevant package, module, feature, or area being changed. For github-schema, prefer the most specific changed GraphQL type or input name when exactly one clear target exists. Do not use generic scopes such as "pull request", "pr", "github", "automation", or "schema". Return an empty string if multiple types are changed or no single scope is clearly dominant.
-- message: a concise imperative-mood description under 72 characters.
-- body: a short markdown bullet list summarizing what changed.`;
 const STRICT_JSON_FALLBACK_INSTRUCTION = `Return exactly one JSON object matching the requested schema.
 Do not return markdown.
 Do not use code fences.
-Do not use bullet points.
 Do not include any explanatory text before or after the JSON object.`;
+
+/** Thrown when no generation attempt produced valid PR metadata. The route answers 502. */
+class PrMetadataGenerationError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
+    this.name = "PrMetadataGenerationError";
+  }
+}
 
 const app = new Hono<HonoContext>();
 
 app.get("/view-source", createViewSourceRedirect("models"));
 app.get("/ping", createPingPongRoute());
-
-function normalizeScope(scope: string): string {
-  const normalized = scope.trim();
-
-  if (!normalized) {
-    return "";
-  }
-
-  const comparable = normalized.toLowerCase().replaceAll(/[\s_-]+/g, "");
-
-  return DISALLOWED_SCOPES.has(comparable) ? "" : normalized;
-}
-
-function normalizePrMetadata(output: z.infer<typeof PR_METADATA_RESPONSE_SCHEMA>) {
-  return {
-    ...output,
-    scope: normalizeScope(output.scope),
-  };
-}
 
 function extractJsonObject(text: string): string {
   const trimmed = text.trim();
@@ -99,14 +88,22 @@ function extractJsonObject(text: string): string {
   return trimmed;
 }
 
+function truncateForLog(text: string): string {
+  return text.length > 2000 ? `${text.slice(0, 2000)}…` : text;
+}
+
 type PrMetadataGeneration = {
-  metadata: ReturnType<typeof normalizePrMetadata>;
+  metadata: PrMetadata;
   generationMode: "structured" | "plain-json-fallback";
 };
 
+/**
+ * Generates PR metadata with structured output, then retries once with plain JSON.
+ * The retry also runs when structured output succeeds but fails the content rules.
+ */
 async function generatePrMetadata(
   workersAi: WorkersAI,
-  model: string,
+  model: PrMetadataModel,
   system: string,
   prompt: string,
   log: RequestLogger | undefined,
@@ -117,74 +114,76 @@ async function generatePrMetadata(
       system,
       temperature: 0.2,
       output: Output.object({
-        schema: PR_METADATA_RESPONSE_SCHEMA,
+        schema: PR_METADATA_OUTPUT_SCHEMA,
       }),
       prompt,
     });
 
     return {
-      metadata: normalizePrMetadata(result.output),
+      metadata: parsePrMetadata(result.output),
       generationMode: "structured",
     };
   } catch (err) {
-    const retryContext = {
+    log?.set({
       message: "Structured PR metadata generation failed; retrying with plain JSON fallback",
       model,
       retryReason: toLogError(err).message,
+      validationIssues: err instanceof PrMetadataValidationError ? err.issues : null,
       aiCause: AISDKError.isInstance(err) ? (err.cause ?? null) : null,
-      aiText: NoObjectGeneratedError.isInstance(err)
-        ? typeof err.text === "string"
-          ? err.text.length > 2000
-            ? `${err.text.slice(0, 2000)}…`
-            : err.text
-          : null
-        : null,
+      aiText:
+        NoObjectGeneratedError.isInstance(err) && typeof err.text === "string"
+          ? truncateForLog(err.text)
+          : null,
       aiResponse: NoObjectGeneratedError.isInstance(err) ? (err.response ?? null) : null,
       aiUsage: NoObjectGeneratedError.isInstance(err) ? (err.usage ?? null) : null,
       aiFinishReason: NoObjectGeneratedError.isInstance(err) ? (err.finishReason ?? null) : null,
-    };
-    log?.set(retryContext);
+    });
+  }
 
+  let fallbackText: string;
+
+  try {
     const fallback = await generateText({
       model: workersAi(model),
       system: `${system}\n\n${STRICT_JSON_FALLBACK_INSTRUCTION}`,
       temperature: 0.2,
       prompt: `${prompt}\n\nReturn only a JSON object.`,
     });
+    fallbackText = extractJsonObject(fallback.text);
+  } catch (err) {
+    throw new PrMetadataGenerationError("Plain JSON fallback request failed", { cause: err });
+  }
 
-    const fallbackText = extractJsonObject(fallback.text);
-    let fallbackJson: unknown;
+  let fallbackJson: unknown;
 
-    try {
-      fallbackJson = JSON.parse(fallbackText);
-    } catch (parseError) {
-      log?.set({
-        message: "Plain JSON fallback returned invalid JSON",
-        model,
-        retryReason: retryContext.retryReason,
-        fallbackText: fallbackText.length > 2000 ? `${fallbackText.slice(0, 2000)}…` : fallbackText,
-      });
-      throw new Error("Plain JSON fallback returned invalid JSON", { cause: parseError });
-    }
-
-    const parsed = PR_METADATA_RESPONSE_SCHEMA.safeParse(fallbackJson);
-
-    if (parsed.success) {
-      return {
-        metadata: normalizePrMetadata(parsed.data),
-        generationMode: "plain-json-fallback",
-      };
-    }
-
+  try {
+    fallbackJson = JSON.parse(fallbackText);
+  } catch (parseError) {
     log?.set({
-      message: "Plain JSON fallback response failed schema validation",
+      message: "Plain JSON fallback returned invalid JSON",
       model,
-      retryReason: retryContext.retryReason,
-      fallbackText: fallbackText.length > 2000 ? `${fallbackText.slice(0, 2000)}…` : fallbackText,
-      schemaIssues: parsed.error.issues,
+      fallbackText: truncateForLog(fallbackText),
     });
+    throw new PrMetadataGenerationError("Plain JSON fallback returned invalid JSON", {
+      cause: parseError,
+    });
+  }
 
-    throw new Error("Plain JSON fallback response failed schema validation", { cause: err });
+  try {
+    return {
+      metadata: parsePrMetadata(fallbackJson),
+      generationMode: "plain-json-fallback",
+    };
+  } catch (err) {
+    log?.set({
+      message: "Plain JSON fallback returned invalid PR metadata",
+      model,
+      fallbackText: truncateForLog(fallbackText),
+      validationIssues: err instanceof PrMetadataValidationError ? err.issues : null,
+    });
+    throw new PrMetadataGenerationError("Plain JSON fallback returned invalid PR metadata", {
+      cause: err,
+    });
   }
 }
 
@@ -226,10 +225,17 @@ app.post("/api/pr-metadata", async (c) => {
   const body = PR_METADATA_REQUEST_BODY_SCHEMA.safeParse(parsedBody);
 
   if (!body.success) {
-    return createError(c, 400, body.error.issues[0]?.message ?? "Invalid request body");
+    const issue = body.error.issues[0];
+    const field = issue?.path.join(".");
+    return createError(
+      c,
+      400,
+      issue ? `${field ? `${field}: ` : ""}${issue.message}` : "Invalid request body",
+    );
   }
 
-  const model = c.env.DEFAULT_MODEL;
+  const { repository, diff, context, model: requestedModel } = body.data;
+  const model = requestedModel ?? DEFAULT_PR_METADATA_MODEL;
 
   const workersAi = createWorkersAI({
     binding: c.env.AI,
@@ -237,21 +243,18 @@ app.post("/api/pr-metadata", async (c) => {
 
   log?.set({
     message: "Generating PR metadata via AI SDK",
+    repository,
     model,
+    modelSource: requestedModel ? "request" : "default",
+    contextLength: context?.length ?? 0,
+    diffLength: diff.length,
   });
-
-  const prompt = [
-    "Please analyze this git diff and generate appropriate PR metadata.",
-    `Repository: ${body.data.repository}`,
-    `Additional context:\n${body.data.context}`,
-    `\`\`\`diff\n${body.data.diff}\n\`\`\``,
-  ].join("\n\n");
 
   const generated = await generatePrMetadata(
     workersAi,
     model,
-    body.data.system ?? DEFAULT_PR_METADATA_SYSTEM_PROMPT,
-    prompt,
+    buildPrMetadataSystemPrompt(repository, context),
+    buildPrMetadataUserPrompt(repository, diff),
     log,
   );
 
@@ -283,6 +286,11 @@ app.onError(async (err, c) => {
       } satisfies ApiError,
       err.status,
     );
+  }
+
+  // The model did not produce usable metadata. Callers treat this like a timeout and mark the PR incomplete.
+  if (err instanceof PrMetadataGenerationError) {
+    return createError(c, 502, "PR metadata generation failed");
   }
 
   return c.json(

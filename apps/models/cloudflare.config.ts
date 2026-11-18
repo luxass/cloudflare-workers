@@ -30,7 +30,6 @@ export default defineConfig({
     env: {
       AI: bindings.ai({ dev: { remote: true } }),
       HMAC_SECRET: bindings.secret(),
-      DEFAULT_MODEL: bindings.text("@cf/ibm-granite/granite-4.0-h-micro"),
     },
   },
 });

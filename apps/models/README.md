@@ -26,9 +26,17 @@ X-Timestamp: <unix timestamp in milliseconds>
 X-Signature: <hex hmac sha256 of "${timestamp}.${raw_json_body}">
 ```
 
-## Request example
+## Request
 
-Generate PR metadata from a diff:
+| Field        | Required | Description                                                                                  |
+| ------------ | -------- | -------------------------------------------------------------------------------------------- |
+| `repository` | yes      | Must match `luxass/<repo>`.                                                                  |
+| `diff`       | yes      | The changes to describe, at most 100,000 characters. Treated as untrusted data.              |
+| `context`    | no       | Repository instructions, at most 4,000 characters. Appended to the built-in prompt.          |
+| `model`      | no       | A Workers AI model from `src/pr-metadata-models.ts`. Defaults to `DEFAULT_PR_METADATA_MODEL`. |
+
+Unknown fields are rejected. Callers cannot replace the built-in prompt in
+`src/pr-metadata-prompt.ts`; they can only extend it with `context`.
 
 ```sh
 curl -X POST http://localhost:8787/api/pr-metadata \
@@ -37,12 +45,25 @@ curl -X POST http://localhost:8787/api/pr-metadata \
   -H "content-type: application/json" \
   -d '{
     "repository": "luxass/widgets",
-    "context": "This repo is a TypeScript monorepo. Prefer package-level scopes when clear.",
+    "context": "Prefer package names as the scope.",
     "diff": "diff --git a/src/api.ts b/src/api.ts\n+export async function createWidget() {}"
   }'
 ```
 
-`repository` and `context` are required. `repository` must match `luxass/<repo>`.
+## Response
+
+`200` returns `{ "type", "scope", "message", "body" }`. The Worker validates the model
+output before it returns it:
+
+- `type` is `docs`, `feat`, `fix`, or `chore`.
+- `scope` is a single name or an empty string. Generic or unusable scopes become empty.
+- `message` is one line of at most 72 characters.
+- `body` is Markdown of at most 6,000 characters.
+- Outside inline code, `message` and `body` contain no links, HTML, images, or `@` mentions.
+  They never contain code fences or the `[incomplete]` release-blocking marker.
+
+`502` means that no attempt produced valid metadata. Callers must treat it as an
+incomplete result.
 
 ## Local helper
 
@@ -52,11 +73,8 @@ Use [sign-request.sh](./sign-request.sh) to build and sign requests locally:
 HMAC_SECRET=your-local-secret ./sign-request.sh
 ```
 
-By default it is hardcoded for `luxass/github-schema` and will use:
-
-- repository: `luxass/github-schema`
-- GraphQL-specific context
-- a hardcoded sample GitHub schema diff string
+By default it sends a sample `luxass/github-schema` diff with no context and the
+default model.
 
 Override any field when needed:
 
@@ -64,5 +82,6 @@ Override any field when needed:
 HMAC_SECRET=your-local-secret ./sign-request.sh \
   --repo luxass/github-schema \
   --context "Prefer GraphQL type names as scope when clear." \
+  --model @cf/openai/gpt-oss-120b \
   --diff "$(git diff github-schema.graphql)"
 ```

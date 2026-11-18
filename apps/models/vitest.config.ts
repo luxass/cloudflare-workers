@@ -13,7 +13,6 @@ export default defineProject({
         bindings: {
           AI: {},
           HMAC_SECRET: "models-unit-test-secret",
-          DEFAULT_MODEL: "@cf/test/model",
         },
       },
     }),

@@ -8,9 +8,9 @@ Usage: ./sign-request.sh [options]
 
 Options:
   --repo <value>      Optional repository name. Defaults to luxass/github-schema
-  --context <value>   Optional extra context for the model
+  --context <value>   Optional repository instructions appended to the built-in prompt
   --diff <value>      Optional diff content. Defaults to a hardcoded github-schema sample diff
-  --model <value>     Optional model override
+  --model <value>     Optional Workers AI model. Must be in src/pr-metadata-models.ts
   --url <value>       Endpoint URL. Defaults to http://127.0.0.1:8787/api/pr-metadata
   --secret <value>    HMAC secret. Defaults to $HMAC_SECRET
   --print-only        Print the signed curl command instead of executing it
@@ -23,8 +23,7 @@ EOF
 }
 
 repo="luxass/github-schema"
-context="This repository contains GitHub's GraphQL schema and generated TypeScript types.
-Prefer a GraphQL type or input name as the scope when there is a clear single target."
+context=""
 diff_content='diff --git a/github-schema.graphql b/github-schema.graphql
 index 0000000..1111111 100644
 --- a/github-schema.graphql
