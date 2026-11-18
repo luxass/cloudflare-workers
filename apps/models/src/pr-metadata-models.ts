@@ -15,8 +15,12 @@ export const PR_METADATA_MODELS = [
 /** A Workers AI model ID from the PR metadata allowlist. */
 export type PrMetadataModel = (typeof PR_METADATA_MODELS)[number];
 
-/** Model used when a PR metadata request does not name one. */
-export const DEFAULT_PR_METADATA_MODEL: PrMetadataModel = "@cf/ibm-granite/granite-4.0-h-micro";
+/**
+ * Model used when a PR metadata request does not name one.
+ * gpt-oss-120b classified a mixed 35 KB github-schema diff correctly as feat in a dry run.
+ * granite-4.0-h-micro returned a generic chore title for the same diff.
+ */
+export const DEFAULT_PR_METADATA_MODEL: PrMetadataModel = "@cf/openai/gpt-oss-120b";
 
 /**
  * Output token limit for every PR metadata generation call.

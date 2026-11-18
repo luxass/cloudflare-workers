@@ -301,8 +301,10 @@ describe("metadata generation", () => {
     expect(modelMock).toHaveBeenCalledWith("@cf/openai/gpt-oss-120b");
   });
 
-  it("sets the output token limit and no reasoning options for the default model", async () => {
-    const response = await postSignedMetadata();
+  it("sets the output token limit and no reasoning options for a non-reasoning model", async () => {
+    const response = await postSignedMetadata(
+      JSON.stringify({ ...METADATA_REQUEST, model: "@cf/ibm-granite/granite-4.0-h-micro" }),
+    );
 
     expect(response.status).toBe(200);
     const options = doGenerateMock.mock.calls[0]?.[0];
