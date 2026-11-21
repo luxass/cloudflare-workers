@@ -21,32 +21,32 @@ minimumReleaseAgeExclude:
 
 catalogs:
   dev:
-    "@cloudflare/vite-plugin": 2.0.0-beta.v.12
-    "@cloudflare/vitest-plugin": 1.6.0
-    cf: 1.0.0-beta.28
+    "@cloudflare/vite-plugin": 2.0.0-beta.v.17
+    "@cloudflare/vitest-plugin": 1.8.2
+    cf: 1.0.0-beta.32
     vite: 8.3.7
     typescript: 7.0.2
-    turbo: 2.11.10
+    turbo: 2.11.11
     oxfmt: 0.78.0
     oxlint: 1.92.0
-    oxlint-tsgolint: 7.0.2006
+    oxlint-tsgolint: 7.0.2007
     vitest: 5.1.0
-    wrangler: 4.158.0
-    "@cloudflare/workers-types": 5.20261109.1
+    wrangler: 4.162.0
+    "@cloudflare/workers-types": 5.20261114.1
 
   prod:
     "@hono/zod-openapi": 1.6.3
     "@octokit/core": 7.0.8
     "@octokit/plugin-paginate-rest": 16.0.0
-    "@scalar/hono-api-reference": 0.12.18
-    ai: 7.0.165
+    "@scalar/hono-api-reference": 0.12.20
+    ai: 7.0.173
     evlog: 2.35.1
-    hono: 4.13.17
-    workers-ai-provider: 4.0.0
+    hono: 4.13.18
+    workers-ai-provider: 4.0.1
     zod: 4.6.7
 
   assets:
-    "@cloudflare/workers-types": 5.20261109.1
+    "@cloudflare/workers-types": 5.20261114.1
 
   image:
     "@resvg/resvg-wasm": 2.4.1
