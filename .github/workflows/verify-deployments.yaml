@@ -117,7 +117,7 @@ jobs:
             --jq .id)
           echo "id=$check_run_id" >> "$GITHUB_OUTPUT"
 
-      - uses: luxass/shared-workflows/actions/setup@9770f7268daf358179c45895de8becc2e8525984 # v0.14.0
+      - uses: luxass/shared-workflows/actions/setup@411fe8f8a0a53eab5153356ac5e0f174cd245eb2 # v0.17.1
         with:
           node-version: 24
 
